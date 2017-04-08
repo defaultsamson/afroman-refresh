@@ -1,7 +1,10 @@
 package afroman.game;
 
+import afroman.game.io.Setting;
+import afroman.game.io.Settings;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -16,7 +19,9 @@ public class MainGame extends Game {
         return game;
     }
 
-    private static float SCALE = 3F; // TODO get from file
+    private Settings settings;
+
+    private static float SCALE; // TODO get from file
     private OrthographicCamera camera;
     private ScreenViewport viewport;
     private boolean isYInverted;
@@ -27,6 +32,15 @@ public class MainGame extends Game {
     @Override
     public void create() {
         game = this;
+
+        // Sets the game to invoke the keyDown() method for when the android back button has been pressed
+        // Gdx.input.setInputProcessor(this);
+        Gdx.input.setCatchBackKey(true);
+
+        settings = new Settings(Gdx.app.getPreferences("settings.afro"));
+        //settings.putFloat(Setting.SCALE, 0.1F);
+
+        SCALE = settings.getFloat(Setting.SCALE, 3F);
 
         isYInverted = false;
 
@@ -69,10 +83,15 @@ public class MainGame extends Game {
         batch.begin();
         batch.draw(img, 0, 0);
         batch.end();
+
+        if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
+            System.out.println("pants");
+        }
     }
 
     @Override
     public void dispose() {
+        settings.save();
         batch.dispose();
         img.dispose();
     }
