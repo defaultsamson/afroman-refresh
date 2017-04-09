@@ -1,9 +1,10 @@
 package afroman.game.gui;
 
 import afroman.game.MainGame;
+import afroman.game.io.Setting;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -15,41 +16,48 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 /**
  * Created by Samson on 2017-04-08.
  */
-public class MainMenu implements Screen {
+public class MainMenu implements CameraScreen {
 
     private Stage stage;
 
+    Label fpsCounter;
     Image img;
 
     public MainMenu() {
         //Skin skin = new Skin(Gdx.files.internal("skin/craftacular-ui.json"));
-        Skin skin = new Skin(Gdx.files.internal("afro/afro.json"));
+        Skin skin = new Skin(Gdx.files.internal("assets/skin/afro.json"));
 
         stage = new Stage(MainGame.createStandardViewport()); // TODO may need to use some sort of viewport
         Gdx.input.setInputProcessor(stage);
         stage.getViewport().getCamera().position.x = 0;
         stage.getViewport().getCamera().position.y = 0;
 
-
-        img = new Image(new Texture("badlogic.jpg"));
+        img = new Image(new Texture("assets/badlogic.jpg"));
         stage.addActor(img);
         img.setPosition(50, 2);
-
-        /*
-        Slider slider = new Slider(1.0F, 10F, 0.1F, false, skin);
-        slider.setSize(170, 20);
-        slider.setPosition(39, 50);
-        stage.addActor(slider);*/
 
         int buttonWidth = 72;
         int buttonHeight = 16;
 
-        int buttonYOffset = -30;
-        int buttonSpacing = 4;
+        int buttonYOffset = -46;
+        int buttonSpacing = 6;
+
+        fpsCounter = new Label("FPS: 0", skin);
+        fpsCounter.setSize(buttonWidth, buttonHeight);
+        fpsCounter.setPosition(-100, 0);
+        stage.addActor(fpsCounter);
+
+        final Label title = new Label("The Adventures of Afro Man", skin);
+        title.setSize(buttonWidth, buttonHeight);
+        title.setPosition(-buttonWidth / 2, buttonYOffset + (4 * (buttonHeight + buttonSpacing)));
+        title.setTouchable(null); // Can click through this element
+        title.setAlignment(Align.center);
+        stage.addActor(title);
 
         final Label label = new Label("Scale: ", skin);
         label.setSize(buttonWidth, buttonHeight);
@@ -57,36 +65,20 @@ public class MainMenu implements Screen {
         label.setTouchable(null); // Can click through this element to the bar
         label.setAlignment(Align.center);
 
-
         final RoundingSlider slider = new RoundingSlider(1.0F, 10.0F, 0.1F, 10F, false, skin);
         slider.setSize(buttonWidth, buttonHeight);
         slider.setPosition(-buttonWidth / 2, buttonYOffset + (3 * (buttonHeight + buttonSpacing)));
+        slider.setValue(MainGame.settings.getFloat(Setting.SCALE));
         slider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 label.setText("Scale: " + slider.getValue());
+                MainGame.game.setScale(slider.getValue());
             }
         });
+        label.setText("Scale: " + slider.getValue());
         stage.addActor(slider);
         stage.addActor(label);
-
-        /*
-        final Slider slider = new Slider(1.0F, 10.00001F, 0.1F, false, skin);
-        slider.setSize(buttonWidth, buttonHeight);
-        slider.setPosition(-buttonWidth / 2, buttonYOffset + (3 * (buttonHeight + buttonSpacing)));
-        stage.addActor(slider);
-        slider.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-
-                if (slider.getValue() > 10){
-                    slider.setValue(10);
-                }
-
-                label.setText("Scale: " + Math.round(slider.getValue() * 10) /10F);
-            }
-        });*/
-
 
         TextButton joinButton = new TextButton("Join", skin, "default");
         joinButton.setSize(buttonWidth, buttonHeight);
@@ -161,6 +153,9 @@ public class MainMenu implements Screen {
 
     @Override
     public void render(float delta) {
+
+        fpsCounter.setText("FPS: " + Gdx.graphics.getFramesPerSecond());
+
         stage.act(delta);
         stage.draw();
 
@@ -202,5 +197,15 @@ public class MainMenu implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+    }
+
+    @Override
+    public OrthographicCamera getCamera() {
+        return (OrthographicCamera) stage.getCamera();
+    }
+
+    @Override
+    public ScreenViewport getViewport() {
+        return (ScreenViewport) stage.getViewport();
     }
 }

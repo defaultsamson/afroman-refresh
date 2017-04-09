@@ -1,5 +1,6 @@
 package afroman.game;
 
+import afroman.game.gui.CameraScreen;
 import afroman.game.gui.MainMenu;
 import afroman.game.io.Setting;
 import afroman.game.io.Settings;
@@ -8,28 +9,37 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class MainGame extends Game {
 
-    private static MainGame game;
-    public static Settings settings = null;
-    public static float SCALE; // TODO get from file
     public static final int CAMERA_WIDTH = 240;
     public static final int CAMERA_HEIGHT = CAMERA_WIDTH * 9 / 16;
+    private static final boolean isYInverted = false;
 
-    private static boolean isYInverted = false;
+    public static MainGame game;
+    public static Settings settings;
 
-    BitmapFont font;
+    private SpriteBatch batch;
+    private Texture vignette;
 
     public static Viewport createStandardViewport() {
         OrthographicCamera camera = new OrthographicCamera();
         camera.setToOrtho(isYInverted);
         ScreenViewport viewport = new ScreenViewport(camera);
-        viewport.setUnitsPerPixel(1 / SCALE);
+        viewport.setUnitsPerPixel(1 / settings.getFloat(Setting.SCALE));
         return viewport;
+    }
+
+    public void setScale(float scale) {
+        settings.putFloat(Setting.SCALE, scale);
+        settings.save();
+        System.out.println("New Scale: " + scale);
+        getViewport().setUnitsPerPixel(1 / scale);
+        getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     @Override
@@ -45,10 +55,24 @@ public class MainGame extends Game {
         // settings.putFloat(Setting.SCALE, 3F);
         // settings.save();
 
-        SCALE = settings.getFloat(Setting.SCALE, 3F);
+        // If on desktop, size the window to fit the default dimensions at the provided scale.
+        if (DeviceUtil.isDesktop()) {
+            float scale = settings.getFloat(Setting.SCALE, 3F);
+            Gdx.graphics.setWindowedMode((int) (CAMERA_WIDTH * scale), (int) (CAMERA_HEIGHT * scale));
+            settings.putFloat(Setting.SCALE, scale);
+            settings.save();
+        }
+        // If on Android, the default value for scaling will make the available hight being drawn the value of the in-world CAMERA_HEIGHT
+        else if (DeviceUtil.isAndroid()) {
+            float scale = settings.getFloat(Setting.SCALE, (float) Gdx.graphics.getHeight() / (float) CAMERA_HEIGHT);
+            settings.putFloat(Setting.SCALE, scale);
+            settings.save();
+        } else {
+            settings.putFloat(Setting.SCALE, 3F);
+        }
 
-        if (DeviceUtil.isDesktop())
-            Gdx.graphics.setWindowedMode((int) (CAMERA_WIDTH * SCALE), (int) (CAMERA_HEIGHT * SCALE));
+        batch = new SpriteBatch();
+        vignette = new Texture("assets/textures/vignette.png");
 
         setScreen(new MainMenu());
     }
@@ -81,14 +105,36 @@ public class MainGame extends Game {
     public void render() {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        super.render();
 
-        /*
-        batch.setTransformMatrix(getCamera().view);
-        batch.setProjectionMatrix(getCamera().projection);
-        batch.begin();
-        batch.draw(img, 0, 0);
-        batch.end();*/
+        // TODO draw world elements before vignette
+
+        // TODO dynamically generated vignette noise?
+        // Draws vignette
+        OrthographicCamera camera = getCamera();
+        ScreenViewport viewport = getViewport();
+        if (camera != null && viewport != null) {
+            batch.setProjectionMatrix(camera.combined);
+            batch.begin();
+            batch.draw(vignette, camera.position.x - (viewport.getWorldWidth() / 2), camera.position.y - (viewport.getWorldHeight() / 2), viewport.getWorldWidth(), viewport.getWorldHeight());
+            batch.end();
+        }
+
+        // Draws screen elements
+        super.render();
+    }
+
+    public ScreenViewport getViewport() {
+        if (this.screen != null && this.screen instanceof CameraScreen) {
+            return ((CameraScreen) this.screen).getViewport();
+        }
+        return null;
+    }
+
+    public OrthographicCamera getCamera() {
+        if (this.screen != null && this.screen instanceof CameraScreen) {
+            return ((CameraScreen) this.screen).getCamera();
+        }
+        return null;
     }
 
     @Override
@@ -96,9 +142,8 @@ public class MainGame extends Game {
         super.dispose();
 
         settings.save();
-        //batch.dispose();
-        font.dispose();
-        //img.dispose();
+        batch.dispose();
+        vignette.dispose();
     }
 
     /**
@@ -114,12 +159,4 @@ public class MainGame extends Game {
     public boolean isInverted() {
         return isYInverted;
     }
-
-    /*public ScreenViewport getViewport() {
-        return viewport;
-    }*/
-
-   /* public OrthographicCamera getCamera() {
-        return (OrthographicCamera) viewport.getCamera();
-    }*/
 }
