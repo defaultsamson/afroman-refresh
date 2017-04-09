@@ -14,14 +14,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class MainGame extends Game {
 
     private static MainGame game;
-
-    public static MainGame instance() {
-        return game;
-    }
-
-    private Settings settings;
-
+    public static Settings settings = null;
     public static float SCALE; // TODO get from file
+    public static final int CAMERA_WIDTH = 240;
+    public static final int CAMERA_HEIGHT = CAMERA_WIDTH * 9 / 16;
+
     private static boolean isYInverted = false;
 
     BitmapFont font;
@@ -43,13 +40,17 @@ public class MainGame extends Game {
         Gdx.input.setCatchBackKey(true);
 
         settings = new Settings(Gdx.app.getPreferences("settings.afro"));
-        settings.putFloat(Setting.SCALE, 3F);
-        settings.save();
+
+        // settings.putFloat(Setting.SCALE, 3F);
+        // settings.save();
+
         SCALE = settings.getFloat(Setting.SCALE, 3F);
 
-        //batch = new SpriteBatch();
+        Gdx.graphics.setWindowedMode((int) (CAMERA_WIDTH * SCALE), (int) (CAMERA_HEIGHT * SCALE));
+
+        // batch = new SpriteBatch();
         font = new BitmapFont();
-        //img = new Texture("badlogic.jpg");
+        // img = new Texture("badlogic.jpg");
 
         setScreen(new MainMenu());
     }

@@ -6,12 +6,11 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 /**
  * Created by Samson on 2017-04-08.
@@ -28,6 +27,9 @@ public class MainMenu implements Screen {
 
         stage = new Stage(MainGame.createStandardViewport()); // TODO may need to use some sort of viewport
         Gdx.input.setInputProcessor(stage);
+        stage.getViewport().getCamera().position.x = 0;
+        stage.getViewport().getCamera().position.y = 0;
+
 
         img = new Image(new Texture("badlogic.jpg"));
         stage.addActor(img);
@@ -39,9 +41,47 @@ public class MainMenu implements Screen {
         slider.setPosition(39, 50);
         stage.addActor(slider);*/
 
-        Button button2 = new TextButton("Dank \nmemes", skin, "default");
-        button2.setSize(100, 20);
-        button2.addListener(new InputListener() {
+        int buttonWidth = 72;
+        int buttonHeight = 16;
+
+        int buttonYOffset = -30;
+        int buttonSpacing = 4;
+
+        TextButton joinButton = new TextButton("Join", skin, "default");
+        joinButton.setSize(buttonWidth, buttonHeight);
+        joinButton.setPosition(-buttonWidth / 2, buttonYOffset + (2 * (buttonHeight + buttonSpacing)));
+        joinButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("clicked");
+            }
+        });
+        stage.addActor(joinButton);
+
+        TextButton hostButton = new TextButton("Host", skin, "default");
+        hostButton.setSize(buttonWidth, buttonHeight);
+        hostButton.setPosition(-buttonWidth / 2, buttonYOffset + (1 * (buttonHeight + buttonSpacing)));
+        hostButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("clicked");
+            }
+        });
+        stage.addActor(hostButton);
+
+        TextButton exitButton = new TextButton("Exit", skin, "default");
+        exitButton.setSize(buttonWidth, buttonHeight);
+        exitButton.setPosition(-buttonWidth / 2, buttonYOffset + (0 * (buttonHeight + buttonSpacing)));
+        exitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.exit();
+            }
+        });
+        stage.addActor(exitButton);
+
+        /*
+        joinButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 System.out.println("Touched Up");
@@ -52,8 +92,8 @@ public class MainMenu implements Screen {
                 System.out.println("Touched Down");
                 return true;
             }
-        });
-        stage.addActor(button2);
+        });*/
+
 
         /*
         Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"));
