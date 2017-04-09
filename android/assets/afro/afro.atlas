@@ -1,0 +1,44 @@
+
+afro.png
+size: 512,512
+format: RGBA8888
+filter: Linear,Nearest
+repeat: none
+button-down
+  rotate: false
+  xy: 259, 246
+  size: 3, 16
+  pad: 1, 1, 1, 1
+  orig: 3, 16
+  offset: 0, 0
+  index: -1
+button-over
+  rotate: false
+  xy: 1, 194
+  size: 3, 16
+  pad: 1, 1, 1, 1
+  orig: 3, 16
+  offset: 0, 0
+  index: -1
+button-up
+  rotate: false
+  xy: 259, 228
+  size: 3, 16
+  pad: 1, 1, 1, 1
+  orig: 3, 16
+  offset: 0, 0
+  index: -1
+afrofont-black
+  rotate: false
+  xy: 1, 238
+  size: 256, 24
+  orig: 256, 24
+  offset: 0, 0
+  index: -1
+afrofont-shadow
+  rotate: false
+  xy: 1, 212
+  size: 256, 24
+  orig: 256, 24
+  offset: 0, 0
+  index: -1
