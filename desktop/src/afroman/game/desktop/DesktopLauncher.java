@@ -5,8 +5,8 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 public class DesktopLauncher {
-	public static final int CAMERA_WIDTH = 240;//1280;
-	public static final int CAMERA_HEIGHT = CAMERA_WIDTH * 9 / 16;//720;
+    private static final int CAMERA_WIDTH = 240;//1280;
+    private static final int CAMERA_HEIGHT = CAMERA_WIDTH * 9 / 16;//720;
 
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();

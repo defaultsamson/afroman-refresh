@@ -67,6 +67,45 @@ atlasData: {
 			tintName: null
 			name: button-up
 		}
+		{
+			file: C:/Users/Samson/IdeaProjects/afroman-refresh/android/assets/afro/raw/slider-knob.png
+			bgColor: {
+				r: 0
+				g: 0
+				b: 0
+				a: 1
+			}
+			visible: true
+			tint: null
+			tintName: null
+			name: slider-knob
+		}
+		{
+			file: C:/Users/Samson/IdeaProjects/afroman-refresh/android/assets/afro/raw/slider-background.png
+			bgColor: {
+				r: 0
+				g: 0
+				b: 0
+				a: 1
+			}
+			visible: true
+			tint: null
+			tintName: null
+			name: slider-background
+		}
+		{
+			file: C:/Users/Samson/IdeaProjects/afroman-refresh/android/assets/afro/raw/slider-knob-before.png
+			bgColor: {
+				r: 1
+				g: 1
+				b: 1
+				a: 1
+			}
+			visible: true
+			tint: null
+			tintName: null
+			name: slider-knob-before
+		}
 	]
 }
 jsonData: {
@@ -688,7 +727,7 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.g2d.BitmapFont
 						name: font
 						optional: false
-						value: null
+						value: shadow
 					}
 					fontColor: {
 						class: com.ray3k.skincomposer.data.StyleProperty
@@ -1019,21 +1058,21 @@ jsonData: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
 						name: knobOver
 						optional: true
-						value: null
+						value: slider-knob
 					}
 					knobDown: {
 						class: com.ray3k.skincomposer.data.StyleProperty
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
 						name: knobDown
 						optional: true
-						value: null
+						value: slider-knob
 					}
 					background: {
 						class: com.ray3k.skincomposer.data.StyleProperty
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
 						name: background
 						optional: false
-						value: null
+						value: slider-background
 					}
 					disabledBackground: {
 						class: com.ray3k.skincomposer.data.StyleProperty
@@ -1047,21 +1086,21 @@ jsonData: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
 						name: knob
 						optional: true
-						value: null
+						value: slider-knob
 					}
 					disabledKnob: {
 						class: com.ray3k.skincomposer.data.StyleProperty
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
 						name: disabledKnob
 						optional: true
-						value: null
+						value: slider-knob
 					}
 					knobBefore: {
 						class: com.ray3k.skincomposer.data.StyleProperty
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
 						name: knobBefore
 						optional: true
-						value: null
+						value: slider-knob-before
 					}
 					knobAfter: {
 						class: com.ray3k.skincomposer.data.StyleProperty

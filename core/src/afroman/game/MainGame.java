@@ -3,6 +3,7 @@ package afroman.game;
 import afroman.game.gui.MainMenu;
 import afroman.game.io.Setting;
 import afroman.game.io.Settings;
+import afroman.game.util.DeviceUtil;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -46,11 +47,8 @@ public class MainGame extends Game {
 
         SCALE = settings.getFloat(Setting.SCALE, 3F);
 
-        Gdx.graphics.setWindowedMode((int) (CAMERA_WIDTH * SCALE), (int) (CAMERA_HEIGHT * SCALE));
-
-        // batch = new SpriteBatch();
-        font = new BitmapFont();
-        // img = new Texture("badlogic.jpg");
+        if (DeviceUtil.isDesktop())
+            Gdx.graphics.setWindowedMode((int) (CAMERA_WIDTH * SCALE), (int) (CAMERA_HEIGHT * SCALE));
 
         setScreen(new MainMenu());
     }

@@ -5,12 +5,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 
 /**
  * Created by Samson on 2017-04-08.
@@ -46,6 +50,43 @@ public class MainMenu implements Screen {
 
         int buttonYOffset = -30;
         int buttonSpacing = 4;
+
+        final Label label = new Label("Scale: ", skin);
+        label.setSize(buttonWidth, buttonHeight);
+        label.setPosition(-buttonWidth / 2, buttonYOffset + (3 * (buttonHeight + buttonSpacing)));
+        label.setTouchable(null); // Can click through this element to the bar
+        label.setAlignment(Align.center);
+
+
+        final RoundingSlider slider = new RoundingSlider(1.0F, 10.0F, 0.1F, 10F, false, skin);
+        slider.setSize(buttonWidth, buttonHeight);
+        slider.setPosition(-buttonWidth / 2, buttonYOffset + (3 * (buttonHeight + buttonSpacing)));
+        slider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                label.setText("Scale: " + slider.getValue());
+            }
+        });
+        stage.addActor(slider);
+        stage.addActor(label);
+
+        /*
+        final Slider slider = new Slider(1.0F, 10.00001F, 0.1F, false, skin);
+        slider.setSize(buttonWidth, buttonHeight);
+        slider.setPosition(-buttonWidth / 2, buttonYOffset + (3 * (buttonHeight + buttonSpacing)));
+        stage.addActor(slider);
+        slider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+
+                if (slider.getValue() > 10){
+                    slider.setValue(10);
+                }
+
+                label.setText("Scale: " + Math.round(slider.getValue() * 10) /10F);
+            }
+        });*/
+
 
         TextButton joinButton = new TextButton("Join", skin, "default");
         joinButton.setSize(buttonWidth, buttonHeight);

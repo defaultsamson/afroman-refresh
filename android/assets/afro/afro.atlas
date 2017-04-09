@@ -6,21 +6,21 @@ filter: Linear,Nearest
 repeat: none
 afrofont-black
   rotate: false
-  xy: 1, 238
+  xy: 1, 243
   size: 256, 24
   orig: 256, 24
   offset: 0, 0
   index: -1
 afrofont-shadow
   rotate: false
-  xy: 1, 212
+  xy: 1, 217
   size: 256, 24
   orig: 256, 24
   offset: 0, 0
   index: -1
 button-down
   rotate: false
-  xy: 259, 246
+  xy: 259, 251
   size: 3, 16
   pad: 1, 1, 1, 1
   orig: 3, 16
@@ -28,7 +28,7 @@ button-down
   index: -1
 button-over
   rotate: false
-  xy: 1, 194
+  xy: 1, 199
   size: 3, 16
   pad: 1, 1, 1, 1
   orig: 3, 16
@@ -36,9 +36,31 @@ button-over
   index: -1
 button-up
   rotate: false
-  xy: 259, 228
+  xy: 259, 233
   size: 3, 16
   pad: 1, 1, 1, 1
   orig: 3, 16
+  offset: 0, 0
+  index: -1
+slider-background
+  rotate: false
+  xy: 264, 251
+  size: 3, 16
+  pad: 1, 1, 1, 1
+  orig: 3, 16
+  offset: 0, 0
+  index: -1
+slider-knob
+  rotate: false
+  xy: 1, 183
+  size: 1, 14
+  orig: 1, 14
+  offset: 0, 0
+  index: -1
+slider-knob-before
+  rotate: false
+  xy: 6, 201
+  size: 1, 14
+  orig: 1, 14
   offset: 0, 0
   index: -1
