@@ -12,7 +12,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class MainGame extends Game {
 
@@ -26,7 +25,7 @@ public class MainGame extends Game {
     private SpriteBatch batch;
     private Texture vignette;
 
-    public static Viewport createStandardViewport() {
+    public static ScreenViewport createStandardViewport() {
         OrthographicCamera camera = new OrthographicCamera();
         camera.setToOrtho(isYInverted);
         ScreenViewport viewport = new ScreenViewport(camera);
@@ -77,23 +76,6 @@ public class MainGame extends Game {
         setScreen(new MainMenu());
     }
 
-    /*
-        public int getScreenWidth() {
-            return viewport.getScreenWidth();
-        }
-
-        public int getScreenHeight() {
-            return viewport.getScreenHeight();
-        }
-
-        public float getWorldWidth() {
-            return viewport.getWorldWidth();
-        }
-
-        public float getWorldHeight() {
-            return viewport.getWorldHeight();
-        }
-    */
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
