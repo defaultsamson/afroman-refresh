@@ -14,10 +14,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
@@ -84,7 +81,6 @@ public class MainMenu implements CameraScreen {
         final Label title = new Label("The Adventures of Afro Man", skin);
         title.setSize(buttonWidth, buttonHeight);
         title.setPosition(-buttonWidth / 2, buttonYOffset + (4 * (buttonHeight + buttonSpacing)));
-        title.setTouchable(null); // Can click through this element
         title.setAlignment(Align.center);
         stageAbove.addActor(title);
 
@@ -106,10 +102,17 @@ public class MainMenu implements CameraScreen {
             }
         });
 
+        TextField textField = new TextField("Ripperoni", skin);
+
+        textField.setSize(buttonWidth, buttonHeight);
+        textField.setPosition((-buttonWidth / 2) - buttonWidth - buttonSpacing, buttonYOffset + (3 * (buttonHeight + buttonSpacing)));
+stageAbove.addActor(textField);
+
         // Upon dragging the text (what will appear to be dragging the bar)
         // Linearly scale the game based on how far the user drags their pointer
         // from the left to the right
-        label.addListener(new InputListener() {
+        label.addListener(new ClickListener() {
+
             @Override
             public void touchDragged(InputEvent event, float x, float y, int pointer) {
                 super.touchDragged(event, x, y, pointer);
@@ -118,7 +121,9 @@ public class MainMenu implements CameraScreen {
                 // Converts the in-world x ordinate to an on-screen ordinate
                 float screenNet = netX / viewport.getUnitsPerPixel();
                 // Sets the slider to (max-min)*percent + min
-                slider.setValue(((slider.getMaxValue() - slider.getMinValue()) * (screenNet / (float) Gdx.graphics.getWidth())) + slider.getMinValue());
+                float sliderValue = ((slider.getMaxValue() - slider.getMinValue()) * (screenNet / (float) Gdx.graphics.getWidth())) + slider.getMinValue();
+                System.out.println(sliderValue);
+                slider.setValue(sliderValue);
             }
         });
 
