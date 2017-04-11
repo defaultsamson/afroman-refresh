@@ -102,8 +102,7 @@ public class MainMenu implements CameraScreen {
             }
         });
 
-        TextField textField = new TextField("Ripperoni", skin);
-
+        CleanTextField textField = new CleanTextField("Ripperoni", skin);
         textField.setSize(buttonWidth, buttonHeight);
         textField.setPosition((-buttonWidth / 2) - buttonWidth - buttonSpacing, buttonYOffset + (3 * (buttonHeight + buttonSpacing)));
 stageAbove.addActor(textField);
