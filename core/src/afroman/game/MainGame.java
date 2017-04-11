@@ -7,7 +7,7 @@ import afroman.game.io.Settings;
 import afroman.game.util.DeviceUtil;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Net;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -57,7 +57,7 @@ public class MainGame extends Game {
         // If on desktop, size the window to fit the default dimensions at the provided scale.
         if (DeviceUtil.isDesktop()) {
             float scale = settings.getFloat(Setting.SCALE, 3F);
-            Gdx.graphics.setWindowedMode((int) (CAMERA_WIDTH * scale), (int) (CAMERA_HEIGHT * scale));
+            resetScreenSize(scale); // TODO save the screen size from the previous runtime
             settings.putFloat(Setting.SCALE, scale);
             settings.save();
         }
@@ -75,7 +75,11 @@ public class MainGame extends Game {
 
         setScreen(new MainMenu());
 
-        Gdx.net.newServerSocket(Net.Protocol.TCP, "localhost", 3145, null);
+        //Gdx.net.newServerSocket(Net.Protocol.TCP, "localhost", 3145, null);
+    }
+
+    private void resetScreenSize(float scale) {
+        Gdx.graphics.setWindowedMode((int) (CAMERA_WIDTH * scale), (int) (CAMERA_HEIGHT * scale));
     }
 
     @Override
@@ -85,8 +89,26 @@ public class MainGame extends Game {
         //viewport.getCamera().update();
     }
 
+    private int windowedWidth;
+    private int windowedHeight;
+
     @Override
     public void render() {
+        if (DeviceUtil.isDesktop()) {
+            // Debug, rescales the window size
+            if (Gdx.input.isKeyJustPressed(Input.Keys.F12)) resetScreenSize(settings.getFloat(Setting.SCALE));
+            // Fullscreen
+            if (Gdx.input.isKeyJustPressed(Input.Keys.F11)) {
+                if (Gdx.graphics.isFullscreen()) {
+                    Gdx.graphics.setWindowedMode(windowedWidth, windowedHeight);
+                } else {
+                    windowedWidth = Gdx.graphics.getWidth();
+                    windowedHeight = Gdx.graphics.getHeight();
+                    Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+                }
+            }
+        }
+
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
