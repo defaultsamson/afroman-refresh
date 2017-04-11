@@ -1,14 +1,13 @@
 package api.gui;
 
-import java.util.List;
-
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
 import net.qwertysam.api.gui.screen.GuiScreen;
 import net.qwertysam.api.language.TranslationKey;
 import net.qwertysam.api.rendering.RenderUtil;
+
+import java.util.List;
 
 public class GuiTextButton extends GuiButton {
     private BitmapFont font;

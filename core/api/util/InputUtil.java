@@ -1,12 +1,12 @@
 package api.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class InputUtil {
     public static List<Vector2> getTouches(int maxTouches, Viewport viewport) {

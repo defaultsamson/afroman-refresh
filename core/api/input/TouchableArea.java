@@ -1,9 +1,9 @@
 package api.input;
 
-import java.util.List;
-
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+
+import java.util.List;
 
 public abstract class TouchableArea {
     private static boolean screenReleased;

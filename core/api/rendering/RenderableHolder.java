@@ -1,7 +1,6 @@
 package api.rendering;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
 import net.qwertysam.api.resource.Holder;
 
 public class RenderableHolder<T> extends Holder<T> {

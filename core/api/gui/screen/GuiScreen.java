@@ -1,8 +1,5 @@
 package api.gui.screen;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -11,12 +8,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScalingViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-
 import net.qwertysam.api.gui.GuiButton;
 import net.qwertysam.api.rendering.RenderableHolder;
 import net.qwertysam.api.resource.IDisposable;
 import net.qwertysam.api.util.InputUtil;
 import net.qwertysam.main.MyGdxGame;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class GuiScreen extends RenderableHolder<GuiButton> implements Screen, IDisposable {
     public static final int MAX_TOUCHES = 4; // Typically hardware limit is 10

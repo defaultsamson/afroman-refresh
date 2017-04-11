@@ -1,8 +1,5 @@
 package api.builder;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,9 +8,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
-
 import net.qwertysam.api.assets.Asset;
 import net.qwertysam.api.assets.AssetLoader;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AssetBuilder {
     /**

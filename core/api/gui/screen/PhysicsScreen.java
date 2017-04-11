@@ -1,9 +1,8 @@
 package api.gui.screen;
 
+import box2dLight.RayHandler;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
-
-import box2dLight.RayHandler;
 import net.qwertysam.api.rendering.Box2dDebugRenderer;
 import net.qwertysam.api.util.PhysicsUtil;
 import net.qwertysam.main.MyGdxGame;

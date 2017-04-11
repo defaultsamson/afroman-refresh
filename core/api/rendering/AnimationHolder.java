@@ -1,10 +1,10 @@
 package api.rendering;
 
-import java.util.List;
-
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
+import java.util.List;
 
 public class AnimationHolder {
     /**

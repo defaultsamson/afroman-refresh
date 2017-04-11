@@ -1,11 +1,8 @@
 package afroman.game.gui;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
@@ -13,16 +10,26 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
  * Created by samson on 11/04/17.
  */
 public class CleanTextField extends TextField{
+
+    // Sets timing for repeating keys
+    static {
+        keyRepeatTime = 0.04F;
+        keyRepeatInitialTime = 0.5F;
+    }
+
     public CleanTextField(String text, Skin skin) {
         super(text, skin);
+        setBlinkTime(0.477F);
     }
 
     public CleanTextField(String text, Skin skin, String styleName) {
         super(text, skin, styleName);
+        setBlinkTime(0.477F);
     }
 
     public CleanTextField(String text, TextFieldStyle style) {
         super(text, style);
+        setBlinkTime(0.477F);
     }
 
     /** Draws selection rectangle **/

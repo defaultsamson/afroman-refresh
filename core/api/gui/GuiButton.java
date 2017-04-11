@@ -1,15 +1,14 @@
 package api.gui;
 
-import java.util.List;
-
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
 import net.qwertysam.api.gui.screen.GuiScreen;
 import net.qwertysam.api.input.TouchableArea;
 import net.qwertysam.api.rendering.RenderUtil;
 import net.qwertysam.api.rendering.Renderable;
 import net.qwertysam.api.util.SpriteUtil;
+
+import java.util.List;
 
 public class GuiButton extends TouchableArea implements Renderable {
     private GuiScreen screen;
