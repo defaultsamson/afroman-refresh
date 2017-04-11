@@ -1,75 +1,75 @@
 {
-com.badlogic.gdx.graphics.g2d.BitmapFont: {
-	afrofont-black: {
-		file: afrofont-black.fnt
-	}
-	afrofont-shadow: {
-		file: afrofont-shadow.fnt
-	}
-}
-com.badlogic.gdx.graphics.Color: {
-	grey: {
-		r: 0.8611765
-		g: 0.8611765
-		b: 0.8611765
-		a: 1
-	}
-	white: {
-		r: 1
-		g: 1
-		b: 1
-		a: 1
-	}
-}
-com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
-	default: {
-		up: button-up
-		down: button-down
-		over: button-over
-		disabled: button-down
-	}
-}
-com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
-	default: {
-		font: afrofont-shadow
-	}
-}
-com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
-	default-horizontal: {
-		knobOver: slider-knob
-		knobDown: slider-knob
-		background: slider-background
-		disabledBackground: slider-background
-		knob: slider-knob
-		disabledKnob: slider-knob
-		knobBefore: slider-knob-before
-		disabledKnobBefore: slider-knob-before
-	}
-}
-com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
-	default: {
-		font: afrofont-shadow
-		disabledFontColor: grey
-		up: button-up
-		down: button-down
-		over: button-over
-		disabled: button-down
-	}
-}
-com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
-	default: {
-		font: afrofont-shadow
-		fontColor: white
-		disabledFontColor: grey
-		background: slider-background
-		cursor: text-field-cursor
-		selection: button-over
-		messageFontColor: grey
-	}
-}
-com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
-	default: {
-		label: default
-	}
-}
+  com.badlogic.gdx.graphics.g2d.BitmapFont: {
+    afrofont-black: {
+      file: afrofont-black.fnt
+    }
+    afrofont-shadow: {
+      file: afrofont-shadow.fnt
+    }
+  }
+  com.badlogic.gdx.graphics.Color: {
+    grey: {
+      r: 0.8611765
+      g: 0.8611765
+      b: 0.8611765
+      a: 1
+    }
+    white: {
+      r: 1
+      g: 1
+      b: 1
+      a: 1
+    }
+  }
+  com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
+    default: {
+      up: button-up
+      down: button-down
+      over: button-over
+      disabled: button-down
+    }
+  }
+  com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
+    default: {
+      font: afrofont-shadow
+    }
+  }
+  com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
+    default-horizontal: {
+      knobOver: slider-knob
+      knobDown: slider-knob
+      background: slider-background
+      disabledBackground: slider-background
+      knob: slider-knob
+      disabledKnob: slider-knob
+      knobBefore: slider-knob-before
+      disabledKnobBefore: slider-knob-before
+    }
+  }
+  com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
+    default: {
+      font: afrofont-black
+      disabledFontColor: grey
+      up: button-up
+      down: button-down
+      over: button-over
+      disabled: button-down
+    }
+  }
+  com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
+    default: {
+      font: afrofont-shadow
+      fontColor: white
+      disabledFontColor: grey
+      background: slider-background
+      cursor: text-field-cursor
+      selection: button-over
+      messageFontColor: grey
+    }
+  }
+  com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
+    default: {
+      label: default
+    }
+  }
 }

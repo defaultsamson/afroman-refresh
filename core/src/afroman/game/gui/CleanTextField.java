@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 /**
  * Created by samson on 11/04/17.
  */
-public class CleanTextField extends TextField{
+public class CleanTextField extends TextField {
 
     // Sets timing for repeating keys
     static {
@@ -32,9 +32,11 @@ public class CleanTextField extends TextField{
         setBlinkTime(0.477F);
     }
 
-    /** Draws selection rectangle **/
-    protected void drawSelection (Drawable selection, Batch batch, BitmapFont font, float x, float y) {
+    /**
+     * Draws selection rectangle
+     **/
+    protected void drawSelection(Drawable selection, Batch batch, BitmapFont font, float x, float y) {
         // prevents the selection box from being drawn when nothing is being selected
-        if (getSelection().length() >0) super.drawSelection(selection, batch, font, x, y);
+        if (getSelection().length() > 0) super.drawSelection(selection, batch, font, x, y);
     }
 }

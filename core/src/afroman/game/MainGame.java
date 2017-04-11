@@ -7,6 +7,7 @@ import afroman.game.io.Settings;
 import afroman.game.util.DeviceUtil;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Net;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -36,7 +37,6 @@ public class MainGame extends Game {
     public void setScale(float scale) {
         settings.putFloat(Setting.SCALE, scale);
         settings.save();
-        System.out.println("New Scale: " + scale);
         getViewport().setUnitsPerPixel(1 / scale);
         getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
@@ -74,6 +74,8 @@ public class MainGame extends Game {
         vignette = new Texture("assets/textures/vignette.png");
 
         setScreen(new MainMenu());
+
+        Gdx.net.newServerSocket(Net.Protocol.TCP, "localhost", 3145, null);
     }
 
     @Override

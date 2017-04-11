@@ -119,15 +119,31 @@ public class MainMenu implements CameraScreen {
         label.addListener(new ClickListener() {
 
             @Override
-            public void touchDragged(InputEvent event, float x, float y, int pointer) {
-                super.touchDragged(event, x, y, pointer);
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                // Upon first touching the button, it will get the initial scaling value to prevent choppiness in scaling
+                startingScaleValue = scaleValue(x) - MainGame.settings.getFloat(Setting.SCALE);
+                return super.touchDown(event, x, y, pointer, button);
+            }
+
+            private float startingScaleValue = 0;
+
+            private float scaleValue(float x) {
                 // The net x value for in-world coordinates
                 float netX = (x + label.getX() + viewport.getCamera().position.x + (viewport.getWorldWidth() / 2));
                 // Converts the in-world x ordinate to an on-screen ordinate
                 float screenNet = netX / viewport.getUnitsPerPixel();
                 // Sets the slider to (max-min)*percent + min
                 float sliderValue = ((slider.getMaxValue() - slider.getMinValue()) * (screenNet / (float) Gdx.graphics.getWidth())) + slider.getMinValue();
-                System.out.println(sliderValue);
+
+                return sliderValue;
+            }
+
+            @Override
+            public void touchDragged(InputEvent event, float x, float y, int pointer) {
+                super.touchDragged(event, x, y, pointer);
+
+                float sliderValue = scaleValue(x) - startingScaleValue;
+
                 slider.setValue(sliderValue);
             }
         });
