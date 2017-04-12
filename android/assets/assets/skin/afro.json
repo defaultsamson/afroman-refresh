@@ -61,7 +61,7 @@
       font: afrofont-shadow
       fontColor: white
       disabledFontColor: grey
-      background: slider-background
+      background: text-field-background
       cursor: text-field-cursor
       selection: button-over
       messageFontColor: grey

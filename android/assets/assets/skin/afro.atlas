@@ -6,68 +6,76 @@ filter: Linear,Nearest
 repeat: none
 afrofont-black
   rotate: false
-  xy: 1, 246
+  xy: 1, 260
   size: 256, 24
   orig: 256, 24
   offset: 0, 0
   index: -1
 afrofont-shadow
   rotate: false
-  xy: 1, 220
+  xy: 1, 234
   size: 256, 24
   orig: 256, 24
   offset: 0, 0
   index: -1
 button-down
   rotate: false
-  xy: 1, 202
+  xy: 259, 250
   size: 3, 16
-  pad: 1, 1, 1, 1
+  split: 1, 1, 1, 1
   orig: 3, 16
   offset: 0, 0
   index: -1
 button-over
   rotate: false
-  xy: 259, 236
+  xy: 281, 268
   size: 3, 16
-  pad: 1, 1, 1, 1
+  split: 1, 1, 1, 1
   orig: 3, 16
   offset: 0, 0
   index: -1
 button-up
   rotate: false
-  xy: 267, 254
+  xy: 1, 198
   size: 3, 16
-  pad: 1, 1, 1, 1
+  split: 1, 1, 1, 1
   orig: 3, 16
   offset: 0, 0
   index: -1
 slider-background
   rotate: false
-  xy: 1, 184
+  xy: 9, 216
   size: 3, 16
-  pad: 1, 1, 1, 1
+  split: 1, 1, 1, 1
   orig: 3, 16
   offset: 0, 0
   index: -1
 slider-knob
   rotate: false
-  xy: 6, 204
+  xy: 259, 234
   size: 1, 14
   orig: 1, 14
   offset: 0, 0
   index: -1
 slider-knob-before
   rotate: false
-  xy: 259, 220
+  xy: 264, 252
   size: 1, 14
   orig: 1, 14
   offset: 0, 0
   index: -1
 text-field-cursor
   rotate: false
-  xy: 259, 254
+  xy: 1, 216
   size: 6, 16
   orig: 6, 16
+  offset: 0, 0
+  index: -1
+text-field-background
+  rotate: false
+  xy: 259, 268
+  size: 20, 16
+  split: 2, 8, 1, 1
+  orig: 20, 16
   offset: 0, 0
   index: -1

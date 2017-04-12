@@ -3,7 +3,7 @@ atlasData: {
 	atlasCurrent: true
 	drawables: [
 		{
-			file: C:/Users/Samson/IdeaProjects/afroman-refresh/android/assets/afro/raw/afrofont-black.png
+			file: C:/Users/Samson/IdeaProjects/afroman-refresh/android/assets/assets/skin/raw/afro_data/afrofont-black.png
 			bgColor: {
 				r: 1
 				g: 1
@@ -16,7 +16,7 @@ atlasData: {
 			name: afrofont-black
 		}
 		{
-			file: C:/Users/Samson/IdeaProjects/afroman-refresh/android/assets/afro/raw/afrofont-shadow.png
+			file: C:/Users/Samson/IdeaProjects/afroman-refresh/android/assets/assets/skin/raw/afro_data/afrofont-shadow.png
 			bgColor: {
 				r: 0
 				g: 0
@@ -29,7 +29,7 @@ atlasData: {
 			name: afrofont-shadow
 		}
 		{
-			file: C:/Users/Samson/IdeaProjects/afroman-refresh/android/assets/afro/raw/button-down.png
+			file: C:/Users/Samson/IdeaProjects/afroman-refresh/android/assets/assets/skin/raw/afro_data/button-down.9.png
 			bgColor: {
 				r: 0
 				g: 0
@@ -42,7 +42,7 @@ atlasData: {
 			name: button-down
 		}
 		{
-			file: C:/Users/Samson/IdeaProjects/afroman-refresh/android/assets/afro/raw/button-over.png
+			file: C:/Users/Samson/IdeaProjects/afroman-refresh/android/assets/assets/skin/raw/afro_data/button-over.9.png
 			bgColor: {
 				r: 0
 				g: 0
@@ -55,7 +55,7 @@ atlasData: {
 			name: button-over
 		}
 		{
-			file: C:/Users/Samson/IdeaProjects/afroman-refresh/android/assets/afro/raw/button-up.png
+			file: C:/Users/Samson/IdeaProjects/afroman-refresh/android/assets/assets/skin/raw/afro_data/button-up.9.png
 			bgColor: {
 				r: 0
 				g: 0
@@ -68,20 +68,7 @@ atlasData: {
 			name: button-up
 		}
 		{
-			file: C:/Users/Samson/IdeaProjects/afroman-refresh/android/assets/afro/raw/slider-knob.png
-			bgColor: {
-				r: 0
-				g: 0
-				b: 0
-				a: 1
-			}
-			visible: true
-			tint: null
-			tintName: null
-			name: slider-knob
-		}
-		{
-			file: C:/Users/Samson/IdeaProjects/afroman-refresh/android/assets/afro/raw/slider-background.png
+			file: C:/Users/Samson/IdeaProjects/afroman-refresh/android/assets/assets/skin/raw/afro_data/slider-background.9.png
 			bgColor: {
 				r: 0
 				g: 0
@@ -94,7 +81,20 @@ atlasData: {
 			name: slider-background
 		}
 		{
-			file: C:/Users/Samson/IdeaProjects/afroman-refresh/android/assets/afro/raw/slider-knob-before.png
+			file: C:/Users/Samson/IdeaProjects/afroman-refresh/android/assets/assets/skin/raw/afro_data/slider-knob.png
+			bgColor: {
+				r: 0
+				g: 0
+				b: 0
+				a: 1
+			}
+			visible: true
+			tint: null
+			tintName: null
+			name: slider-knob
+		}
+		{
+			file: C:/Users/Samson/IdeaProjects/afroman-refresh/android/assets/assets/skin/raw/afro_data/slider-knob-before.png
 			bgColor: {
 				r: 1
 				g: 1
@@ -106,20 +106,67 @@ atlasData: {
 			tintName: null
 			name: slider-knob-before
 		}
+		{
+			file: C:/Users/Samson/IdeaProjects/afroman-refresh/android/assets/assets/skin/raw/afro_data/text-field-cursor.png
+			bgColor: {
+				r: 1
+				g: 1
+				b: 1
+				a: 1
+			}
+			visible: true
+			tint: null
+			tintName: null
+			name: text-field-cursor
+		}
+		{
+			file: C:/Users/Samson/IdeaProjects/afroman-refresh/android/assets/assets/skin/raw/afro_data/text-field-background.9.png
+			bgColor: {
+				r: 0
+				g: 0
+				b: 0
+				a: 1
+			}
+			visible: true
+			tint: null
+			tintName: null
+			name: text-field-background
+		}
 	]
 }
 jsonData: {
-	colors: []
+	colors: [
+		{
+			class: com.ray3k.skincomposer.data.ColorData
+			color: {
+				r: 0.8611765
+				g: 0.8611765
+				b: 0.8611765
+				a: 1
+			}
+			name: grey
+		}
+		{
+			class: com.ray3k.skincomposer.data.ColorData
+			color: {
+				r: 1
+				g: 1
+				b: 1
+				a: 1
+			}
+			name: white
+		}
+	]
 	fonts: [
 		{
 			class: com.ray3k.skincomposer.data.FontData
-			name: default
-			file: C:/Users/Samson/IdeaProjects/afroman-refresh/android/assets/afro/raw/afrofont-black.fnt
+			name: afrofont-black
+			file: C:/Users/Samson/IdeaProjects/afroman-refresh/android/assets/assets/skin/raw/afro_data/afrofont-black.fnt
 		}
 		{
 			class: com.ray3k.skincomposer.data.FontData
-			name: shadow
-			file: C:/Users/Samson/IdeaProjects/afroman-refresh/android/assets/afro/raw/afrofont-shadow.fnt
+			name: afrofont-shadow
+			file: C:/Users/Samson/IdeaProjects/afroman-refresh/android/assets/assets/skin/raw/afro_data/afrofont-shadow.fnt
 		}
 	]
 	classStyleMap: {
@@ -727,7 +774,7 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.g2d.BitmapFont
 						name: font
 						optional: false
-						value: shadow
+						value: afrofont-shadow
 					}
 					fontColor: {
 						class: com.ray3k.skincomposer.data.StyleProperty
@@ -1079,7 +1126,7 @@ jsonData: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
 						name: disabledBackground
 						optional: true
-						value: null
+						value: slider-background
 					}
 					knob: {
 						class: com.ray3k.skincomposer.data.StyleProperty
@@ -1114,7 +1161,7 @@ jsonData: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
 						name: disabledKnobBefore
 						optional: true
-						value: null
+						value: slider-knob-before
 					}
 					disabledKnobAfter: {
 						class: com.ray3k.skincomposer.data.StyleProperty
@@ -1248,7 +1295,7 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.g2d.BitmapFont
 						name: font
 						optional: false
-						value: shadow
+						value: afrofont-black
 					}
 					fontColor: {
 						class: com.ray3k.skincomposer.data.StyleProperty
@@ -1290,7 +1337,7 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.Color
 						name: disabledFontColor
 						optional: true
-						value: null
+						value: grey
 					}
 					up: {
 						class: com.ray3k.skincomposer.data.StyleProperty
@@ -1391,14 +1438,14 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.g2d.BitmapFont
 						name: font
 						optional: false
-						value: null
+						value: afrofont-shadow
 					}
 					fontColor: {
 						class: com.ray3k.skincomposer.data.StyleProperty
 						type: com.badlogic.gdx.graphics.Color
 						name: fontColor
 						optional: false
-						value: null
+						value: white
 					}
 					focusedFontColor: {
 						class: com.ray3k.skincomposer.data.StyleProperty
@@ -1412,14 +1459,14 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.Color
 						name: disabledFontColor
 						optional: true
-						value: null
+						value: grey
 					}
 					background: {
 						class: com.ray3k.skincomposer.data.StyleProperty
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
 						name: background
 						optional: true
-						value: null
+						value: text-field-background
 					}
 					focusedBackground: {
 						class: com.ray3k.skincomposer.data.StyleProperty
@@ -1440,14 +1487,14 @@ jsonData: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
 						name: cursor
 						optional: true
-						value: null
+						value: text-field-cursor
 					}
 					selection: {
 						class: com.ray3k.skincomposer.data.StyleProperty
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
 						name: selection
 						optional: true
-						value: null
+						value: button-over
 					}
 					messageFont: {
 						class: com.ray3k.skincomposer.data.StyleProperty
@@ -1461,7 +1508,7 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.Color
 						name: messageFontColor
 						optional: true
-						value: null
+						value: grey
 					}
 				}
 				deletable: false
@@ -1615,12 +1662,12 @@ preferences: {
 	}
 	id: {
 		class: java.lang.Integer
-		value: 371134316
+		value: 898296371
 	}
 	resources-relative: {
 		class: java.lang.Boolean
 		value: false
 	}
 }
-saveFile: C:/Users/Samson/IdeaProjects/afroman-refresh/android/assets/afro/raw/afro.scmp
+saveFile: C:/Users/Samson/IdeaProjects/afroman-refresh/android/assets/assets/skin/raw/afro.scmp
 }
