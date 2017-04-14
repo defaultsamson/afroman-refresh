@@ -14,6 +14,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainGame extends Game {
 
     public static final int CAMERA_WIDTH = 240;
@@ -23,6 +26,7 @@ public class MainGame extends Game {
     public static MainGame game;
     public static Settings settings;
 
+    public MainMenu mainMenu;
     private SpriteBatch batch;
     private Texture vignette;
 
@@ -31,14 +35,20 @@ public class MainGame extends Game {
         camera.setToOrtho(isYInverted);
         ScreenViewport viewport = new ScreenViewport(camera);
         viewport.setUnitsPerPixel(1 / settings.getFloat(Setting.SCALE));
+        game.viewportList.add(viewport);
         return viewport;
     }
+
+    private List<ScreenViewport> viewportList;
 
     public void setScale(float scale) {
         settings.putFloat(Setting.SCALE, scale);
         settings.save();
-        getViewport().setUnitsPerPixel(1 / scale);
-        getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        for (ScreenViewport port : viewportList) {
+            port.setUnitsPerPixel(1 / scale);
+            port.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        }
     }
 
     @Override
@@ -72,8 +82,9 @@ public class MainGame extends Game {
 
         batch = new SpriteBatch();
         vignette = new Texture("assets/textures/vignette.png");
-
-        setScreen(new MainMenu());
+        viewportList = new ArrayList<ScreenViewport>();
+        mainMenu = new MainMenu();
+        setScreen(mainMenu);
 
         //Gdx.net.newServerSocket(Net.Protocol.TCP, "localhost", 3145, null);
     }
@@ -85,8 +96,6 @@ public class MainGame extends Game {
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
-        //viewport.update(width, height);
-        //viewport.getCamera().update();
     }
 
     private int windowedWidth;
@@ -116,32 +125,40 @@ public class MainGame extends Game {
 
         // TODO dynamically generated vignette noise?
         // Draws vignette
-        OrthographicCamera camera = getCamera();
-        ScreenViewport viewport = getViewport();
-        if (camera != null && viewport != null) {
-            batch.setProjectionMatrix(camera.combined);
-            batch.begin();
-            batch.draw(vignette, camera.position.x - (viewport.getWorldWidth() / 2), camera.position.y - (viewport.getWorldHeight() / 2), viewport.getWorldWidth(), viewport.getWorldHeight());
-            batch.end();
+        if (this.screen != null && this.screen instanceof CameraScreen) {
+            OrthographicCamera camera = ((CameraScreen) this.screen).getCamera();
+
+            if (this.screen != null && this.screen instanceof CameraScreen) {
+                ScreenViewport viewport = ((CameraScreen) this.screen).getViewport();
+
+                if (camera != null && viewport != null) {
+                    batch.setProjectionMatrix(camera.combined);
+                    batch.begin();
+                    batch.draw(vignette, camera.position.x - (viewport.getWorldWidth() / 2), camera.position.y - (viewport.getWorldHeight() / 2), viewport.getWorldWidth(), viewport.getWorldHeight());
+                    batch.end();
+                }
+            }
         }
 
         // Draws screen elements
         super.render();
     }
 
+    /*
     public ScreenViewport getViewport() {
         if (this.screen != null && this.screen instanceof CameraScreen) {
             return ((CameraScreen) this.screen).getViewport();
         }
         return null;
-    }
+    }*/
 
+    /*
     public OrthographicCamera getCamera() {
         if (this.screen != null && this.screen instanceof CameraScreen) {
             return ((CameraScreen) this.screen).getCamera();
         }
         return null;
-    }
+    }*/
 
     @Override
     public void dispose() {
