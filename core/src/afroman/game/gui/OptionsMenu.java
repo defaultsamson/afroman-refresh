@@ -2,15 +2,14 @@ package afroman.game.gui;
 
 import afroman.game.MainGame;
 import afroman.game.io.Setting;
-import box2dLight.PointLight;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -19,84 +18,116 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import javax.microedition.khronos.opengles.GL10;
+
 /**
  * Created by Samson on 2017-04-08.
  */
 public class OptionsMenu extends HierarchicalMenu implements CameraScreen {
-
-    private boolean enableDebug = false;
-
     /**
      * The stage above the lighting.
      */
     private Stage stageAbove;
-    /**
-     * The stage below the lighting.
-     */
-    private Stage stageBelow;
 
-    private Label fpsCounter;
-    private Image img;
-
-    private PointLight pointLight;
+    private ShapeRenderer shapeRenderer;
 
     public OptionsMenu(final Screen parentScreen) {
         super(parentScreen);
 
-        //Skin skin = new Skin(Gdx.files.internal("skin/craftacular-ui.json"));
         Skin skin = new Skin(Gdx.files.internal("assets/skin/afro.json"));
 
         final ScreenViewport viewport = MainGame.createStandardViewport();
 
         stageAbove = new Stage(viewport);
-        stageBelow = new Stage(viewport);
         viewport.getCamera().position.x = 0;
         viewport.getCamera().position.y = 0;
 
-        int buttonWidth = 72;
+        shapeRenderer = new ShapeRenderer();
+
+        int buttonWidth = 102;
         int buttonHeight = 16;
 
         int buttonYOffset = -46;
         int buttonSpacing = 6;
 
-        fpsCounter = new Label("FPS: 0", skin);
-        fpsCounter.setSize(buttonWidth, buttonHeight);
-        fpsCounter.setPosition(-100, 0);
-        stageAbove.addActor(fpsCounter);
-
-        final Label title = new Label("The Adventures of Afro Man", skin);
+        final Label title = new Label("Settings", skin);
         title.setSize(buttonWidth, buttonHeight);
         title.setPosition(-buttonWidth / 2, buttonYOffset + (4 * (buttonHeight + buttonSpacing)));
         title.setAlignment(Align.center);
         stageAbove.addActor(title);
 
-        final Label label = new Label("Scale: ", skin);
-        label.setSize(buttonWidth, buttonHeight);
-        label.setPosition(-buttonWidth / 2, buttonYOffset + (3 * (buttonHeight + buttonSpacing)));
-        label.setAlignment(Align.center);
+        final Label musicLabel = new Label("Music: ", skin);
+        musicLabel.setSize(buttonWidth, buttonHeight);
+        musicLabel.setTouchable(Touchable.disabled);
+        musicLabel.setPosition(-buttonWidth - (buttonSpacing / 2), buttonYOffset + (3 * (buttonHeight + buttonSpacing)));
+        musicLabel.setAlignment(Align.center);
 
-        final RoundingSlider slider = new RoundingSlider(1.0F, 10.0F, 0.1F, 10F, false, skin);
-        slider.setSize(buttonWidth, buttonHeight);
-        slider.setTouchable(Touchable.disabled);
-        slider.setPosition(-buttonWidth / 2, buttonYOffset + (3 * (buttonHeight + buttonSpacing)));
-        slider.setValue(MainGame.settings.getFloat(Setting.SCALE));
-        slider.addListener(new ChangeListener() {
+        final RoundingSlider musicSlider = new RoundingSlider(0.0F, 100.0F, 1F, 1F, false, skin);
+        musicSlider.setSize(buttonWidth, buttonHeight);
+        musicSlider.setPosition(-buttonWidth - (buttonSpacing / 2), buttonYOffset + (3 * (buttonHeight + buttonSpacing)));
+        musicSlider.setValue(MainGame.settings.getFloat(Setting.MUSIC, 1F) * 100F);
+        musicSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                label.setText("Scale: " + slider.getValue());
-                MainGame.game.setScale(slider.getValue());
+                musicLabel.setText("Music: " + (int) musicSlider.getValue());
+                MainGame.settings.putFloat(Setting.MUSIC, musicSlider.getValue() / 100F);
             }
         });
+        musicLabel.setText("Music: " + (int) musicSlider.getValue());
+        stageAbove.addActor(musicSlider);
+        stageAbove.addActor(musicLabel);
 
+
+        final Label sfxLabel = new Label("SFX: ", skin);
+        sfxLabel.setSize(buttonWidth, buttonHeight);
+        sfxLabel.setTouchable(Touchable.disabled);
+        sfxLabel.setPosition(buttonSpacing / 2, buttonYOffset + (3 * (buttonHeight + buttonSpacing)));
+        sfxLabel.setAlignment(Align.center);
+
+        final RoundingSlider sfxSlider = new RoundingSlider(0.0F, 100.0F, 1F, 1F, false, skin);
+        sfxSlider.setSize(buttonWidth, buttonHeight);
+        sfxSlider.setPosition(buttonSpacing / 2, buttonYOffset + (3 * (buttonHeight + buttonSpacing)));
+        sfxSlider.setValue(MainGame.settings.getFloat(Setting.MUSIC, 1F) * 100F);
+        sfxSlider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                sfxLabel.setText("SFX: " + (int) sfxSlider.getValue());
+                MainGame.settings.putFloat(Setting.SFX, sfxSlider.getValue() / 100F);
+            }
+        });
+        sfxLabel.setText("SFX: " + (int) sfxSlider.getValue());
+        stageAbove.addActor(sfxSlider);
+        stageAbove.addActor(sfxLabel);
+
+
+        /*
         CleanTextField textField = new CleanTextField("Ripperoni", skin);
         textField.setSize(buttonWidth, buttonHeight);
         textField.setPosition((-buttonWidth / 2) - buttonWidth - buttonSpacing, buttonYOffset + (3 * (buttonHeight + buttonSpacing)));
-        stageAbove.addActor(textField);
+        stageAbove.addActor(textField);*/
+
+        final Label scaleLabel = new Label("Scale: ", skin);
+        scaleLabel.setSize((buttonWidth * 2) + buttonSpacing, buttonHeight);
+        scaleLabel.setPosition(-buttonWidth - (buttonSpacing / 2), buttonYOffset + (2 * (buttonHeight + buttonSpacing)));
+        scaleLabel.setAlignment(Align.center);
+
+        final RoundingSlider scaleSlider = new RoundingSlider(1.0F, 10.0F, 0.1F, 10F, false, skin);
+        scaleSlider.setSize((buttonWidth * 2) + buttonSpacing, buttonHeight);
+        scaleSlider.setTouchable(Touchable.disabled);
+        scaleSlider.setPosition(-buttonWidth - (buttonSpacing / 2), buttonYOffset + (2 * (buttonHeight + buttonSpacing)));
+        scaleSlider.setValue(MainGame.settings.getFloat(Setting.SCALE));
+        scaleSlider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                scaleLabel.setText("Scale: " + scaleSlider.getValue());
+                MainGame.game.setScale(scaleSlider.getValue());
+            }
+        });
 
         // Upon dragging the text (what will appear to be dragging the bar)
         // Linearly scale the game based on how far the user drags their pointer
         // from the left to the right
-        label.addListener(new ClickListener() {
+        scaleLabel.addListener(new ClickListener() {
 
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -109,11 +140,11 @@ public class OptionsMenu extends HierarchicalMenu implements CameraScreen {
 
             private float scaleValue(float x) {
                 // The net x value for in-world coordinates
-                float netX = (x + label.getX() + viewport.getCamera().position.x + (viewport.getWorldWidth() / 2));
+                float netX = (x + scaleLabel.getX() + viewport.getCamera().position.x + (viewport.getWorldWidth() / 2));
                 // Converts the in-world x ordinate to an on-screen ordinate
                 float screenNet = netX / viewport.getUnitsPerPixel();
                 // Sets the slider to (max-min)*percent + min
-                float sliderValue = ((slider.getMaxValue() - slider.getMinValue()) * (screenNet / (float) Gdx.graphics.getWidth())) + slider.getMinValue();
+                float sliderValue = ((scaleSlider.getMaxValue() - scaleSlider.getMinValue()) * (screenNet / (float) Gdx.graphics.getWidth())) + scaleSlider.getMinValue();
 
                 return sliderValue;
             }
@@ -124,21 +155,21 @@ public class OptionsMenu extends HierarchicalMenu implements CameraScreen {
 
                 float sliderValue = scaleValue(x) - startingScaleValue;
 
-                slider.setValue(sliderValue);
+                scaleSlider.setValue(sliderValue);
             }
         });
 
-        label.setText("Scale: " + slider.getValue());
-        stageAbove.addActor(slider);
-        stageAbove.addActor(label);
+        scaleLabel.setText("Scale: " + scaleSlider.getValue());
+        stageAbove.addActor(scaleSlider);
+        stageAbove.addActor(scaleLabel);
 
         TextButton joinButton = new TextButton("Join", skin, "default");
         joinButton.setSize(buttonWidth, buttonHeight);
-        joinButton.setPosition(-buttonWidth / 2, buttonYOffset + (2 * (buttonHeight + buttonSpacing)));
+        joinButton.setPosition(-buttonWidth / 2, buttonYOffset + (1 * (buttonHeight + buttonSpacing)));
         joinButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("clicked");
+
             }
         });
         stageAbove.addActor(joinButton);
@@ -195,8 +226,17 @@ public class OptionsMenu extends HierarchicalMenu implements CameraScreen {
     @Override
     public void render(float delta) {
 
-        stageBelow.act(delta);
-        stageBelow.draw();
+        getCamera().update();
+        shapeRenderer.setProjectionMatrix(getCamera().combined);
+
+        // Draws darkness in the background
+        Gdx.gl.glEnable(GL10.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(0, 0, 0, 0.7F);
+        shapeRenderer.rect(getCamera().position.x - (getViewport().getWorldWidth() / 2), getCamera().position.y - (getViewport().getWorldHeight() / 2), getViewport().getWorldWidth(), getViewport().getWorldHeight());
+        shapeRenderer.end();
+        Gdx.gl.glDisable(GL10.GL_BLEND);
 
         stageAbove.act(delta);
         stageAbove.draw();
@@ -220,7 +260,7 @@ public class OptionsMenu extends HierarchicalMenu implements CameraScreen {
 
     @Override
     public void hide() {
-
+        MainGame.settings.save();
     }
 
     @Override

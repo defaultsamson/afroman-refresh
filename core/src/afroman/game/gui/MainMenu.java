@@ -6,7 +6,6 @@ import afroman.game.util.PhysicsUtil;
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,7 +13,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -41,7 +39,6 @@ public class MainMenu implements CameraScreen {
     private Stage stageBelow;
 
     private Label fpsCounter;
-    private Image img;
 
     private PointLight pointLight;
 
@@ -51,9 +48,8 @@ public class MainMenu implements CameraScreen {
         rayHandler.setBlurNum(1);
         rayHandler.setAmbientLight(0.3F);
 
-        pointLight = LightBuilder.createPointLight(rayHandler, 200, 2F, new Color(0F, 0F, 0F, 1F), 50, false, 0, 20);
+        pointLight = LightBuilder.createPointLight(rayHandler, 200, 0F, new Color(0F, 0F, 0F, 1F), 100, false, 0, 20);
 
-        //Skin skin = new Skin(Gdx.files.internal("skin/craftacular-ui.json"));
         Skin skin = new Skin(Gdx.files.internal("assets/skin/afro.json"));
 
         final ScreenViewport viewport = MainGame.createStandardViewport();
@@ -62,10 +58,6 @@ public class MainMenu implements CameraScreen {
         stageBelow = new Stage(viewport);
         viewport.getCamera().position.x = 0;
         viewport.getCamera().position.y = 0;
-
-        img = new Image(new Texture("assets/badlogic.jpg"));
-        stageAbove.addActor(img);
-        img.setPosition(50, 2);
 
         int buttonWidth = 72;
         int buttonHeight = 16;
@@ -83,11 +75,6 @@ public class MainMenu implements CameraScreen {
         title.setPosition(-buttonWidth / 2, buttonYOffset + (4 * (buttonHeight + buttonSpacing)));
         title.setAlignment(Align.center);
         stageAbove.addActor(title);
-
-        CleanTextField textField = new CleanTextField("Ripperoni", skin);
-        textField.setSize(buttonWidth, buttonHeight);
-        textField.setPosition((-buttonWidth / 2) - buttonWidth - buttonSpacing, buttonYOffset + (3 * (buttonHeight + buttonSpacing)));
-        stageAbove.addActor(textField);
 
         TextButton joinButton = new TextButton("Join", skin, "default");
         joinButton.setSize(buttonWidth, buttonHeight);
@@ -158,20 +145,6 @@ public class MainMenu implements CameraScreen {
 
         stageAbove.act(delta);
         stageAbove.draw();
-
-        // TODO remove this test stuff
-        float x = img.getX();
-        float y = img.getY();
-
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) x -= 1;
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) x += 1;
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) y += 1;
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) y -= 1;
-        img.setPosition(x, y);
-
-        if (Gdx.input.isKeyPressed(Input.Keys.BACK)) {
-            System.out.println("dankmeme22222s");
-        }
     }
 
     @Override

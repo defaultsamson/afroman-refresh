@@ -4,7 +4,9 @@ package afroman.game.io;
  * Created by Samson on 2017-04-08.
  */
 public enum Setting {
-    SCALE("scale");
+    SCALE("scale"),
+    MUSIC("music"),
+    SFX("sfx");
 
     private String key;
 

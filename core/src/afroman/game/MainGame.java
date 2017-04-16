@@ -43,7 +43,6 @@ public class MainGame extends Game {
 
     public void setScale(float scale) {
         settings.putFloat(Setting.SCALE, scale);
-        settings.save();
 
         for (ScreenViewport port : viewportList) {
             port.setUnitsPerPixel(1 / scale);
