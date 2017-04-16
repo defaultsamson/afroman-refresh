@@ -72,12 +72,12 @@ public class OptionsMenu extends HierarchicalMenu implements CameraScreen {
         final RoundingSlider musicSlider = new RoundingSlider(0.0F, 100.0F, 1F, 1F, false, skin);
         musicSlider.setSize(buttonWidth, buttonHeight);
         musicSlider.setPosition(-buttonWidth - (buttonSpacing / 2), buttonYOffset + (3 * (buttonHeight + buttonSpacing)));
-        musicSlider.setValue(MainGame.settings.getFloat(Setting.MUSIC, 1F) * 100F);
+        musicSlider.setValue(MainGame.game.getSettings().getFloat(Setting.MUSIC, 1F) * 100F);
         musicSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 musicLabel.setText("Music: " + (int) musicSlider.getValue());
-                MainGame.settings.putFloat(Setting.MUSIC, musicSlider.getValue() / 100F);
+                MainGame.game.getSettings().putFloat(Setting.MUSIC, musicSlider.getValue() / 100F);
             }
         });
         musicLabel.setText("Music: " + (int) musicSlider.getValue());
@@ -94,12 +94,12 @@ public class OptionsMenu extends HierarchicalMenu implements CameraScreen {
         final RoundingSlider sfxSlider = new RoundingSlider(0.0F, 100.0F, 1F, 1F, false, skin);
         sfxSlider.setSize(buttonWidth, buttonHeight);
         sfxSlider.setPosition(buttonSpacing / 2, buttonYOffset + (3 * (buttonHeight + buttonSpacing)));
-        sfxSlider.setValue(MainGame.settings.getFloat(Setting.MUSIC, 1F) * 100F);
+        sfxSlider.setValue(MainGame.game.getSettings().getFloat(Setting.MUSIC, 1F) * 100F);
         sfxSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 sfxLabel.setText("SFX: " + (int) sfxSlider.getValue());
-                MainGame.settings.putFloat(Setting.SFX, sfxSlider.getValue() / 100F);
+                MainGame.game.getSettings().putFloat(Setting.SFX, sfxSlider.getValue() / 100F);
             }
         });
         sfxLabel.setText("SFX: " + (int) sfxSlider.getValue());
@@ -122,7 +122,7 @@ public class OptionsMenu extends HierarchicalMenu implements CameraScreen {
         scaleSlider.setSize((buttonWidth * 2) + buttonSpacing, buttonHeight);
         scaleSlider.setTouchable(Touchable.disabled);
         scaleSlider.setPosition(-buttonWidth - (buttonSpacing / 2), buttonYOffset + (2 * (buttonHeight + buttonSpacing)));
-        scaleSlider.setValue(MainGame.settings.getFloat(Setting.SCALE));
+        scaleSlider.setValue(MainGame.game.getSettings().getFloat(Setting.SCALE));
         scaleSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -139,7 +139,7 @@ public class OptionsMenu extends HierarchicalMenu implements CameraScreen {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 // Upon first touching the button, it will get the initial scaling value to prevent choppiness in scaling
-                startingScaleValue = scaleValue(x) - MainGame.settings.getFloat(Setting.SCALE);
+                startingScaleValue = scaleValue(x) - MainGame.game.getSettings().getFloat(Setting.SCALE);
                 return super.touchDown(event, x, y, pointer, button);
             }
 
@@ -267,7 +267,7 @@ public class OptionsMenu extends HierarchicalMenu implements CameraScreen {
 
     @Override
     public void hide() {
-        MainGame.settings.save();
+        MainGame.game.getSettings().save();
     }
 
     @Override

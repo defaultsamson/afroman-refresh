@@ -26,8 +26,8 @@ public class MainGame extends Game {
     private static final boolean isYInverted = false;
 
     public static MainGame game;
-    public static Settings settings;
 
+    private Settings settings;
     private Assets assets;
     private MainMenu mainMenu;
     private SpriteBatch batch;
@@ -37,7 +37,7 @@ public class MainGame extends Game {
         OrthographicCamera camera = new OrthographicCamera();
         camera.setToOrtho(isYInverted);
         ScreenViewport viewport = new ScreenViewport(camera);
-        viewport.setUnitsPerPixel(1 / settings.getFloat(Setting.SCALE));
+        viewport.setUnitsPerPixel(1 / game.settings.getFloat(Setting.SCALE));
         game.viewportList.add(viewport);
         return viewport;
     }
@@ -186,6 +186,10 @@ public class MainGame extends Game {
 
     public Assets getAssets() {
         return assets;
+    }
+
+    public Settings getSettings() {
+        return settings;
     }
 
     /**
