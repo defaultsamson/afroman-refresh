@@ -1,4 +1,4 @@
-package afroman.game.gui;
+package afroman.game.gui.components;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;

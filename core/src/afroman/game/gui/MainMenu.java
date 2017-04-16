@@ -1,6 +1,9 @@
 package afroman.game.gui;
 
 import afroman.game.MainGame;
+import afroman.game.assets.Asset;
+import afroman.game.gui.components.CameraScreen;
+import afroman.game.gui.components.IconButton;
 import afroman.game.util.LightBuilder;
 import afroman.game.util.PhysicsUtil;
 import box2dLight.PointLight;
@@ -48,9 +51,9 @@ public class MainMenu implements CameraScreen {
         rayHandler.setBlurNum(1);
         rayHandler.setAmbientLight(0.3F);
 
-        pointLight = LightBuilder.createPointLight(rayHandler, 200, 0F, new Color(0F, 0F, 0F, 1F), 100, false, 0, 20);
+        pointLight = LightBuilder.createPointLight(rayHandler, 10, 20F, new Color(0F, 0F, 0F, 1F), 100, false, 0, 20);
 
-        Skin skin = new Skin(Gdx.files.internal("assets/skin/afro.json"));
+        Skin skin = MainGame.game.getAssets().getSkin(Asset.AFRO_SKIN);
 
         final ScreenViewport viewport = MainGame.createStandardViewport();
 
@@ -98,8 +101,8 @@ public class MainMenu implements CameraScreen {
         });
         stageAbove.addActor(hostButton);
 
-        Texture optionsIcon = new Texture("assets/textures/gui/settings.png");
-        IconButton settingsButton = new IconButton(skin, optionsIcon);
+        Texture settingsIcon = MainGame.game.getAssets().getTexture(Asset.SETTINGS_ICON);
+        IconButton settingsButton = new IconButton(skin, settingsIcon);
         settingsButton.setSize(buttonHeight, buttonHeight);
         settingsButton.setPosition((-buttonWidth / 2) - buttonHeight - buttonSpacing, buttonYOffset + (1 * (buttonHeight + buttonSpacing)));
         final OptionsMenu menu = new OptionsMenu(MainMenu.this);

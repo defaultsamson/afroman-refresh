@@ -1,4 +1,4 @@
-package afroman.game.gui;
+package afroman.game.gui.components;
 
 import afroman.game.MainGame;
 import com.badlogic.gdx.Screen;

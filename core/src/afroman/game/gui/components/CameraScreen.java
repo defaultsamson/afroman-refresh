@@ -1,4 +1,4 @@
-package afroman.game.gui;
+package afroman.game.gui.components;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;

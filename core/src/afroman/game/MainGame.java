@@ -1,7 +1,9 @@
 package afroman.game;
 
-import afroman.game.gui.CameraScreen;
+import afroman.game.assets.Asset;
+import afroman.game.assets.Assets;
 import afroman.game.gui.MainMenu;
+import afroman.game.gui.components.CameraScreen;
 import afroman.game.io.Setting;
 import afroman.game.io.Settings;
 import afroman.game.util.DeviceUtil;
@@ -26,7 +28,8 @@ public class MainGame extends Game {
     public static MainGame game;
     public static Settings settings;
 
-    public MainMenu mainMenu;
+    private Assets assets;
+    private MainMenu mainMenu;
     private SpriteBatch batch;
     private Texture vignette;
 
@@ -54,14 +57,27 @@ public class MainGame extends Game {
     public void create() {
         game = this;
 
+        // Loads the assets
+        assets = new Assets();
+        Texture.setAssetManager(assets);
+        System.out.println("Loading Assets...");
+        int previouslyLoaded = -1;
+        long startTime = System.currentTimeMillis();
+        while (!assets.update()) {
+            int loaded = assets.getLoadedAssets();
+            // Only outputs the percentage if the number of loaded assets has changed
+            if (previouslyLoaded != loaded) {
+                System.out.println("(" + loaded + ", " + (int) (assets.getProgress() * 100) + "%)");
+                previouslyLoaded = loaded;
+            }
+        }
+        System.out.println("(" + assets.getLoadedAssets() + ", 100%) Assets loaded. Took: " + (System.currentTimeMillis() - startTime) + " milliseconds.");
+
         // Sets the game to invoke the keyDown() method for when the android back button has been pressed
         // Gdx.input.setInputProcessor(this);
         Gdx.input.setCatchBackKey(true);
 
         settings = new Settings(Gdx.app.getPreferences("settings.afro"));
-
-        // settings.putFloat(Setting.SCALE, 3F);
-        // settings.save();
 
         // If on desktop, size the window to fit the default dimensions at the provided scale.
         if (DeviceUtil.isDesktop()) {
@@ -70,7 +86,7 @@ public class MainGame extends Game {
             settings.putFloat(Setting.SCALE, scale);
             settings.save();
         }
-        // If on Android, the default value for scaling will make the available hight being drawn the value of the in-world CAMERA_HEIGHT
+        // If on Android, the default value for scaling will make the available height being drawn the value of the in-world CAMERA_HEIGHT
         else if (DeviceUtil.isAndroid()) {
             float scale = settings.getFloat(Setting.SCALE, (float) Gdx.graphics.getHeight() / (float) CAMERA_HEIGHT);
             settings.putFloat(Setting.SCALE, scale);
@@ -80,7 +96,7 @@ public class MainGame extends Game {
         }
 
         batch = new SpriteBatch();
-        vignette = new Texture("assets/textures/vignette.png");
+        vignette = assets.getTexture(Asset.VIGNETTE);
         viewportList = new ArrayList<ScreenViewport>();
         mainMenu = new MainMenu();
         setScreen(mainMenu);
@@ -166,6 +182,10 @@ public class MainGame extends Game {
         settings.save();
         batch.dispose();
         vignette.dispose();
+    }
+
+    public Assets getAssets() {
+        return assets;
     }
 
     /**

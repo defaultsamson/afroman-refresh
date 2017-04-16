@@ -1,9 +1,14 @@
 package afroman.game.gui;
 
 import afroman.game.MainGame;
+import afroman.game.assets.Asset;
+import afroman.game.gui.components.CameraScreen;
+import afroman.game.gui.components.HierarchicalMenu;
+import afroman.game.gui.components.RoundingSlider;
 import afroman.game.io.Setting;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -30,11 +35,12 @@ public class OptionsMenu extends HierarchicalMenu implements CameraScreen {
     private Stage stageAbove;
 
     private ShapeRenderer shapeRenderer;
+    private Color bgColour;
 
     public OptionsMenu(final Screen parentScreen) {
         super(parentScreen);
 
-        Skin skin = new Skin(Gdx.files.internal("assets/skin/afro.json"));
+        Skin skin = MainGame.game.getAssets().getSkin(Asset.AFRO_SKIN);
 
         final ScreenViewport viewport = MainGame.createStandardViewport();
 
@@ -43,6 +49,7 @@ public class OptionsMenu extends HierarchicalMenu implements CameraScreen {
         viewport.getCamera().position.y = 0;
 
         shapeRenderer = new ShapeRenderer();
+        bgColour = new Color(0, 0, 0, 0.7F);
 
         int buttonWidth = 102;
         int buttonHeight = 16;
@@ -233,7 +240,7 @@ public class OptionsMenu extends HierarchicalMenu implements CameraScreen {
         Gdx.gl.glEnable(GL10.GL_BLEND);
         Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(0, 0, 0, 0.7F);
+        shapeRenderer.setColor(bgColour);
         shapeRenderer.rect(getCamera().position.x - (getViewport().getWorldWidth() / 2), getCamera().position.y - (getViewport().getWorldHeight() / 2), getViewport().getWorldWidth(), getViewport().getWorldHeight());
         shapeRenderer.end();
         Gdx.gl.glDisable(GL10.GL_BLEND);
