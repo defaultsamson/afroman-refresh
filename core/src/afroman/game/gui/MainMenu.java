@@ -4,12 +4,9 @@ import afroman.game.MainGame;
 import afroman.game.assets.Asset;
 import afroman.game.gui.components.CameraScreen;
 import afroman.game.gui.components.IconButton;
-import afroman.game.util.LightBuilder;
 import afroman.game.util.PhysicsUtil;
-import box2dLight.PointLight;
 import box2dLight.RayHandler;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -45,7 +42,7 @@ public class MainMenu implements CameraScreen {
     private Stage stageBelow;
 
     private Label fpsCounter;
-    private PointLight light;
+    private FlickeringLight light;
 
     public MainMenu() {
         world = new World(new Vector2(0, 0F), true);
@@ -53,7 +50,9 @@ public class MainMenu implements CameraScreen {
         rayHandler.setBlurNum(1);
         rayHandler.setAmbientLight(0.3F);
 
-        light = LightBuilder.createPointLight(rayHandler, 10, 20F, new Color(0F, 0F, 0F, 1F), 100, false, 0, 20);
+        // light = LightBuilder.createPointLight(rayHandler, 10, 20F, new Color(0F, 0F, 0F, 1F), 100, false, 0, 20);
+
+        light = new FlickeringLight(0.016F, 80, 100, rayHandler, 10, new Color(0F, 0F, 0F, 1F), 0, 20);
 
         settingsMenu = new OptionsMenu(this);
 
@@ -149,15 +148,6 @@ public class MainMenu implements CameraScreen {
 
         stageAbove.act(delta);
         stageAbove.draw();
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            light.setDistance(light.getDistance() + 10F);
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-            light.setDistance(light.getDistance() - 10F);
-        }
-
-        System.out.println("Light Distance: " + light.getDistance());
     }
 
     @Override
