@@ -28,7 +28,6 @@ public class MainMenu implements CameraScreen {
 
     private World world;
     protected RayHandler rayHandler;
-    private boolean enableDebug = false;
 
     private final OptionsMenu settingsMenu;
 
@@ -36,13 +35,10 @@ public class MainMenu implements CameraScreen {
      * The stage above the lighting.
      */
     private Stage stageAbove;
-    /**
-     * The stage below the lighting.
-     */
+    /** The stage below the lighting. */
     private Stage stageBelow;
 
     private Label fpsCounter;
-    private FlickeringLight light;
 
     public MainMenu() {
         world = new World(new Vector2(0, 0F), true);
@@ -50,9 +46,7 @@ public class MainMenu implements CameraScreen {
         rayHandler.setBlurNum(1);
         rayHandler.setAmbientLight(0.3F);
 
-        // light = LightBuilder.createPointLight(rayHandler, 10, 20F, new Color(0F, 0F, 0F, 1F), 100, false, 0, 20);
-
-        light = new FlickeringLight(0.016F, 80, 100, rayHandler, 10, new Color(0F, 0F, 0F, 1F), 0, 20);
+        new FlickeringLight(0.03F, 80, 100, rayHandler, 10, new Color(0F, 0F, 0F, 1F), 0, 20);
 
         settingsMenu = new OptionsMenu(this);
 

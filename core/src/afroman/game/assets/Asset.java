@@ -2,6 +2,7 @@ package afroman.game.assets;
 
 import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 /**
@@ -10,7 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 public enum Asset {
     AFRO_SKIN("assets/skin/afro.json", Skin.class),
     SETTINGS_ICON("assets/textures/gui/settings.png", Texture.class),
-    VIGNETTE("assets/textures/vignette.png", Texture.class);
+    VIGNETTE("assets/textures/vignette.png", Texture.class),
+    PLAYER("assets/textures/player.png", TextureAtlas.class);
 
     /**
      * The internal file path to this.
