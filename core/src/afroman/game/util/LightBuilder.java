@@ -68,7 +68,7 @@ public class LightBuilder {
      * @return a PointLight with the given parameters.
      */
     private static PointLight createPointLight(RayHandler rayHandler, int rays, float softnessLength, Color colour, float distance, boolean xRay, Body body, float x, float y) {
-        PointLight light = new PointLight(rayHandler, rays, colour, distance / PhysicsUtil.PIXELS_PER_METER, x / PhysicsUtil.PIXELS_PER_METER, y / PhysicsUtil.PIXELS_PER_METER);
+        PointLight light = new PointLight(rayHandler, rays, colour, distance, x, y);
         light.setSoftnessLength(softnessLength);
         light.setXray(xRay);
         light.attachToBody(body);

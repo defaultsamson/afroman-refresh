@@ -54,7 +54,7 @@ public class OptionsMenu extends HierarchicalMenu implements CameraScreen {
         int buttonWidth = 102;
         int buttonHeight = 16;
 
-        int buttonYOffset = -46;
+        int buttonYOffset = -48;
         int buttonSpacing = 6;
 
         final Label title = new Label("Settings", skin);
@@ -170,6 +170,7 @@ public class OptionsMenu extends HierarchicalMenu implements CameraScreen {
         stageAbove.addActor(scaleSlider);
         stageAbove.addActor(scaleLabel);
 
+        /*
         TextButton joinButton = new TextButton("Join", skin, "default");
         joinButton.setSize(buttonWidth, buttonHeight);
         joinButton.setPosition(-buttonWidth / 2, buttonYOffset + (1 * (buttonHeight + buttonSpacing)));
@@ -179,7 +180,7 @@ public class OptionsMenu extends HierarchicalMenu implements CameraScreen {
 
             }
         });
-        stageAbove.addActor(joinButton);
+        stageAbove.addActor(joinButton);*/
 
         TextButton exitButton = new TextButton("Done", skin, "default");
         exitButton.setSize(buttonWidth, buttonHeight);
@@ -273,6 +274,7 @@ public class OptionsMenu extends HierarchicalMenu implements CameraScreen {
     @Override
     public void dispose() {
         stageAbove.dispose();
+        shapeRenderer.dispose();
     }
 
     @Override

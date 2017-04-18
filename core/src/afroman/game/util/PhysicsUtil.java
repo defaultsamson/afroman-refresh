@@ -10,7 +10,7 @@ public class PhysicsUtil {
      * <p>
      * When converting from <b>meters</b> to <b>pixels</b>, <i>multiply</i> by this.
      */
-    public static final float PIXELS_PER_METER = 180F;
+    public static final float PIXELS_PER_METER = 16F;
 
     public static void stepWorld(World world, float delta) {
         world.step(delta, 6, 2);

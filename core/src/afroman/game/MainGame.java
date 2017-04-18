@@ -71,7 +71,7 @@ public class MainGame extends Game {
                 previouslyLoaded = loaded;
             }
         }
-        System.out.println("(" + assets.getLoadedAssets() + ", 100%) Assets loaded. Took: " + (System.currentTimeMillis() - startTime) + " milliseconds.");
+        System.out.println("(" + assets.getLoadedAssets() + ", 100%) Assets loaded. Took: " + ((System.currentTimeMillis() - startTime) / 1000D) + " seconds.");
 
         // Sets the game to invoke the keyDown() method for when the android back button has been pressed
         // Gdx.input.setInputProcessor(this);
@@ -179,7 +179,9 @@ public class MainGame extends Game {
     public void dispose() {
         super.dispose();
 
+        mainMenu.dispose();
         settings.save();
+        assets.dispose();
         batch.dispose();
         vignette.dispose();
     }

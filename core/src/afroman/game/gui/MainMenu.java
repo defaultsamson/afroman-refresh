@@ -9,6 +9,7 @@ import afroman.game.util.PhysicsUtil;
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -32,6 +33,8 @@ public class MainMenu implements CameraScreen {
     protected RayHandler rayHandler;
     private boolean enableDebug = false;
 
+    private final OptionsMenu settingsMenu;
+
     /**
      * The stage above the lighting.
      */
@@ -42,8 +45,7 @@ public class MainMenu implements CameraScreen {
     private Stage stageBelow;
 
     private Label fpsCounter;
-
-    private PointLight pointLight;
+    private PointLight light;
 
     public MainMenu() {
         world = new World(new Vector2(0, 0F), true);
@@ -51,7 +53,9 @@ public class MainMenu implements CameraScreen {
         rayHandler.setBlurNum(1);
         rayHandler.setAmbientLight(0.3F);
 
-        pointLight = LightBuilder.createPointLight(rayHandler, 10, 20F, new Color(0F, 0F, 0F, 1F), 100, false, 0, 20);
+        light = LightBuilder.createPointLight(rayHandler, 10, 20F, new Color(0F, 0F, 0F, 1F), 100, false, 0, 20);
+
+        settingsMenu = new OptionsMenu(this);
 
         Skin skin = MainGame.game.getAssets().getSkin(Asset.AFRO_SKIN);
 
@@ -65,7 +69,7 @@ public class MainMenu implements CameraScreen {
         int buttonWidth = 72;
         int buttonHeight = 16;
 
-        int buttonYOffset = -46;
+        int buttonYOffset = -48;
         int buttonSpacing = 6;
 
         fpsCounter = new Label("FPS: 0", skin);
@@ -105,11 +109,10 @@ public class MainMenu implements CameraScreen {
         IconButton settingsButton = new IconButton(skin, settingsIcon);
         settingsButton.setSize(buttonHeight, buttonHeight);
         settingsButton.setPosition((-buttonWidth / 2) - buttonHeight - buttonSpacing, buttonYOffset + (1 * (buttonHeight + buttonSpacing)));
-        final OptionsMenu menu = new OptionsMenu(MainMenu.this);
         settingsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                MainGame.game.setScreen(menu);
+                MainGame.game.setScreen(settingsMenu);
             }
         });
         stageAbove.addActor(settingsButton);
@@ -141,13 +144,20 @@ public class MainMenu implements CameraScreen {
 
         PhysicsUtil.stepWorld(world, delta);
 
-        // TODO use what this says (maybe)
-        rayHandler.setCombinedMatrix(getCamera().combined.cpy().scale(PhysicsUtil.PIXELS_PER_METER, PhysicsUtil.PIXELS_PER_METER, PhysicsUtil.PIXELS_PER_METER));
-        //rayHandler.setCombinedMatrix(getCamera());
+        rayHandler.setCombinedMatrix(getCamera());
         rayHandler.updateAndRender();
 
         stageAbove.act(delta);
         stageAbove.draw();
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+            light.setDistance(light.getDistance() + 10F);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+            light.setDistance(light.getDistance() - 10F);
+        }
+
+        System.out.println("Light Distance: " + light.getDistance());
     }
 
     @Override
@@ -174,8 +184,10 @@ public class MainMenu implements CameraScreen {
     @Override
     public void dispose() {
         stageAbove.dispose();
+        stageBelow.dispose();
         world.dispose();
         rayHandler.dispose();
+        settingsMenu.dispose();
     }
 
     @Override
