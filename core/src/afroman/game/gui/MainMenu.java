@@ -65,10 +65,10 @@ public class MainMenu implements CameraScreen {
         viewport.getCamera().position.x = 0;
         viewport.getCamera().position.y = 0;
 
-        afroAnimation = new Animation<TextureRegion>(0.6f, MainGame.game.getAssets().getTextureAtlas(Asset.PLAYER).findRegions("player1moveDown"), Animation.PlayMode.LOOP_PINGPONG);
+        afroAnimation = new Animation<TextureRegion>(0.3f, MainGame.game.getAssets().getTextureAtlas(Asset.PLAYER).findRegions("player1moveDown"), Animation.PlayMode.LOOP_PINGPONG);
         AnimationActor anim = new AnimationActor(afroAnimation);
         anim.setSize(20, 20);
-        anim.setPosition(-100, -40);
+        anim.setPosition(-5, 18);
         stageBelow.addActor(anim);
 
         int buttonWidth = 72;
