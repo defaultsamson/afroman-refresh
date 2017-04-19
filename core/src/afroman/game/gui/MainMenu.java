@@ -10,6 +10,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -35,10 +37,14 @@ public class MainMenu implements CameraScreen {
      * The stage above the lighting.
      */
     private Stage stageAbove;
-    /** The stage below the lighting. */
+    /**
+     * The stage below the lighting.
+     */
     private Stage stageBelow;
 
     private Label fpsCounter;
+
+    private Animation<TextureRegion> afroAnimation;
 
     public MainMenu() {
         world = new World(new Vector2(0, 0F), true);
@@ -58,6 +64,12 @@ public class MainMenu implements CameraScreen {
         stageBelow = new Stage(viewport);
         viewport.getCamera().position.x = 0;
         viewport.getCamera().position.y = 0;
+
+        afroAnimation = new Animation<TextureRegion>(0.6f, MainGame.game.getAssets().getTextureAtlas(Asset.PLAYER).findRegions("player1moveDown"), Animation.PlayMode.LOOP_PINGPONG);
+        AnimationActor anim = new AnimationActor(afroAnimation);
+        anim.setSize(20, 20);
+        anim.setPosition(-100, -40);
+        stageBelow.addActor(anim);
 
         int buttonWidth = 72;
         int buttonHeight = 16;

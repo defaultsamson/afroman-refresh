@@ -4,6 +4,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 /**
@@ -39,6 +40,16 @@ public class Assets extends AssetManager {
 
     public Sprite getSprite(Asset asset) {
         Class<Sprite> requiredType = Sprite.class;
+        if (asset.getType() == requiredType) {
+            return get(asset.getPath(), requiredType);
+        } else {
+            incorrectType(asset, requiredType);
+            return null;
+        }
+    }
+
+    public TextureAtlas getTextureAtlas(Asset asset) {
+        Class<TextureAtlas> requiredType = TextureAtlas.class;
         if (asset.getType() == requiredType) {
             return get(asset.getPath(), requiredType);
         } else {

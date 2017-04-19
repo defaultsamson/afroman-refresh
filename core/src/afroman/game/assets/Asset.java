@@ -12,7 +12,7 @@ public enum Asset {
     AFRO_SKIN("assets/skin/afro.json", Skin.class),
     SETTINGS_ICON("assets/textures/gui/settings.png", Texture.class),
     VIGNETTE("assets/textures/vignette.png", Texture.class),
-    PLAYER("assets/textures/player.png", TextureAtlas.class);
+    PLAYER("assets/textures/player/player.txt", TextureAtlas.class);
 
     /**
      * The internal file path to this.
