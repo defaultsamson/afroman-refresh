@@ -17,7 +17,8 @@ public enum Asset {
     PLAYER("assets/textures/player/player.txt", TextureAtlas.class),
     MENU_MUSIC("assets/audio/music/menu.ogg", Music.class),
     BUTTON_UP("assets/audio/sfx/gui/but_up.ogg", Sound.class),
-    BUTTON_DOWN("assets/audio/sfx/gui/but_down.ogg", Sound.class);
+    BUTTON_DOWN("assets/audio/sfx/gui/but_down.ogg", Sound.class),
+    SHITE("assets/audio/music/shite.ogg", Music.class);
 
     /**
      * The internal file path to this.

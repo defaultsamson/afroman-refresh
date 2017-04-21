@@ -4,6 +4,7 @@ import afroman.game.MainGame;
 import afroman.game.assets.Asset;
 import afroman.game.gui.components.FlickeringLight;
 import afroman.game.gui.components.IconButton;
+import afroman.game.gui.components.NoisyClickListener;
 import afroman.game.util.PhysicsUtil;
 import box2dLight.RayHandler;
 import com.badlogic.gdx.Gdx;
@@ -21,9 +22,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+
+import java.util.Random;
 
 /**
  * Created by Samson on 2017-04-08.
@@ -111,22 +113,10 @@ public class MainMenu implements Screen {
         TextButton joinButton = new TextButton("Join", skin, "default");
         joinButton.setSize(buttonWidth, buttonHeight);
         joinButton.setPosition(-buttonWidth / 2, buttonYOffset + (2 * (buttonHeight + buttonSpacing)));
-        joinButton.addListener(new ClickListener() {
+        joinButton.addListener(new NoisyClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 MainGame.game.setScreen(joinMenu);
-            }
-
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                MainGame.game.playSound(buttonDown, 1);
-                return super.touchDown(event, x, y, pointer, button);
-            }
-
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                super.touchUp(event, x, y, pointer, button);
-                MainGame.game.playSound(buttonUp, 1);
             }
         });
         stageAbove.addActor(joinButton);
@@ -134,7 +124,7 @@ public class MainMenu implements Screen {
         TextButton hostButton = new TextButton("Host", skin, "default");
         hostButton.setSize(buttonWidth, buttonHeight);
         hostButton.setPosition(-buttonWidth / 2, buttonYOffset + (1 * (buttonHeight + buttonSpacing)));
-        hostButton.addListener(new ClickListener() {
+        hostButton.addListener(new NoisyClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("clicked");
@@ -146,7 +136,7 @@ public class MainMenu implements Screen {
         IconButton settingsButton = new IconButton(skin, settingsIcon);
         settingsButton.setSize(buttonHeight, buttonHeight);
         settingsButton.setPosition((-buttonWidth / 2) - buttonHeight - buttonSpacing, buttonYOffset + (1 * (buttonHeight + buttonSpacing)));
-        settingsButton.addListener(new ClickListener() {
+        settingsButton.addListener(new NoisyClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 MainGame.game.setScreen(settingsMenu);
@@ -157,7 +147,7 @@ public class MainMenu implements Screen {
         TextButton exitButton = new TextButton("Exit", skin, "default");
         exitButton.setSize(buttonWidth, buttonHeight);
         exitButton.setPosition(-buttonWidth / 2, buttonYOffset + (0 * (buttonHeight + buttonSpacing)));
-        exitButton.addListener(new ClickListener() {
+        exitButton.addListener(new NoisyClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.exit();
@@ -171,7 +161,19 @@ public class MainMenu implements Screen {
         Gdx.input.setInputProcessor(stageAbove);
 
         if (!music.isPlaying()) {
-            MainGame.game.playMusic(music);
+            if (new Random().nextInt(1000) == 0) {
+                Music shite = MainGame.game.getAssets().getMusic(Asset.SHITE);
+                shite.setOnCompletionListener(new MainGame.RemovableOnCompletionListener() {
+                    @Override
+                    public void onCompletion(Music garbag) {
+                        super.onCompletion(music);
+                        MainGame.game.playMusic(music);
+                    }
+                });
+                MainGame.game.playMusic(shite);
+            } else {
+                MainGame.game.playMusic(music);
+            }
         }
     }
 

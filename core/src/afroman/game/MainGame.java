@@ -3,6 +3,7 @@ package afroman.game;
 import afroman.game.assets.Asset;
 import afroman.game.assets.Assets;
 import afroman.game.gui.MainMenu;
+import afroman.game.gui.components.NoisyClickListener;
 import afroman.game.io.Setting;
 import afroman.game.io.Settings;
 import afroman.game.util.DeviceUtil;
@@ -87,6 +88,9 @@ public class MainGame extends Game {
         musicList = new ArrayList<Music>();
         musicVolume = settings.getFloat(Setting.MUSIC, Settings.Default.MUSIC_VOLUME);
         sfxVolume = settings.getFloat(Setting.SFX, Settings.Default.SFX_VOLUME);
+
+        NoisyClickListener.buttonUp = MainGame.game.getAssets().getSound(Asset.BUTTON_UP);
+        NoisyClickListener.buttonDown = MainGame.game.getAssets().getSound(Asset.BUTTON_DOWN);
 
         // If on desktop, size the window to fit the default dimensions at the provided scale.
         if (DeviceUtil.isDesktop()) {
@@ -199,7 +203,7 @@ public class MainGame extends Game {
         return assets;
     }
 
-    private List<Music> musicList;
+    protected List<Music> musicList;
     private float sfxVolume;
     private float musicVolume;
 
@@ -237,12 +241,6 @@ public class MainGame extends Game {
     }
 
     public void playMusic(Music music) {
-        music.setOnCompletionListener(new Music.OnCompletionListener() {
-            @Override
-            public void onCompletion(Music music) {
-                musicList.remove(music);
-            }
-        });
         musicList.add(music);
         music.setVolume(musicVolume);
         music.play();
@@ -276,5 +274,13 @@ public class MainGame extends Game {
      */
     public boolean isInverted() {
         return isYInverted;
+    }
+
+    public static class RemovableOnCompletionListener implements Music.OnCompletionListener {
+
+        @Override
+        public void onCompletion(Music music) {
+            MainGame.game.musicList.remove(music);
+        }
     }
 }

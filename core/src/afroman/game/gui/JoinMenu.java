@@ -3,6 +3,7 @@ package afroman.game.gui;
 import afroman.game.MainGame;
 import afroman.game.assets.Asset;
 import afroman.game.gui.components.HierarchicalMenu;
+import afroman.game.gui.components.NoisyClickListener;
 import afroman.game.util.PhysicsUtil;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -13,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -78,7 +78,7 @@ public class JoinMenu extends HierarchicalMenu implements Screen {
         TextButton joinButton = new TextButton("Join", skin, "default");
         joinButton.setSize(buttonWidth, buttonHeight);
         joinButton.setPosition(-buttonWidth / 2, buttonYOffset + (2 * (buttonHeight + buttonSpacing)));
-        joinButton.addListener(new ClickListener() {
+        joinButton.addListener(new NoisyClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("clicked");
@@ -89,7 +89,7 @@ public class JoinMenu extends HierarchicalMenu implements Screen {
         TextButton hostButton = new TextButton("Host", skin, "default");
         hostButton.setSize(buttonWidth, buttonHeight);
         hostButton.setPosition(-buttonWidth / 2, buttonYOffset + (1 * (buttonHeight + buttonSpacing)));
-        hostButton.addListener(new ClickListener() {
+        hostButton.addListener(new NoisyClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 System.out.println("clicked");
@@ -100,7 +100,7 @@ public class JoinMenu extends HierarchicalMenu implements Screen {
         TextButton exitButton = new TextButton("Back", skin, "default");
         exitButton.setSize(buttonWidth, buttonHeight);
         exitButton.setPosition(-buttonWidth / 2, buttonYOffset + (0 * (buttonHeight + buttonSpacing)));
-        exitButton.addListener(new ClickListener() {
+        exitButton.addListener(new NoisyClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 gotoParentScreen();

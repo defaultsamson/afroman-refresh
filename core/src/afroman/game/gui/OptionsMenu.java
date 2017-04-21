@@ -3,6 +3,7 @@ package afroman.game.gui;
 import afroman.game.MainGame;
 import afroman.game.assets.Asset;
 import afroman.game.gui.components.HierarchicalMenu;
+import afroman.game.gui.components.NoisyClickListener;
 import afroman.game.gui.components.RoundingSlider;
 import afroman.game.io.Setting;
 import com.badlogic.gdx.Gdx;
@@ -184,7 +185,7 @@ public class OptionsMenu extends HierarchicalMenu implements Screen {
         TextButton exitButton = new TextButton("Done", skin, "default");
         exitButton.setSize(buttonWidth, buttonHeight);
         exitButton.setPosition(-buttonWidth / 2, buttonYOffset + (0 * (buttonHeight + buttonSpacing)));
-        exitButton.addListener(new ClickListener() {
+        exitButton.addListener(new NoisyClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 MainGame.game.setScreen(parentScreen);// gotoParentScreen();
