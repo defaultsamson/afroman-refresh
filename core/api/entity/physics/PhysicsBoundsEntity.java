@@ -13,7 +13,7 @@ public class PhysicsBoundsEntity extends PhysicsEntity {
     /**
      * Invisible walls in the shape of a box.
      *
-     * @param world     the physics world that is in
+     * @param world     the physics menuWorld that is in
      * @param x1        the first x ordinate
      * @param y1        the first y ordinate
      * @param x2        the seconds x ordinate
@@ -33,7 +33,7 @@ public class PhysicsBoundsEntity extends PhysicsEntity {
     /**
      * Creates a bounds body with the specified parameters.
      *
-     * @param world     the physics world that is in
+     * @param world     the physics menuWorld that is in
      * @param x1        the first x ordinate
      * @param y1        the first y ordinate
      * @param x2        the seconds x ordinate
@@ -59,7 +59,7 @@ public class PhysicsBoundsEntity extends PhysicsEntity {
         // meters
         bodyDef.position.set(x1 / PhysicsUtil.PIXELS_PER_METER, y1 / PhysicsUtil.PIXELS_PER_METER);
 
-        // Create a body in the world using our definition
+        // Create a body in the menuWorld using our definition
         Body body = world.createBody(bodyDef);
 
         // Adds the 4 side fixtures to the body

@@ -20,7 +20,7 @@ public abstract class PhysicsScreen extends GuiScreen {
     public PhysicsScreen(MyGdxGame game, boolean enableDebug) {
         super(game);
 
-        // Create a physics world, the heart of the simulation. The Vector
+        // Create a physics menuWorld, the heart of the simulation. The Vector
         // passed in is gravity
         world = new World(new Vector2(0, -9.81F), true);
 
@@ -47,7 +47,7 @@ public abstract class PhysicsScreen extends GuiScreen {
     public void tick(float delta) {
         super.tick(delta);
 
-        // Makes the world physics go
+        // Makes the menuWorld physics go
         PhysicsUtil.stepWorld(getWorld(), delta);
 
         rayHandler.setCombinedMatrix(game.getCamera().combined.cpy().scale(PhysicsUtil.PIXELS_PER_METER, PhysicsUtil.PIXELS_PER_METER, PhysicsUtil.PIXELS_PER_METER));

@@ -15,7 +15,7 @@ public class PhysicsBoxEntity extends PhysicsEntity {
     /**
      * An Entity with a square physics Body.
      *
-     * @param world       the physics world that is in
+     * @param world       the physics menuWorld that is in
      * @param friction    the coefficient of friction for this
      * @param restitution the restitution (bounciness) for this
      * @param mass        the mass of this in grams
@@ -36,7 +36,7 @@ public class PhysicsBoxEntity extends PhysicsEntity {
     /**
      * Creates a physics Body with the specified parameters.
      *
-     * @param world       the world that the physics body is in
+     * @param world       the menuWorld that the physics body is in
      * @param friction    the coefficient of friction for this
      * @param restitution the restitution (bounciness) for this
      * @param mass        the mass of this in grams
@@ -64,7 +64,7 @@ public class PhysicsBoxEntity extends PhysicsEntity {
         // meters
         bodyDef.position.set((x + width / 2) / PhysicsUtil.PIXELS_PER_METER, (y + height / 2) / PhysicsUtil.PIXELS_PER_METER);
 
-        // Creates a body in the world using our definition
+        // Creates a body in the menuWorld using our definition
         Body body = world.createBody(bodyDef);
 
         // The shape for the fixture

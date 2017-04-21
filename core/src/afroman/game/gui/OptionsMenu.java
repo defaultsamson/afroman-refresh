@@ -145,9 +145,9 @@ public class OptionsMenu extends HierarchicalMenu implements Screen {
             private float startingScaleValue = 0;
 
             private float scaleValue(float x) {
-                // The net x value for in-world coordinates
+                // The net x value for in-menuWorld coordinates
                 float netX = (x + scaleLabel.getX() + viewport.getCamera().position.x + (viewport.getWorldWidth() / 2));
-                // Converts the in-world x ordinate to an on-screen ordinate
+                // Converts the in-menuWorld x ordinate to an on-screen ordinate
                 float screenNet = netX / viewport.getUnitsPerPixel();
                 // Sets the slider to (max-min)*percent + min
                 float sliderValue = ((scaleSlider.getMaxValue() - scaleSlider.getMinValue()) * (screenNet / (float) Gdx.graphics.getWidth())) + scaleSlider.getMinValue();

@@ -13,7 +13,7 @@ public class PhysicsSpriteEntity extends PhysicsBoxEntity implements Renderable 
     /**
      * An Entity with a square physics Body.
      *
-     * @param world       the physics world that is in
+     * @param world       the physics menuWorld that is in
      * @param sprite      the sprite for this
      * @param friction    the coefficient of friction for this
      * @param restitution the restitution (bounciness) for this
@@ -30,7 +30,7 @@ public class PhysicsSpriteEntity extends PhysicsBoxEntity implements Renderable 
     /**
      * An Entity with a square physics Body.
      *
-     * @param world       the physics world that is in
+     * @param world       the physics menuWorld that is in
      * @param sprite      the sprite for this
      * @param friction    the coefficient of friction for this
      * @param restitution the restitution (bounciness) for this
@@ -50,7 +50,7 @@ public class PhysicsSpriteEntity extends PhysicsBoxEntity implements Renderable 
      * An Entity with a square physics Body.
      *
      * @param scale       the scale of this
-     * @param world       the physics world that is in
+     * @param world       the physics menuWorld that is in
      * @param sprite      the sprite for this
      * @param friction    the coefficient of friction for this
      * @param restitution the restitution (bounciness) for this
@@ -68,7 +68,7 @@ public class PhysicsSpriteEntity extends PhysicsBoxEntity implements Renderable 
      * An Entity with a square physics Body.
      *
      * @param scale       the scale of this
-     * @param world       the physics world that is in
+     * @param world       the physics menuWorld that is in
      * @param sprite      the sprite for this
      * @param friction    the coefficient of friction for this
      * @param restitution the restitution (bounciness) for this

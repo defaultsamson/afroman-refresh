@@ -95,7 +95,7 @@ public class MainGame extends Game {
             settings.putFloat(Setting.SCALE, scale);
             settings.save();
         }
-        // If on Android, the default value for scaling will make the available height being drawn the value of the in-world CAMERA_HEIGHT
+        // If on Android, the default value for scaling will make the available height being drawn the value of the in-menuWorld CAMERA_HEIGHT
         else if (DeviceUtil.isAndroid()) {
             float scale = settings.getFloat(Setting.SCALE, (float) Gdx.graphics.getHeight() / (float) CAMERA_HEIGHT);
             settings.putFloat(Setting.SCALE, scale);
@@ -244,6 +244,7 @@ public class MainGame extends Game {
             }
         });
         musicList.add(music);
+        music.setVolume(musicVolume);
         music.play();
     }
 
