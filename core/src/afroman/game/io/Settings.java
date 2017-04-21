@@ -6,6 +6,12 @@ import com.badlogic.gdx.Preferences;
  * Created by Samson on 2017-04-08.
  */
 public class Settings {
+    public class Default {
+        public static final float MUSIC_VOLUME = 1F;
+        public static final float SFX_VOLUME = 1F;
+        public static final float SCREEN_SCALE = 3F;
+    }
+
     private Preferences preferences;
 
     public Settings(Preferences preferences) {

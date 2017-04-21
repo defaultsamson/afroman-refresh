@@ -2,20 +2,21 @@ package afroman.game.gui;
 
 import afroman.game.MainGame;
 import afroman.game.assets.Asset;
-import afroman.game.gui.components.CameraScreen;
+import afroman.game.gui.components.FlickeringLight;
 import afroman.game.gui.components.IconButton;
 import afroman.game.util.PhysicsUtil;
 import box2dLight.RayHandler;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -26,7 +27,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 /**
  * Created by Samson on 2017-04-08.
  */
-public class MainMenu implements CameraScreen {
+public class MainMenu implements Screen {
 
     private World world;
     protected RayHandler rayHandler;
@@ -42,9 +43,8 @@ public class MainMenu implements CameraScreen {
      */
     private Stage stageBelow;
 
+    private Music music;
     private Label fpsCounter;
-
-    private Animation<TextureRegion> afroAnimation;
 
     public MainMenu() {
         world = new World(new Vector2(0, 0F), true);
@@ -65,17 +65,38 @@ public class MainMenu implements CameraScreen {
         viewport.getCamera().position.x = 0;
         viewport.getCamera().position.y = 0;
 
-        afroAnimation = new Animation<TextureRegion>(0.3f, MainGame.game.getAssets().getTextureAtlas(Asset.PLAYER).findRegions("player1moveDown"), Animation.PlayMode.LOOP_PINGPONG);
-        AnimationActor anim = new AnimationActor(afroAnimation);
+        int manY = 18;
+        int manSpacing = 20;
+        int manWidth = 5;
+
+        Image image = new Image(MainGame.game.getAssets().getTextureAtlas(Asset.PLAYER).findRegion("player1moveDown", 2));
+        image.setPosition(-manWidth - (manSpacing / 2), manY);
+        stageBelow.addActor(image);
+
+        Image image2 = new Image(MainGame.game.getAssets().getTextureAtlas(Asset.PLAYER).findRegion("player2moveDown", 2));
+        image2.setPosition(-manWidth + (manSpacing / 2), manY);
+        stageBelow.addActor(image2);
+        /*AnimationActor anim = new AnimationActor(new Animation<TextureRegion>(0.3f, MainGame.game.getAssets().getTextureAtlas(Asset.PLAYER).findRegions("player1moveDown"), Animation.PlayMode.LOOP_PINGPONG));
         anim.setSize(20, 20);
         anim.setPosition(-5, 18);
-        stageBelow.addActor(anim);
+        stageBelow.addActor(anim);*/
 
         int buttonWidth = 72;
         int buttonHeight = 16;
 
         int buttonYOffset = -48;
         int buttonSpacing = 6;
+
+        music = MainGame.game.getAssets().getMusic(Asset.MENU_MUSIC);
+        music.setLooping(true);
+        music.setVolume(1.0F);
+        /*music.play();
+        music.setOnCompletionListener(new Music.OnCompletionListener() {
+            @Override
+            public void onCompletion(Music music) {
+                System.out.println("Dank memes are made of bees");
+            }
+        });*/
 
         fpsCounter = new Label("FPS: 0", skin);
         fpsCounter.setSize(buttonWidth, buttonHeight);
@@ -137,6 +158,10 @@ public class MainMenu implements CameraScreen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stageAbove);
+
+        if (!music.isPlaying()) {
+            MainGame.game.playMusic(music);
+        }
     }
 
     @Override
@@ -149,8 +174,10 @@ public class MainMenu implements CameraScreen {
 
         PhysicsUtil.stepWorld(world, delta);
 
-        rayHandler.setCombinedMatrix(getCamera());
+        rayHandler.setCombinedMatrix((OrthographicCamera) stageAbove.getCamera());
         rayHandler.updateAndRender();
+
+        MainGame.game.drawVignette(stageAbove.getBatch(), stageAbove.getCamera(), stageAbove.getViewport());
 
         stageAbove.act(delta);
         stageAbove.draw();
@@ -183,16 +210,7 @@ public class MainMenu implements CameraScreen {
         stageBelow.dispose();
         world.dispose();
         rayHandler.dispose();
+        music.dispose();
         settingsMenu.dispose();
-    }
-
-    @Override
-    public OrthographicCamera getCamera() {
-        return (OrthographicCamera) stageAbove.getCamera();
-    }
-
-    @Override
-    public ScreenViewport getViewport() {
-        return (ScreenViewport) stageAbove.getViewport();
     }
 }

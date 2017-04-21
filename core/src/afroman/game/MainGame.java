@@ -3,18 +3,23 @@ package afroman.game;
 import afroman.game.assets.Asset;
 import afroman.game.assets.Assets;
 import afroman.game.gui.MainMenu;
-import afroman.game.gui.components.CameraScreen;
 import afroman.game.io.Setting;
 import afroman.game.io.Settings;
 import afroman.game.util.DeviceUtil;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,9 +84,13 @@ public class MainGame extends Game {
 
         settings = new Settings(Gdx.app.getPreferences("settings.afro"));
 
+        musicList = new ArrayList<Music>();
+        musicVolume = settings.getFloat(Setting.MUSIC, Settings.Default.MUSIC_VOLUME);
+        sfxVolume = settings.getFloat(Setting.SFX, Settings.Default.SFX_VOLUME);
+
         // If on desktop, size the window to fit the default dimensions at the provided scale.
         if (DeviceUtil.isDesktop()) {
-            float scale = settings.getFloat(Setting.SCALE, 3F);
+            float scale = settings.getFloat(Setting.SCALE, Settings.Default.SCREEN_SCALE);
             resetScreenSize(scale); // TODO save the screen size from the previous runtime
             settings.putFloat(Setting.SCALE, scale);
             settings.save();
@@ -92,7 +101,7 @@ public class MainGame extends Game {
             settings.putFloat(Setting.SCALE, scale);
             settings.save();
         } else {
-            settings.putFloat(Setting.SCALE, 3F);
+            settings.putFloat(Setting.SCALE, Settings.Default.SCREEN_SCALE);
         }
 
         batch = new SpriteBatch();
@@ -136,27 +145,27 @@ public class MainGame extends Game {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // TODO draw world elements before vignette
-
-        // TODO dynamically generated vignette noise?
-        // Draws vignette
-        if (this.screen != null && this.screen instanceof CameraScreen) {
-            OrthographicCamera camera = ((CameraScreen) this.screen).getCamera();
-
-            if (this.screen != null && this.screen instanceof CameraScreen) {
-                ScreenViewport viewport = ((CameraScreen) this.screen).getViewport();
-
-                if (camera != null && viewport != null) {
-                    batch.setProjectionMatrix(camera.combined);
-                    batch.begin();
-                    batch.draw(vignette, camera.position.x - (viewport.getWorldWidth() / 2), camera.position.y - (viewport.getWorldHeight() / 2), viewport.getWorldWidth(), viewport.getWorldHeight());
-                    batch.end();
-                }
-            }
-        }
-
         // Draws screen elements
         super.render();
+    }
+
+    /*
+    public void drawVignette(SpriteBatch batch, Camera camera, Viewport viewport) {
+        if (!(camera instanceof OrthographicCamera) || !(viewport instanceof ScreenViewport)) return;
+        drawVignette(batch, (OrthographicCamera) camera, (ScreenViewport) viewport);
+    }*/
+
+    public void drawVignette(Batch batch, Camera camera, Viewport viewport) {
+        if (!(camera instanceof OrthographicCamera) || !(viewport instanceof ScreenViewport)) return;
+        drawVignette(batch, (OrthographicCamera) camera, (ScreenViewport) viewport);
+    }
+
+    public void drawVignette(Batch batch, OrthographicCamera camera, ScreenViewport viewport) {
+        if (batch == null || camera == null || viewport == null) return;
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+        batch.draw(vignette, camera.position.x - (viewport.getWorldWidth() / 2), camera.position.y - (viewport.getWorldHeight() / 2), viewport.getWorldWidth(), viewport.getWorldHeight());
+        batch.end();
     }
 
     /*
@@ -188,6 +197,66 @@ public class MainGame extends Game {
 
     public Assets getAssets() {
         return assets;
+    }
+
+    private List<Music> musicList;
+    private float sfxVolume;
+    private float musicVolume;
+
+    public void setMusicVolume(float volume) {
+        volume = MathUtils.clamp(volume, 0, 1);
+        settings.putFloat(Setting.MUSIC, volume);
+        musicVolume = volume;
+        for (Music music : musicList) {
+            music.setVolume(musicVolume);
+        }
+    }
+
+    public void setSfxVolume(float volume) {
+        volume = MathUtils.clamp(volume, 0, 1);
+        settings.putFloat(Setting.SFX, volume);
+        sfxVolume = volume;
+    }
+
+    /**
+     * @param sound
+     * @param volume the volume in the range [0,1]
+     * @param pitch  the pitch multiplier, 1 == default, >1 == faster, <1 == slower, the value has to be between 0.5 and 2.0
+     * @param pan    panning in the range -1 (full left) to 1 (full right). 0 is center position.
+     */
+    public void playSound(Sound sound, float volume, float pitch, float pan) {
+        sound.play(volume * sfxVolume, pitch, pan);
+    }
+
+    /**
+     * @param sound
+     * @param volume the volume in the range [0,1]
+     */
+    public void playSound(Sound sound, float volume) {
+        sound.play(volume * sfxVolume);
+    }
+
+    public void playMusic(Music music) {
+        music.setOnCompletionListener(new Music.OnCompletionListener() {
+            @Override
+            public void onCompletion(Music music) {
+                musicList.remove(music);
+            }
+        });
+        musicList.add(music);
+        music.play();
+    }
+
+    public void pauseAudio() {
+        for (Music music : musicList) {
+            music.pause();
+        }
+    }
+
+    public void resumeAudio() {
+        for (Music music : musicList) {
+            music.play();
+        }
     }
 
     public Settings getSettings() {

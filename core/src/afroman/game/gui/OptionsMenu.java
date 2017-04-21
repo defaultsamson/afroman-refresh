@@ -2,14 +2,13 @@ package afroman.game.gui;
 
 import afroman.game.MainGame;
 import afroman.game.assets.Asset;
-import afroman.game.gui.components.CameraScreen;
 import afroman.game.gui.components.HierarchicalMenu;
 import afroman.game.gui.components.RoundingSlider;
 import afroman.game.io.Setting;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -28,7 +27,7 @@ import javax.microedition.khronos.opengles.GL10;
 /**
  * Created by Samson on 2017-04-08.
  */
-public class OptionsMenu extends HierarchicalMenu implements CameraScreen {
+public class OptionsMenu extends HierarchicalMenu implements Screen {
     /**
      * The stage above the lighting.
      */
@@ -77,7 +76,7 @@ public class OptionsMenu extends HierarchicalMenu implements CameraScreen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 musicLabel.setText("Music: " + (int) musicSlider.getValue());
-                MainGame.game.getSettings().putFloat(Setting.MUSIC, musicSlider.getValue() / 100F);
+                MainGame.game.setMusicVolume(musicSlider.getValue() / 100F);
             }
         });
         musicLabel.setText("Music: " + (int) musicSlider.getValue());
@@ -99,7 +98,7 @@ public class OptionsMenu extends HierarchicalMenu implements CameraScreen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 sfxLabel.setText("SFX: " + (int) sfxSlider.getValue());
-                MainGame.game.getSettings().putFloat(Setting.SFX, sfxSlider.getValue() / 100F);
+                MainGame.game.setSfxVolume(sfxSlider.getValue() / 100F);
             }
         });
         sfxLabel.setText("SFX: " + (int) sfxSlider.getValue());
@@ -234,17 +233,23 @@ public class OptionsMenu extends HierarchicalMenu implements CameraScreen {
     @Override
     public void render(float delta) {
 
-        getCamera().update();
-        shapeRenderer.setProjectionMatrix(getCamera().combined);
+        Camera camera = stageAbove.getCamera();
+        camera.update();
+        shapeRenderer.setProjectionMatrix(camera.combined);
 
-        // Draws darkness in the background
-        Gdx.gl.glEnable(GL10.GL_BLEND);
-        Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(bgColour);
-        shapeRenderer.rect(getCamera().position.x - (getViewport().getWorldWidth() / 2), getCamera().position.y - (getViewport().getWorldHeight() / 2), getViewport().getWorldWidth(), getViewport().getWorldHeight());
-        shapeRenderer.end();
-        Gdx.gl.glDisable(GL10.GL_BLEND);
+        if (stageAbove.getViewport() instanceof ScreenViewport) {
+            ScreenViewport viewport = (ScreenViewport) stageAbove.getViewport();
+            // Draws darkness in the background
+            Gdx.gl.glEnable(GL10.GL_BLEND);
+            Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.setColor(bgColour);
+            shapeRenderer.rect(camera.position.x - (viewport.getWorldWidth() / 2), camera.position.y - (viewport.getWorldHeight() / 2), viewport.getWorldWidth(), viewport.getWorldHeight());
+            shapeRenderer.end();
+            Gdx.gl.glDisable(GL10.GL_BLEND);
+        }
+
+        MainGame.game.drawVignette(stageAbove.getBatch(), stageAbove.getCamera(), stageAbove.getViewport());
 
         stageAbove.act(delta);
         stageAbove.draw();
@@ -275,15 +280,5 @@ public class OptionsMenu extends HierarchicalMenu implements CameraScreen {
     public void dispose() {
         stageAbove.dispose();
         shapeRenderer.dispose();
-    }
-
-    @Override
-    public OrthographicCamera getCamera() {
-        return (OrthographicCamera) stageAbove.getCamera();
-    }
-
-    @Override
-    public ScreenViewport getViewport() {
-        return (ScreenViewport) stageAbove.getViewport();
     }
 }

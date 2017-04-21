@@ -1,6 +1,7 @@
 package afroman.game.assets;
 
 import com.badlogic.gdx.assets.AssetLoaderParameters;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -12,7 +13,8 @@ public enum Asset {
     AFRO_SKIN("assets/skin/afro.json", Skin.class),
     SETTINGS_ICON("assets/textures/gui/settings.png", Texture.class),
     VIGNETTE("assets/textures/vignette.png", Texture.class),
-    PLAYER("assets/textures/player/player.txt", TextureAtlas.class);
+    PLAYER("assets/textures/player/player.txt", TextureAtlas.class),
+    MENU_MUSIC("assets/audio/music/menu.ogg", Music.class);
 
     /**
      * The internal file path to this.

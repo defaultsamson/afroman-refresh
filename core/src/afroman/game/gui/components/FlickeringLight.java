@@ -1,4 +1,4 @@
-package afroman.game.gui;
+package afroman.game.gui.components;
 
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
@@ -30,7 +30,6 @@ public class FlickeringLight extends PointLight {
             // Creates the radius for the frame based on a cosine function
             // Uses the first PI/2 of the function to map out all the values, then dsimply ping-pongs back and forth
             radi.add((float) (smaller + (radiusDifference * ((Math.cos((i * Math.PI) / radiusDifference) / 2D) + 0.5))));
-            System.out.println(radi.get(i));
         }
 
         return radi;

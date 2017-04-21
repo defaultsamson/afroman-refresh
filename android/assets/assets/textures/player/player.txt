@@ -12,161 +12,161 @@ player1moveDown
   index: 1
 player1moveDown
   rotate: false
-  xy: 10, 0
+  xy: 11, 0
   size: 10, 16
   orig: 10, 16
   offset: 0, 0
   index: 2
 player1moveDown
   rotate: false
-  xy: 20, 0
+  xy: 22, 0
   size: 10, 16
   orig: 10, 16
   offset: 0, 0
   index: 3
 player1moveLeft
   rotate: false
-  xy: 30, 0
+  xy: 33, 0
   size: 10, 16
   orig: 10, 16
   offset: 0, 0
   index: 1
 player1moveLeft
   rotate: false
-  xy: 40, 0
+  xy: 44, 0
   size: 10, 16
   orig: 10, 16
   offset: 0, 0
   index: 2
 player1moveLeft
   rotate: false
-  xy: 50, 0
+  xy: 0, 17
   size: 10, 16
   orig: 10, 16
   offset: 0, 0
   index: 3
 player1moveRight
   rotate: false
-  xy: 0, 16
+  xy: 11, 17
   size: 10, 17
   orig: 10, 17
   offset: 0, 0
   index: 1
 player1moveRight
   rotate: false
-  xy: 10, 16
+  xy: 22, 17
   size: 10, 16
   orig: 10, 16
   offset: 0, 0
   index: 2
 player1moveRight
   rotate: false
-  xy: 20, 16
+  xy: 33, 17
   size: 10, 16
   orig: 10, 16
   offset: 0, 0
   index: 3
 player1moveUp
   rotate: false
-  xy: 30, 16
+  xy: 44, 17
   size: 10, 16
   orig: 10, 16
   offset: 0, 0
   index: 1
 player1moveUp
   rotate: false
-  xy: 40, 16
+  xy: 0, 35
   size: 10, 16
   orig: 10, 16
   offset: 0, 0
   index: 2
 player1moveUp
   rotate: false
-  xy: 50, 16
+  xy: 11, 35
   size: 10, 16
   orig: 10, 16
   offset: 0, 0
   index: 3
 player2moveDown
   rotate: false
-  xy: 0, 33
+  xy: 22, 35
   size: 10, 16
   orig: 10, 16
   offset: 0, 0
   index: 1
 player2moveDown
   rotate: false
-  xy: 10, 33
+  xy: 33, 35
   size: 10, 16
   orig: 10, 16
   offset: 0, 0
   index: 2
 player2moveDown
   rotate: false
-  xy: 20, 33
+  xy: 44, 35
   size: 10, 16
   orig: 10, 16
   offset: 0, 0
   index: 3
 player2moveLeft
   rotate: false
-  xy: 30, 33
+  xy: 0, 52
   size: 10, 16
   orig: 10, 16
   offset: 0, 0
   index: 1
 player2moveLeft
   rotate: false
-  xy: 40, 33
+  xy: 11, 52
   size: 10, 16
   orig: 10, 16
   offset: 0, 0
   index: 2
 player2moveLeft
   rotate: false
-  xy: 50, 33
+  xy: 22, 52
   size: 10, 16
   orig: 10, 16
   offset: 0, 0
   index: 3
 player2moveRight
   rotate: false
-  xy: 0, 49
+  xy: 33, 52
   size: 10, 16
   orig: 10, 16
   offset: 0, 0
   index: 1
 player2moveRight
   rotate: false
-  xy: 10, 49
+  xy: 44, 52
   size: 10, 16
   orig: 10, 16
   offset: 0, 0
   index: 2
 player2moveRight
   rotate: false
-  xy: 20, 49
+  xy: 0, 69
   size: 10, 16
   orig: 10, 16
   offset: 0, 0
   index: 3
 player2moveUp
   rotate: false
-  xy: 30, 49
+  xy: 11, 69
   size: 10, 16
   orig: 10, 16
   offset: 0, 0
   index: 1
 player2moveUp
   rotate: false
-  xy: 40, 49
+  xy: 22, 69
   size: 10, 16
   orig: 10, 16
   offset: 0, 0
   index: 2
 player2moveUp
   rotate: false
-  xy: 50, 49
+  xy: 33, 69
   size: 10, 16
   orig: 10, 16
   offset: 0, 0
