@@ -55,7 +55,7 @@ public class DeviceUtil {
         return Gdx.app.getType() == ApplicationType.Desktop;
     }
 
-    public static boolean isApple() {
+    public static boolean isIOS() {
         return Gdx.app.getType() == ApplicationType.iOS;
     }
 

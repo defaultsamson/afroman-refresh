@@ -139,6 +139,7 @@ public class OptionsMenu extends HierarchicalMenu implements Screen {
             private float startingScaleValue = 0;
 
             private float scaleValue(float x) {
+
                 // The net x value for in-menuWorld coordinates
                 float netX = (x + scaleLabel.getX() + viewport.getCamera().position.x + (viewport.getWorldWidth() / 2));
                 // Converts the in-menuWorld x ordinate to an on-screen ordinate
@@ -153,6 +154,7 @@ public class OptionsMenu extends HierarchicalMenu implements Screen {
             public void touchDragged(InputEvent event, float x, float y, int pointer) {
                 super.touchDragged(event, x, y, pointer);
 
+                // TODO on android, it always begins the slider at 5 for every drag
                 float sliderValue = scaleValue(x) - startingScaleValue;
 
                 scaleSlider.setValue(sliderValue);

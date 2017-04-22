@@ -7,11 +7,13 @@ import afroman.game.gui.components.CleanTextField;
 import afroman.game.gui.components.GuiConstants;
 import afroman.game.gui.components.HierarchicalMenu;
 import afroman.game.gui.components.NoisyClickListener;
+import afroman.game.util.DeviceUtil;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -100,6 +102,7 @@ public class HostMenu extends HierarchicalMenu implements Screen {
                 updateHostButton();
             }
         });
+        usernameInput.addListener(new CleanTextField.TextFieldOrientFocusListener(viewport.getCamera(), buttonSpacing));
         stageAbove.addActor(usernameInput);
 
         Label usernameLabel = new Label("Username", skin, "black");
@@ -118,6 +121,7 @@ public class HostMenu extends HierarchicalMenu implements Screen {
                 updateHostButton();
             }
         });
+        passwordInput.addListener(new CleanTextField.TextFieldOrientFocusListener(viewport.getCamera(), buttonSpacing));
         stageAbove.addActor(passwordInput);
 
         Label ipLabel = new Label("Server Password", skin, "black");
@@ -137,6 +141,8 @@ public class HostMenu extends HierarchicalMenu implements Screen {
                 updateHostButton();
             }
         });
+        portInput.setTextFieldFilter(new TextField.TextFieldFilter.DigitsOnlyFilter());
+        portInput.addListener(new CleanTextField.TextFieldOrientFocusListener(viewport.getCamera(), buttonSpacing));
         stageAbove.addActor(portInput);
 
         Label portLabel = new Label("Port", skin, "black");
@@ -156,6 +162,18 @@ public class HostMenu extends HierarchicalMenu implements Screen {
             }
         });
         stageAbove.addActor(exitButton);
+
+        // If anything is touched that's not a TextField, remove text input focus
+        stageAbove.getRoot().addCaptureListener(new InputListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (!(event.getTarget() instanceof TextField)) {
+                    stageAbove.setKeyboardFocus(null);
+                    Gdx.input.setOnscreenKeyboardVisible(false);
+                    viewport.getCamera().position.y = 0;
+                }
+                return false;
+            }
+        });
 
         updateHostButton();
     }
@@ -183,7 +201,8 @@ public class HostMenu extends HierarchicalMenu implements Screen {
         stageAbove.act(delta);
         stageAbove.draw();
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) hostServer();
+        if (DeviceUtil.isDesktop() && Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) hostServer();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)) gotoParentScreen();
     }
 
     private void hostServer() {

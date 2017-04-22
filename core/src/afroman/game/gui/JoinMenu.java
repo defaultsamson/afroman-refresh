@@ -7,17 +7,20 @@ import afroman.game.gui.components.CleanTextField;
 import afroman.game.gui.components.GuiConstants;
 import afroman.game.gui.components.HierarchicalMenu;
 import afroman.game.gui.components.NoisyClickListener;
+import afroman.game.util.DeviceUtil;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -67,7 +70,7 @@ public class JoinMenu extends HierarchicalMenu implements Screen {
         int buttonHeight = 16;
 
         int buttonYOffset = -48;
-        int buttonSpacing = 6;
+        final int buttonSpacing = 6;
 
         Label title = new Label("Join a Server", skin);
         title.setSize(buttonWidth, buttonHeight);
@@ -97,6 +100,7 @@ public class JoinMenu extends HierarchicalMenu implements Screen {
                 updateJoinButton();
             }
         });
+        usernameInput.addListener(new CleanTextField.TextFieldOrientFocusListener(viewport.getCamera(), buttonSpacing));
         stageAbove.addActor(usernameInput);
 
         Label usernameLabel = new Label("Username", skin, "black");
@@ -115,6 +119,7 @@ public class JoinMenu extends HierarchicalMenu implements Screen {
                 updateJoinButton();
             }
         });
+        ipInput.addListener(new CleanTextField.TextFieldOrientFocusListener(viewport.getCamera(), buttonSpacing));
         stageAbove.addActor(ipInput);
 
         Label ipLabel = new Label("Server IP", skin, "black");
@@ -135,11 +140,27 @@ public class JoinMenu extends HierarchicalMenu implements Screen {
         });
         stageAbove.addActor(exitButton);
 
+        // If anything is touched that's not a TextField, remove text input focus
+        stageAbove.getRoot().addCaptureListener(new InputListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (!(event.getTarget() instanceof TextField)) {
+                    stageAbove.setKeyboardFocus(null);
+                    Gdx.input.setOnscreenKeyboardVisible(false);
+                    viewport.getCamera().position.y = 0;
+                }
+                return false;
+            }
+        });
+
         updateJoinButton();
     }
 
+    private boolean canJoin() {
+        return !(usernameInput.getText().length() < FinalConstants.minUsernameLength || ipInput.getText().length() < 1);
+    }
+
     private void updateJoinButton() {
-        joinButton.setDisabled(usernameInput.getText().length() < FinalConstants.minUsernameLength || ipInput.getText().length() < 1);
+        joinButton.setDisabled(!canJoin());
     }
 
     @Override
@@ -161,11 +182,25 @@ public class JoinMenu extends HierarchicalMenu implements Screen {
         stageAbove.act(delta);
         stageAbove.draw();
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) connectToServer();
+        // TODO
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+            if (DeviceUtil.isDesktop()) {
+                if (!canJoin()) {
+                    if (stageAbove.getKeyboardFocus() instanceof TextField) {
+                        ((TextField) stageAbove.getKeyboardFocus()).next(UIUtils.shift());
+                    }
+                } else {
+                    connectToServer();
+                }
+            }
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)) gotoParentScreen();
     }
 
     private void connectToServer() {
-        MainGame.game.connectToServer(ipInput.getText());
+        if (canJoin()) {
+            MainGame.game.connectToServer(ipInput.getText());
+        }
     }
 
     @Override
