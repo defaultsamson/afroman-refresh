@@ -57,7 +57,7 @@ public class OptionsMenu extends HierarchicalMenu implements Screen {
         int buttonYOffset = -48;
         int buttonSpacing = 6;
 
-        final Label title = new Label("Settings", skin);
+        Label title = new Label("Settings", skin);
         title.setSize(buttonWidth, buttonHeight);
         title.setPosition(-buttonWidth / 2, buttonYOffset + (4 * (buttonHeight + buttonSpacing)));
         title.setAlignment(Align.center);
@@ -105,13 +105,6 @@ public class OptionsMenu extends HierarchicalMenu implements Screen {
         sfxLabel.setText("SFX: " + (int) sfxSlider.getValue());
         stageAbove.addActor(sfxSlider);
         stageAbove.addActor(sfxLabel);
-
-
-        /*
-        CleanTextField textField = new CleanTextField("Ripperoni", skin);
-        textField.setSize(buttonWidth, buttonHeight);
-        textField.setPosition((-buttonWidth / 2) - buttonWidth - buttonSpacing, buttonYOffset + (3 * (buttonHeight + buttonSpacing)));
-        stageAbove.addActor(textField);*/
 
         final Label scaleLabel = new Label("Scale: ", skin);
         scaleLabel.setSize((buttonWidth * 2) + buttonSpacing, buttonHeight);
@@ -170,18 +163,6 @@ public class OptionsMenu extends HierarchicalMenu implements Screen {
         stageAbove.addActor(scaleSlider);
         stageAbove.addActor(scaleLabel);
 
-        /*
-        TextButton joinButton = new TextButton("Join", skin, "default");
-        joinButton.setSize(buttonWidth, buttonHeight);
-        joinButton.setPosition(-buttonWidth / 2, buttonYOffset + (1 * (buttonHeight + buttonSpacing)));
-        joinButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-
-            }
-        });
-        stageAbove.addActor(joinButton);*/
-
         TextButton exitButton = new TextButton("Done", skin, "default");
         exitButton.setSize(buttonWidth, buttonHeight);
         exitButton.setPosition(-buttonWidth / 2, buttonYOffset + (0 * (buttonHeight + buttonSpacing)));
@@ -192,21 +173,6 @@ public class OptionsMenu extends HierarchicalMenu implements Screen {
             }
         });
         stageAbove.addActor(exitButton);
-
-        /*
-        joinButton.addListener(new InputListener() {
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                System.out.println("Touched Up");
-            }
-
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                System.out.println("Touched Down");
-                return true;
-            }
-        });*/
-
 
         /*
         Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"));

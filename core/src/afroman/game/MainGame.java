@@ -3,6 +3,7 @@ package afroman.game;
 import afroman.game.assets.Asset;
 import afroman.game.assets.Assets;
 import afroman.game.gui.MainMenu;
+import afroman.game.gui.components.GuiConstants;
 import afroman.game.gui.components.NoisyClickListener;
 import afroman.game.io.Setting;
 import afroman.game.io.Settings;
@@ -10,6 +11,7 @@ import afroman.game.util.DeviceUtil;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Net;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
@@ -19,6 +21,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.net.Socket;
+import com.badlogic.gdx.net.SocketHints;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -32,6 +36,8 @@ public class MainGame extends Game {
     private static final boolean isYInverted = false;
 
     public static MainGame game;
+
+    private Socket socket;
 
     private Settings settings;
     private Assets assets;
@@ -111,10 +117,36 @@ public class MainGame extends Game {
         batch = new SpriteBatch();
         vignette = assets.getTexture(Asset.VIGNETTE);
         viewportList = new ArrayList<ScreenViewport>();
+
+        GuiConstants.initGuiConstants();
         mainMenu = new MainMenu();
         setScreen(mainMenu);
+    }
 
-        //Gdx.net.newServerSocket(Net.Protocol.TCP, "localhost", 3145, null);
+    public void connectToServer(String ip) {
+        int port = FinalConstants.defaultPort;
+        if (ip.contains(":")) {
+            try {
+                String[] split = ip.split("[:]");
+                port = Integer.parseInt(split[split.length - 1]);
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < split.length - 1; i++) {
+                    sb.append(split[i]);
+                    if (i < split.length - 2) sb.append(':');
+                }
+                ip = sb.toString();
+            } catch (NumberFormatException e) {
+                System.err.println("Error when parsing port from IP");
+                e.printStackTrace();
+            }
+        }
+
+        connectToServer(ip, port);
+    }
+
+    public void connectToServer(String ip, int port) {
+        socket = Gdx.net.newClientSocket(Net.Protocol.TCP, ip, port, new SocketHints());
+
     }
 
     private void resetScreenSize(float scale) {

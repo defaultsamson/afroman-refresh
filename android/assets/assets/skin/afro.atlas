@@ -2,7 +2,7 @@
 afro.png
 size: 512,512
 format: RGBA8888
-filter: Linear,Nearest
+filter: Nearest,Nearest
 repeat: none
 afrofont-black
   rotate: false
@@ -64,18 +64,18 @@ slider-knob-before
   orig: 1, 14
   offset: 0, 0
   index: -1
-text-field-cursor
-  rotate: false
-  xy: 1, 216
-  size: 6, 16
-  orig: 6, 16
-  offset: 0, 0
-  index: -1
 text-field-background
   rotate: false
   xy: 259, 268
   size: 20, 16
   split: 2, 8, 1, 1
   orig: 20, 16
+  offset: 0, 0
+  index: -1
+text-field-cursor
+  rotate: false
+  xy: 1, 216
+  size: 6, 16
+  orig: 6, 16
   offset: 0, 0
   index: -1

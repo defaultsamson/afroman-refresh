@@ -2,42 +2,35 @@ package afroman.game.gui;
 
 import afroman.game.MainGame;
 import afroman.game.assets.Asset;
-import afroman.game.gui.components.FlickeringLight;
 import afroman.game.gui.components.IconButton;
 import afroman.game.gui.components.NoisyClickListener;
-import afroman.game.util.PhysicsUtil;
-import box2dLight.RayHandler;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.Random;
 
+import static afroman.game.gui.components.GuiConstants.menuRayHandler;
+import static afroman.game.gui.components.GuiConstants.skin;
+
 /**
  * Created by Samson on 2017-04-08.
  */
 public class MainMenu implements Screen {
 
-    public static FlickeringLight menuLight;
-    public static RayHandler menuRayHandler;
-    public static World menuWorld;
-
     private final OptionsMenu settingsMenu;
     private final JoinMenu joinMenu;
+    private final HostMenu hostMenu;
 
     /**
      * The stage above the lighting.
@@ -52,16 +45,9 @@ public class MainMenu implements Screen {
     private Label fpsCounter;
 
     public MainMenu() {
-        menuWorld = new World(new Vector2(0, 0F), true);
-        menuRayHandler = new RayHandler(menuWorld);
-        menuRayHandler.setBlurNum(1);
-        menuRayHandler.setAmbientLight(0.3F);
-        menuLight = new FlickeringLight(0.03F, 80, 100, menuRayHandler, 10, new Color(0F, 0F, 0F, 1F), 0, 20);
-
         settingsMenu = new OptionsMenu(this);
         joinMenu = new JoinMenu(this);
-
-        Skin skin = MainGame.game.getAssets().getSkin(Asset.AFRO_SKIN);
+        hostMenu = new HostMenu(this);
 
         final ScreenViewport viewport = MainGame.createStandardViewport();
 
@@ -70,7 +56,7 @@ public class MainMenu implements Screen {
         viewport.getCamera().position.x = 0;
         viewport.getCamera().position.y = 0;
 
-        int manY = 18;
+        int manY = 20;
         int manSpacing = 20;
         int manWidth = 5;
 
@@ -101,7 +87,7 @@ public class MainMenu implements Screen {
         fpsCounter.setPosition(-100, 0);
         stageAbove.addActor(fpsCounter);
 
-        final Label title = new Label("The Adventures of Afro Man", skin);
+        Label title = new Label("The Adventures of Afro Man", skin);
         title.setSize(buttonWidth, buttonHeight);
         title.setPosition(-buttonWidth / 2, buttonYOffset + (4 * (buttonHeight + buttonSpacing)));
         title.setAlignment(Align.center);
@@ -127,7 +113,7 @@ public class MainMenu implements Screen {
         hostButton.addListener(new NoisyClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("clicked");
+                MainGame.game.setScreen(hostMenu);
             }
         });
         stageAbove.addActor(hostButton);
@@ -185,8 +171,6 @@ public class MainMenu implements Screen {
         stageBelow.act(delta);
         stageBelow.draw();
 
-        PhysicsUtil.stepWorld(menuWorld, delta);
-
         menuRayHandler.setCombinedMatrix((OrthographicCamera) stageAbove.getCamera());
         menuRayHandler.updateAndRender();
 
@@ -221,8 +205,6 @@ public class MainMenu implements Screen {
     public void dispose() {
         stageAbove.dispose();
         stageBelow.dispose();
-        menuWorld.dispose();
-        menuRayHandler.dispose();
         music.dispose();
         settingsMenu.dispose();
     }

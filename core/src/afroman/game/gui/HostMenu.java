@@ -27,7 +27,7 @@ import static afroman.game.gui.components.GuiConstants.skin;
 /**
  * Created by Samson on 2017-04-08.
  */
-public class JoinMenu extends HierarchicalMenu implements Screen {
+public class HostMenu extends HierarchicalMenu implements Screen {
     /**
      * The stage above the lighting.
      */
@@ -38,10 +38,11 @@ public class JoinMenu extends HierarchicalMenu implements Screen {
     private Stage stageBelow;
 
     private CleanTextField usernameInput;
-    private CleanTextField ipInput;
-    private TextButton joinButton;
+    private CleanTextField passwordInput;
+    private CleanTextField portInput;
+    private TextButton hostButton;
 
-    public JoinMenu(Screen parentScreen) {
+    public HostMenu(Screen parentScreen) {
         super(parentScreen);
 
         final ScreenViewport viewport = MainGame.createStandardViewport();
@@ -69,22 +70,24 @@ public class JoinMenu extends HierarchicalMenu implements Screen {
         int buttonYOffset = -48;
         int buttonSpacing = 6;
 
-        Label title = new Label("Join a Server", skin);
+        int portInputWidth = 40;
+
+        Label title = new Label("Host a Server", skin);
         title.setSize(buttonWidth, buttonHeight);
         title.setPosition(-buttonWidth / 2, buttonYOffset + (4 * (buttonHeight + buttonSpacing)));
         title.setAlignment(Align.center);
         stageAbove.addActor(title);
 
-        joinButton = new TextButton("Join", skin, "default");
-        joinButton.setSize(buttonWidth, buttonHeight);
-        joinButton.setPosition(-buttonWidth - (buttonSpacing / 2), buttonYOffset + (-0.5F * (buttonHeight + buttonSpacing)));
-        joinButton.addListener(new NoisyClickListener() {
+        hostButton = new TextButton("Host", skin, "default");
+        hostButton.setSize(buttonWidth, buttonHeight);
+        hostButton.setPosition(-buttonWidth - (buttonSpacing / 2), buttonYOffset + (-0.5F * (buttonHeight + buttonSpacing)));
+        hostButton.addListener(new NoisyClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                connectToServer();
+                hostServer();
             }
         });
-        stageAbove.addActor(joinButton);
+        stageAbove.addActor(hostButton);
 
         usernameInput = new CleanTextField("", skin);
         usernameInput.setSize(buttonWidth * 2, buttonHeight);
@@ -94,7 +97,7 @@ public class JoinMenu extends HierarchicalMenu implements Screen {
         usernameInput.setTextFieldListener(new TextField.TextFieldListener() {
             @Override
             public void keyTyped(TextField textField, char c) {
-                updateJoinButton();
+                updateHostButton();
             }
         });
         stageAbove.addActor(usernameInput);
@@ -106,23 +109,42 @@ public class JoinMenu extends HierarchicalMenu implements Screen {
         usernameLabel.setPosition(0, buttonYOffset + (2.4F * (buttonHeight + buttonSpacing)));
         stageAbove.addActor(usernameLabel);
 
-        ipInput = new CleanTextField("", skin);
-        ipInput.setSize(buttonWidth * 2, buttonHeight);
-        ipInput.setPosition(-ipInput.getWidth() / 2, buttonYOffset + (0.5F * (buttonHeight + buttonSpacing)));
-        ipInput.setTextFieldListener(new TextField.TextFieldListener() {
+        passwordInput = new CleanTextField("", skin);
+        passwordInput.setSize((buttonWidth * 2) - buttonSpacing - portInputWidth, buttonHeight);
+        passwordInput.setPosition(-usernameInput.getWidth() / 2, buttonYOffset + (0.5F * (buttonHeight + buttonSpacing)));
+        passwordInput.setTextFieldListener(new TextField.TextFieldListener() {
             @Override
             public void keyTyped(TextField textField, char c) {
-                updateJoinButton();
+                updateHostButton();
             }
         });
-        stageAbove.addActor(ipInput);
+        stageAbove.addActor(passwordInput);
 
-        Label ipLabel = new Label("Server IP", skin, "black");
+        Label ipLabel = new Label("Server Password", skin, "black");
         ipLabel.setSize(0, buttonHeight);
         ipLabel.setAlignment(Align.center);
         ipLabel.setTouchable(Touchable.disabled);
-        ipLabel.setPosition(0, 1 + buttonYOffset + (1.1F * (buttonHeight + buttonSpacing)));
+        ipLabel.setPosition(passwordInput.getX() + (passwordInput.getWidth() / 2), 1 + buttonYOffset + (1.1F * (buttonHeight + buttonSpacing)));
         stageAbove.addActor(ipLabel);
+
+        portInput = new CleanTextField("", skin);
+        portInput.setSize(portInputWidth, buttonHeight);
+        portInput.setMaxLength(FinalConstants.maxPortLength);
+        portInput.setPosition(passwordInput.getX() + passwordInput.getWidth() + buttonSpacing, buttonYOffset + (0.5F * (buttonHeight + buttonSpacing)));
+        portInput.setTextFieldListener(new TextField.TextFieldListener() {
+            @Override
+            public void keyTyped(TextField textField, char c) {
+                updateHostButton();
+            }
+        });
+        stageAbove.addActor(portInput);
+
+        Label portLabel = new Label("Port", skin, "black");
+        portLabel.setSize(0, buttonHeight);
+        portLabel.setAlignment(Align.center);
+        portLabel.setTouchable(Touchable.disabled);
+        portLabel.setPosition(portInput.getX() + (portInput.getWidth() / 2), 1 + buttonYOffset + (1.1F * (buttonHeight + buttonSpacing)));
+        stageAbove.addActor(portLabel);
 
         TextButton exitButton = new TextButton("Back", skin, "default");
         exitButton.setSize(buttonWidth, buttonHeight);
@@ -135,11 +157,11 @@ public class JoinMenu extends HierarchicalMenu implements Screen {
         });
         stageAbove.addActor(exitButton);
 
-        updateJoinButton();
+        updateHostButton();
     }
 
-    private void updateJoinButton() {
-        joinButton.setDisabled(usernameInput.getText().length() < FinalConstants.minUsernameLength || ipInput.getText().length() < 1);
+    private void updateHostButton() {
+        hostButton.setDisabled(usernameInput.getText().length() < FinalConstants.minUsernameLength);
     }
 
     @Override
@@ -161,11 +183,11 @@ public class JoinMenu extends HierarchicalMenu implements Screen {
         stageAbove.act(delta);
         stageAbove.draw();
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) connectToServer();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) hostServer();
     }
 
-    private void connectToServer() {
-        MainGame.game.connectToServer(ipInput.getText());
+    private void hostServer() {
+        MainGame.game.connectToServer(passwordInput.getText());
     }
 
     @Override
