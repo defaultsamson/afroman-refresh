@@ -22,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -206,17 +207,15 @@ public class OptionsMenu extends HierarchicalMenu implements Screen {
         camera.update();
         shapeRenderer.setProjectionMatrix(camera.combined);
 
-        if (stageAbove.getViewport() instanceof ScreenViewport) {
-            ScreenViewport viewport = (ScreenViewport) stageAbove.getViewport();
-            // Draws darkness in the background
-            Gdx.gl.glEnable(GL10.GL_BLEND);
-            Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer.setColor(bgColour);
-            shapeRenderer.rect(camera.position.x - (viewport.getWorldWidth() / 2), camera.position.y - (viewport.getWorldHeight() / 2), viewport.getWorldWidth(), viewport.getWorldHeight());
-            shapeRenderer.end();
-            Gdx.gl.glDisable(GL10.GL_BLEND);
-        }
+        Viewport viewport = stageAbove.getViewport();
+        // Draws darkness in the background
+        Gdx.gl.glEnable(GL10.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(bgColour);
+        shapeRenderer.rect(camera.position.x - (viewport.getWorldWidth() / 2), camera.position.y - (viewport.getWorldHeight() / 2), viewport.getWorldWidth(), viewport.getWorldHeight());
+        shapeRenderer.end();
+        Gdx.gl.glDisable(GL10.GL_BLEND);
 
         MainGame.game.drawVignette(stageAbove.getBatch(), stageAbove.getCamera(), stageAbove.getViewport());
 

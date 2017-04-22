@@ -31,6 +31,7 @@ public class MainMenu implements Screen {
     private final OptionsMenu settingsMenu;
     private final JoinMenu joinMenu;
     private final HostMenu hostMenu;
+    private final ControlsMenu controlsMenu;
 
     /**
      * The stage above the lighting.
@@ -48,6 +49,7 @@ public class MainMenu implements Screen {
         settingsMenu = new OptionsMenu(this);
         joinMenu = new JoinMenu(this);
         hostMenu = new HostMenu(this);
+        controlsMenu = new ControlsMenu(this);
 
         final ScreenViewport viewport = MainGame.createStandardViewport();
 
@@ -129,6 +131,18 @@ public class MainMenu implements Screen {
             }
         });
         stageAbove.addActor(settingsButton);
+
+        Texture controlsIcon = MainGame.game.getAssets().getTexture(Asset.CONTROLLER_ICON);
+        IconButton controlsButton = new IconButton(skin, controlsIcon);
+        controlsButton.setSize(buttonHeight, buttonHeight);
+        controlsButton.setPosition((-buttonWidth / 2) - buttonHeight - buttonSpacing, buttonYOffset + (0 * (buttonHeight + buttonSpacing)));
+        controlsButton.addListener(new NoisyClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                MainGame.game.setScreen(controlsMenu);
+            }
+        });
+        stageAbove.addActor(controlsButton);
 
         TextButton exitButton = new TextButton("Exit", skin, "default");
         exitButton.setSize(buttonWidth, buttonHeight);

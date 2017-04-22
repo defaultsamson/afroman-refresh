@@ -191,12 +191,13 @@ public class MainGame extends Game {
         drawVignette(batch, (OrthographicCamera) camera, (ScreenViewport) viewport);
     }*/
 
+    /*
     public void drawVignette(Batch batch, Camera camera, Viewport viewport) {
-        if (!(camera instanceof OrthographicCamera) || !(viewport instanceof ScreenViewport)) return;
-        drawVignette(batch, (OrthographicCamera) camera, (ScreenViewport) viewport);
-    }
+        if (!(camera instanceof OrthographicCamera)) return;
+        drawVignette(batch, (OrthographicCamera) camera, viewport);
+    }*/
 
-    public void drawVignette(Batch batch, OrthographicCamera camera, ScreenViewport viewport) {
+    public void drawVignette(Batch batch, Camera camera, Viewport viewport) {
         if (batch == null || camera == null || viewport == null) return;
         batch.setProjectionMatrix(camera.combined);
         batch.begin();

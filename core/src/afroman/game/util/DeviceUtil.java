@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Orientation;
 import com.badlogic.gdx.Input.Peripheral;
+import com.badlogic.gdx.controllers.Controllers;
 
 public class DeviceUtil {
     public static boolean isAccelerometerAvailable() {
@@ -73,5 +74,9 @@ public class DeviceUtil {
 
     public static String getLocalStoragePath() {
         return Gdx.files.getLocalStoragePath();
+    }
+
+    public static boolean hasController() {
+        return Controllers.getControllers().size > 0;
     }
 }

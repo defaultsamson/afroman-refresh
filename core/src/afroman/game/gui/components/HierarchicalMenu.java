@@ -6,7 +6,7 @@ import com.badlogic.gdx.Screen;
 /**
  * Created by Samson on 2017-04-14.
  */
-public class HierarchicalMenu {
+public abstract class HierarchicalMenu implements Screen {
     protected Screen parentScreen;
 
     public HierarchicalMenu(Screen parent) {

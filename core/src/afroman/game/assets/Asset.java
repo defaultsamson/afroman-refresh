@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 public enum Asset {
     AFRO_SKIN("assets/skin/afro.json", Skin.class),
     SETTINGS_ICON("assets/textures/gui/settings.png", Texture.class),
+    CONTROLLER_ICON("assets/textures/gui/controller.png", Texture.class),
     VIGNETTE("assets/textures/vignette.png", Texture.class),
     PLAYER("assets/textures/player/player.txt", TextureAtlas.class),
     MENU_MUSIC("assets/audio/music/menu.ogg", Music.class),
