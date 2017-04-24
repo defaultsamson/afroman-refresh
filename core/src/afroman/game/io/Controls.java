@@ -29,7 +29,7 @@ public class Controls {
         up.keyboardId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_KEYBOARD_UP_ID, Input.Keys.W);
         up.controllerType = ControlInputType.safeValueOf(MainGame.game.getSettings().getString(Setting.CONTROLS_CONTROLLER_UP_TYPE));
         up.controllerType = up.controllerType != null ? up.controllerType : ControlInputType.CONTROLLER_AXIS; // Gets a default if it returned null
-        up.controllerId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_CONTROLLER_UP_ID, 1);
+        up.controllerId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_CONTROLLER_UP_ID, ControllerMap.Axis.AXIS_LEFT_Y);
         up.axisExpectingNegative = false;
         controlInputs.add(new ControlInput(up) {
             @Override
@@ -51,7 +51,7 @@ public class Controls {
         down.keyboardId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_KEYBOARD_DOWN_ID, Input.Keys.S);
         down.controllerType = ControlInputType.safeValueOf(MainGame.game.getSettings().getString(Setting.CONTROLS_CONTROLLER_DOWN_TYPE));
         down.controllerType = down.controllerType != null ? down.controllerType : ControlInputType.CONTROLLER_AXIS; // Gets a default if it returned null
-        down.controllerId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_CONTROLLER_DOWN_ID, 1);
+        down.controllerId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_CONTROLLER_DOWN_ID, ControllerMap.Axis.AXIS_LEFT_Y);
         down.axisExpectingNegative = true;
         controlInputs.add(new ControlInput(down) {
             @Override
@@ -74,11 +74,11 @@ public class Controls {
         left.controllerType = ControlInputType.safeValueOf(MainGame.game.getSettings().getString(Setting.CONTROLS_CONTROLLER_LEFT_TYPE));
         left.controllerType = left.controllerType != null ? left.controllerType : ControlInputType.CONTROLLER_AXIS; // Gets a default if it returned null
         left.axisExpectingNegative = true;
-        left.controllerId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_CONTROLLER_LEFT_ID, 0);
+        left.controllerId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_CONTROLLER_LEFT_ID, ControllerMap.Axis.AXIS_LEFT_X);
         controlInputs.add(new ControlInput(left) {
             @Override
             public void performAction(float analogueValue) {
-                System.out.println("Moving Left: " + analogueValue);
+                //System.out.println("Moving Left: " + analogueValue);
             }
 
             @Override
@@ -95,12 +95,12 @@ public class Controls {
         right.keyboardId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_KEYBOARD_RIGHT_ID, Input.Keys.D);
         right.controllerType = ControlInputType.safeValueOf(MainGame.game.getSettings().getString(Setting.CONTROLS_CONTROLLER_RIGHT_TYPE));
         right.controllerType = right.controllerType != null ? right.controllerType : ControlInputType.CONTROLLER_AXIS; // Gets a default if it returned null
-        right.controllerId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_CONTROLLER_RIGHT_ID, 0);
+        right.controllerId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_CONTROLLER_RIGHT_ID, ControllerMap.Axis.AXIS_LEFT_X);
         right.axisExpectingNegative = false;
         controlInputs.add(new ControlInput(right) {
             @Override
             public void performAction(float analogueValue) {
-                System.out.println("Moving Right: " + analogueValue);
+                //System.out.println("Moving Right: " + analogueValue);
             }
 
             @Override
@@ -117,11 +117,11 @@ public class Controls {
         interact.keyboardId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_KEYBOARD_INTERACT_ID, Input.Keys.E);
         interact.controllerType = ControlInputType.safeValueOf(MainGame.game.getSettings().getString(Setting.CONTROLS_CONTROLLER_INTERACT_TYPE));
         interact.controllerType = interact.controllerType != null ? interact.controllerType : ControlInputType.CONTROLLER_BUTTON; // Gets a default if it returned null
-        interact.controllerId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_CONTROLLER_INTERACT_ID, 0); // TODO button A
+        interact.controllerId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_CONTROLLER_INTERACT_ID, ControllerMap.Buttons.A); // 'A' button
         controlInputs.add(new ControlInput(interact) {
             @Override
             public void performAction(float analogueValue) {
-                System.out.println("Interact: ");
+                System.out.println("Interact");
             }
 
             @Override
@@ -138,11 +138,11 @@ public class Controls {
         nextItem.keyboardId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_KEYBOARD_NEXT_ITEM_ID, Input.Keys.R);
         nextItem.controllerType = ControlInputType.safeValueOf(MainGame.game.getSettings().getString(Setting.CONTROLS_CONTROLLER_NEXT_ITEM_TYPE));
         nextItem.controllerType = nextItem.controllerType != null ? nextItem.controllerType : ControlInputType.CONTROLLER_BUTTON; // Gets a default if it returned null
-        nextItem.controllerId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_CONTROLLER_NEXT_ITEM_ID, 0); // TODO Right bumper
+        nextItem.controllerId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_CONTROLLER_NEXT_ITEM_ID, ControllerMap.Buttons.RB); // Right bumper
         controlInputs.add(new ControlInput(nextItem) {
             @Override
             public void performAction(float analogueValue) {
-                System.out.println("Next Item: ");
+                System.out.println("Next Item");
             }
 
             @Override
@@ -159,11 +159,11 @@ public class Controls {
         prevItem.keyboardId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_KEYBOARD_PREV_ITEM_ID, Input.Keys.Q);
         prevItem.controllerType = ControlInputType.safeValueOf(MainGame.game.getSettings().getString(Setting.CONTROLS_CONTROLLER_PREV_ITEM_TYPE));
         prevItem.controllerType = prevItem.controllerType != null ? prevItem.controllerType : ControlInputType.CONTROLLER_BUTTON; // Gets a default if it returned null
-        prevItem.controllerId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_CONTROLLER_PREV_ITEM_ID, 0); // TODO Left bumper
+        prevItem.controllerId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_CONTROLLER_PREV_ITEM_ID, ControllerMap.Buttons.LB); // Left bumper
         controlInputs.add(new ControlInput(prevItem) {
             @Override
             public void performAction(float analogueValue) {
-                System.out.println("Prev Item: ");
+                System.out.println("Prev Item");
             }
 
             @Override
@@ -177,14 +177,14 @@ public class Controls {
         dropItem.updateConstantly = false;
         dropItem.keyboardType = ControlInputType.safeValueOf(MainGame.game.getSettings().getString(Setting.CONTROLS_KEYBOARD_DROP_ITEM_TYPE));
         dropItem.keyboardType = dropItem.keyboardType != null ? dropItem.keyboardType : ControlInputType.KEYBOARD_BUTTON; // Gets a default if it returned null
-        dropItem.keyboardId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_KEYBOARD_DROP_ITEM_ID, Input.Keys.Q);
+        dropItem.keyboardId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_KEYBOARD_DROP_ITEM_ID, Input.Keys.X);
         dropItem.controllerType = ControlInputType.safeValueOf(MainGame.game.getSettings().getString(Setting.CONTROLS_CONTROLLER_DROP_ITEM_TYPE));
         dropItem.controllerType = dropItem.controllerType != null ? dropItem.controllerType : ControlInputType.CONTROLLER_BUTTON; // Gets a default if it returned null
-        dropItem.controllerId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_CONTROLLER_DROP_ITEM_ID, 0); // TODO Y button
+        dropItem.controllerId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_CONTROLLER_DROP_ITEM_ID, ControllerMap.Buttons.Y); // Y button
         controlInputs.add(new ControlInput(dropItem) {
             @Override
             public void performAction(float analogueValue) {
-                System.out.println("Prev Item: ");
+                System.out.println("Drop Item");
             }
 
             @Override
@@ -201,11 +201,11 @@ public class Controls {
         useItem.keyboardId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_KEYBOARD_USE_ITEM_ID, Input.Keys.SPACE);
         useItem.controllerType = ControlInputType.safeValueOf(MainGame.game.getSettings().getString(Setting.CONTROLS_CONTROLLER_USE_ITEM_TYPE));
         useItem.controllerType = useItem.controllerType != null ? useItem.controllerType : ControlInputType.CONTROLLER_BUTTON; // Gets a default if it returned null
-        useItem.controllerId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_CONTROLLER_USE_ITEM_ID, 0); // TODO Right bumper
+        useItem.controllerId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_CONTROLLER_USE_ITEM_ID, ControllerMap.Buttons.X); // X button
         controlInputs.add(new ControlInput(useItem) {
             @Override
             public void performAction(float analogueValue) {
-                System.out.println("Prev Item: ");
+                System.out.println("Use Item");
             }
 
             @Override
@@ -241,7 +241,7 @@ public class Controls {
             for (ControlInput c : controlInputs) {
                 c.hasBeenPressed = false;
             }
-            System.out.println("Switching to Controller scheme");
+            System.out.println("Switching to ControllerMap scheme");
         } else if (!isUsingController() && isUsingControllerScheme) {
             // Switch to Keyboard scheme
             isUsingControllerScheme = false;
@@ -317,79 +317,5 @@ public class Controls {
                 }
             }
         }
-    }
-
-    private boolean hasConfiguredController = false;
-
-    public boolean hasConfiguredController() {
-        return hasConfiguredController;
-    }
-
-    public void focusInGameControls() {
-
-    }
-}
-
-abstract class ControlInput {
-    protected boolean hasBeenPressed = false;
-
-    private boolean updateConstantly;
-    private boolean expectingAxisNegative;
-    private ControlMapType mapType;
-    private ControlInputType keyboardInputType;
-    private ControlInputType controllerInputType;
-    private int controllerId;
-    private int keyboardId;
-
-    public ControlInput(ControlInputConfig config) {
-        this(config.updateConstantly, config.axisExpectingNegative, config.mapType, config.keyboardType, config.controllerType, config.controllerId, config.keyboardId);
-    }
-
-    public ControlInput(boolean updateConstantly, boolean expectingAxisNegative, ControlMapType mapType, ControlInputType inputType, ControlInputType controllerInputType, int controllerId, int keyboardId) {
-        this.updateConstantly = updateConstantly;
-        this.expectingAxisNegative = expectingAxisNegative;
-        this.mapType = mapType;
-        this.keyboardInputType = inputType;
-        this.controllerInputType = controllerInputType;
-        this.controllerId = controllerId;
-        this.keyboardId = keyboardId;
-    }
-
-    public ControlInputType getKeyboardInputType() {
-        return keyboardInputType;
-    }
-
-    public int getKeyboardID() {
-        return keyboardId;
-    }
-
-    public int getControllerID() {
-        return controllerId;
-    }
-
-    public void set(ControlInputType type, int controllerId, int keyboardId) {
-        this.keyboardInputType = type;
-        this.controllerId = controllerId;
-        this.keyboardId = keyboardId;
-    }
-
-    public abstract void performAction(float analogueValue);
-
-    public abstract void performAction();
-
-    public ControlMapType getMapType() {
-        return mapType;
-    }
-
-    public boolean isUpdateConstantly() {
-        return updateConstantly;
-    }
-
-    public ControlInputType getControllerInputType() {
-        return controllerInputType;
-    }
-
-    public boolean isExpectingAxisNegative() {
-        return expectingAxisNegative;
     }
 }

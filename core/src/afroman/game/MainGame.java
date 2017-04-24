@@ -242,6 +242,10 @@ public class MainGame extends Game {
         return assets;
     }
 
+    public Controls getControls() {
+        return controls;
+    }
+
     protected List<Music> musicList;
     private float sfxVolume;
     private float musicVolume;
