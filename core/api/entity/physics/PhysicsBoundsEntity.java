@@ -43,7 +43,7 @@ public class PhysicsBoundsEntity extends PhysicsEntity {
      * @return a bounds body with the specified parameters.
      */
     private static Body createBody(World world, float x1, float y1, float x2, float y2, boolean isStatic, boolean canRotate) {
-        // Now create a BodyDefinition. This defines the physics objects type
+        // Now create a BodyDefinition. This defines the physics objects keyboardType
         // and position in the simulation
         BodyDef bodyDef = new BodyDef();
 

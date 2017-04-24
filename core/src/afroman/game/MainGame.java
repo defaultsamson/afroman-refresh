@@ -5,6 +5,7 @@ import afroman.game.assets.Assets;
 import afroman.game.gui.MainMenu;
 import afroman.game.gui.components.GuiConstants;
 import afroman.game.gui.components.NoisyClickListener;
+import afroman.game.io.Controls;
 import afroman.game.io.Setting;
 import afroman.game.io.Settings;
 import afroman.game.util.DeviceUtil;
@@ -39,6 +40,7 @@ public class MainGame extends Game {
 
     private Socket socket;
 
+    private Controls controls;
     private Settings settings;
     private Assets assets;
     private MainMenu mainMenu;
@@ -118,6 +120,8 @@ public class MainGame extends Game {
         vignette = assets.getTexture(Asset.VIGNETTE);
         viewportList = new ArrayList<ScreenViewport>();
 
+        controls = new Controls();
+
         GuiConstants.initGuiConstants();
         mainMenu = new MainMenu();
         setScreen(mainMenu);
@@ -177,6 +181,8 @@ public class MainGame extends Game {
                 }
             }
         }
+
+        controls.update();
 
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

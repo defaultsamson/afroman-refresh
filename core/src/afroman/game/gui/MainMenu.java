@@ -33,6 +33,7 @@ public class MainMenu implements Screen {
     private final HostMenu hostMenu;
     private final ControlsMenu controlsMenu;
 
+
     /**
      * The stage above the lighting.
      */

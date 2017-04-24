@@ -26,7 +26,7 @@ public enum Asset {
      */
     private String path;
     /**
-     * The class type of this.
+     * The class keyboardType of this.
      */
     private Class<?> type;
     /**

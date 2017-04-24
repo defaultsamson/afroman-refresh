@@ -3,7 +3,6 @@ package afroman.game.gui;
 import afroman.game.MainGame;
 import afroman.game.gui.components.HierarchicalMenu;
 import afroman.game.gui.components.NoisyClickListener;
-import afroman.game.util.DeviceUtil;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.controllers.Controller;
@@ -88,6 +87,12 @@ public class ControlsMenu extends HierarchicalMenu {
                 System.out.println("Pressed: " + controller.getName() + ", " + buttonIndex);
                 return super.buttonDown(controller, buttonIndex);
             }
+
+            @Override
+            public boolean axisMoved(Controller controller, int axisIndex, float value) {
+                //System.out.println("Axis: " + controller.getName() + ", " + axisIndex + ", " + value);
+                return super.axisMoved(controller, axisIndex, value);
+            }
         });
     }
 
@@ -116,8 +121,6 @@ public class ControlsMenu extends HierarchicalMenu {
 
         stageAbove.act(delta);
         stageAbove.draw();
-
-        System.out.println("Has controller: " + DeviceUtil.hasController());
     }
 
     @Override

@@ -101,7 +101,7 @@ public class Assets extends AssetManager {
     }
 
     private static void incorrectType(Asset asset, Class<?> requiredType) {
-        System.out.println("Asset attempted to be loaded is the incorrect type.");
-        System.out.println("Asset (" + asset.name() + ", " + asset.getType() + " must be type " + requiredType);
+        System.out.println("Asset attempted to be loaded is the incorrect keyboardType.");
+        System.out.println("Asset (" + asset.name() + ", " + asset.getType() + " must be keyboardType " + requiredType);
     }
 }

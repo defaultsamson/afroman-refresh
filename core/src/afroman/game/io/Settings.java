@@ -23,68 +23,68 @@ public class Settings {
     }
 
     public Preferences putBoolean(Setting key, boolean val) {
-        preferences.putBoolean(key.getKey(), val);
+        preferences.putBoolean(key.name(), val);
         return preferences;
     }
 
     public Preferences putInteger(Setting key, int val) {
-        preferences.putInteger(key.getKey(), val);
+        preferences.putInteger(key.name(), val);
         return preferences;
     }
 
     public Preferences putLong(Setting key, long val) {
-        preferences.putLong(key.getKey(), val);
+        preferences.putLong(key.name(), val);
         return preferences;
     }
 
     public Preferences putFloat(Setting key, float val) {
-        preferences.putFloat(key.getKey(), val);
+        preferences.putFloat(key.name(), val);
         return preferences;
     }
 
     public Preferences putString(Setting key, String val) {
-        preferences.putString(key.getKey(), val);
+        preferences.putString(key.name(), val);
         return preferences;
     }
 
     public boolean getBoolean(Setting key) {
-        return preferences.getBoolean(key.getKey());
+        return preferences.getBoolean(key.name());
     }
 
     public int getInteger(Setting key) {
-        return preferences.getInteger(key.getKey());
+        return preferences.getInteger(key.name());
     }
 
     public long getLong(Setting key) {
-        return preferences.getLong(key.getKey());
+        return preferences.getLong(key.name());
     }
 
     public float getFloat(Setting key) {
-        return preferences.getFloat(key.getKey());
+        return preferences.getFloat(key.name());
     }
 
     public String getString(Setting key) {
-        return preferences.getString(key.getKey());
+        return preferences.getString(key.name());
     }
 
     public boolean getBoolean(Setting key, boolean defValue) {
-        return preferences.getBoolean(key.getKey(), defValue);
+        return preferences.getBoolean(key.name(), defValue);
     }
 
     public int getInteger(Setting key, int defValue) {
-        return preferences.getInteger(key.getKey(), defValue);
+        return preferences.getInteger(key.name(), defValue);
     }
 
     public long getLong(Setting key, long defValue) {
-        return preferences.getLong(key.getKey(), defValue);
+        return preferences.getLong(key.name(), defValue);
     }
 
     public float getFloat(Setting key, float defValue) {
-        return preferences.getFloat(key.getKey(), defValue);
+        return preferences.getFloat(key.name(), defValue);
     }
 
     public String getString(Setting key, String defValue) {
-        return preferences.getString(key.getKey(), defValue);
+        return preferences.getString(key.name(), defValue);
     }
 
     /*
@@ -95,7 +95,7 @@ public class Settings {
     */
 
     public boolean contains(Setting key) {
-        return preferences.contains(key.getKey());
+        return preferences.contains(key.name());
     }
 
     public void clear() {
@@ -103,7 +103,7 @@ public class Settings {
     }
 
     public void remove(Setting key) {
-        preferences.remove(key.getKey());
+        preferences.remove(key.name());
     }
 
     /**
