@@ -96,7 +96,7 @@ public class Controls {
         right.controllerType = ControlInputType.safeValueOf(MainGame.game.getSettings().getString(Setting.CONTROLS_CONTROLLER_RIGHT_TYPE));
         right.controllerType = right.controllerType != null ? right.controllerType : ControlInputType.CONTROLLER_AXIS; // Gets a default if it returned null
         right.controllerId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_CONTROLLER_RIGHT_ID, 0);
-        left.axisExpectingNegative = false;
+        right.axisExpectingNegative = false;
         controlInputs.add(new ControlInput(right) {
             @Override
             public void performAction(float analogueValue) {
@@ -114,10 +114,10 @@ public class Controls {
         interact.updateConstantly = false;
         interact.keyboardType = ControlInputType.safeValueOf(MainGame.game.getSettings().getString(Setting.CONTROLS_KEYBOARD_INTERACT_TYPE));
         interact.keyboardType = interact.keyboardType != null ? interact.keyboardType : ControlInputType.KEYBOARD_BUTTON; // Gets a default if it returned null
-        interact.keyboardId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_KEYBOARD_INTERACT_ID, Input.Keys.D);
+        interact.keyboardId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_KEYBOARD_INTERACT_ID, Input.Keys.E);
         interact.controllerType = ControlInputType.safeValueOf(MainGame.game.getSettings().getString(Setting.CONTROLS_CONTROLLER_INTERACT_TYPE));
         interact.controllerType = interact.controllerType != null ? interact.controllerType : ControlInputType.CONTROLLER_BUTTON; // Gets a default if it returned null
-        interact.controllerId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_CONTROLLER_INTERACT_ID, 0);
+        interact.controllerId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_CONTROLLER_INTERACT_ID, 0); // TODO button A
         controlInputs.add(new ControlInput(interact) {
             @Override
             public void performAction(float analogueValue) {
@@ -135,14 +135,77 @@ public class Controls {
         nextItem.updateConstantly = false;
         nextItem.keyboardType = ControlInputType.safeValueOf(MainGame.game.getSettings().getString(Setting.CONTROLS_KEYBOARD_NEXT_ITEM_TYPE));
         nextItem.keyboardType = nextItem.keyboardType != null ? nextItem.keyboardType : ControlInputType.KEYBOARD_BUTTON; // Gets a default if it returned null
-        nextItem.keyboardId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_KEYBOARD_NEXT_ITEM_ID, Input.Keys.D);
+        nextItem.keyboardId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_KEYBOARD_NEXT_ITEM_ID, Input.Keys.R);
         nextItem.controllerType = ControlInputType.safeValueOf(MainGame.game.getSettings().getString(Setting.CONTROLS_CONTROLLER_NEXT_ITEM_TYPE));
         nextItem.controllerType = nextItem.controllerType != null ? nextItem.controllerType : ControlInputType.CONTROLLER_BUTTON; // Gets a default if it returned null
-        nextItem.controllerId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_CONTROLLER_NEXT_ITEM_ID, 0);
+        nextItem.controllerId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_CONTROLLER_NEXT_ITEM_ID, 0); // TODO Right bumper
         controlInputs.add(new ControlInput(nextItem) {
             @Override
             public void performAction(float analogueValue) {
                 System.out.println("Next Item: ");
+            }
+
+            @Override
+            public void performAction() {
+                performAction(1F);
+            }
+        });
+
+        ControlInputConfig prevItem = new ControlInputConfig();
+        prevItem.mapType = ControlMapType.PREV_ITEM;
+        prevItem.updateConstantly = false;
+        prevItem.keyboardType = ControlInputType.safeValueOf(MainGame.game.getSettings().getString(Setting.CONTROLS_KEYBOARD_PREV_ITEM_TYPE));
+        prevItem.keyboardType = prevItem.keyboardType != null ? prevItem.keyboardType : ControlInputType.KEYBOARD_BUTTON; // Gets a default if it returned null
+        prevItem.keyboardId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_KEYBOARD_PREV_ITEM_ID, Input.Keys.Q);
+        prevItem.controllerType = ControlInputType.safeValueOf(MainGame.game.getSettings().getString(Setting.CONTROLS_CONTROLLER_PREV_ITEM_TYPE));
+        prevItem.controllerType = prevItem.controllerType != null ? prevItem.controllerType : ControlInputType.CONTROLLER_BUTTON; // Gets a default if it returned null
+        prevItem.controllerId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_CONTROLLER_PREV_ITEM_ID, 0); // TODO Left bumper
+        controlInputs.add(new ControlInput(prevItem) {
+            @Override
+            public void performAction(float analogueValue) {
+                System.out.println("Prev Item: ");
+            }
+
+            @Override
+            public void performAction() {
+                performAction(1F);
+            }
+        });
+
+        ControlInputConfig dropItem = new ControlInputConfig();
+        dropItem.mapType = ControlMapType.DROP_ITEM;
+        dropItem.updateConstantly = false;
+        dropItem.keyboardType = ControlInputType.safeValueOf(MainGame.game.getSettings().getString(Setting.CONTROLS_KEYBOARD_DROP_ITEM_TYPE));
+        dropItem.keyboardType = dropItem.keyboardType != null ? dropItem.keyboardType : ControlInputType.KEYBOARD_BUTTON; // Gets a default if it returned null
+        dropItem.keyboardId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_KEYBOARD_DROP_ITEM_ID, Input.Keys.Q);
+        dropItem.controllerType = ControlInputType.safeValueOf(MainGame.game.getSettings().getString(Setting.CONTROLS_CONTROLLER_DROP_ITEM_TYPE));
+        dropItem.controllerType = dropItem.controllerType != null ? dropItem.controllerType : ControlInputType.CONTROLLER_BUTTON; // Gets a default if it returned null
+        dropItem.controllerId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_CONTROLLER_DROP_ITEM_ID, 0); // TODO Y button
+        controlInputs.add(new ControlInput(dropItem) {
+            @Override
+            public void performAction(float analogueValue) {
+                System.out.println("Prev Item: ");
+            }
+
+            @Override
+            public void performAction() {
+                performAction(1F);
+            }
+        });
+
+        ControlInputConfig useItem = new ControlInputConfig();
+        useItem.mapType = ControlMapType.USE_ITEM;
+        useItem.updateConstantly = false;
+        useItem.keyboardType = ControlInputType.safeValueOf(MainGame.game.getSettings().getString(Setting.CONTROLS_KEYBOARD_USE_ITEM_TYPE));
+        useItem.keyboardType = useItem.keyboardType != null ? useItem.keyboardType : ControlInputType.KEYBOARD_BUTTON; // Gets a default if it returned null
+        useItem.keyboardId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_KEYBOARD_USE_ITEM_ID, Input.Keys.SPACE);
+        useItem.controllerType = ControlInputType.safeValueOf(MainGame.game.getSettings().getString(Setting.CONTROLS_CONTROLLER_USE_ITEM_TYPE));
+        useItem.controllerType = useItem.controllerType != null ? useItem.controllerType : ControlInputType.CONTROLLER_BUTTON; // Gets a default if it returned null
+        useItem.controllerId = MainGame.game.getSettings().getInteger(Setting.CONTROLS_CONTROLLER_USE_ITEM_ID, 0); // TODO Right bumper
+        controlInputs.add(new ControlInput(useItem) {
+            @Override
+            public void performAction(float analogueValue) {
+                System.out.println("Prev Item: ");
             }
 
             @Override
@@ -176,14 +239,14 @@ public class Controls {
             // Switch to controller scheme
             isUsingControllerScheme = true;
             for (ControlInput c : controlInputs) {
-                c.hasMouseBeenPressed = false;
+                c.hasBeenPressed = false;
             }
             System.out.println("Switching to Controller scheme");
         } else if (!isUsingController() && isUsingControllerScheme) {
             // Switch to Keyboard scheme
             isUsingControllerScheme = false;
             for (ControlInput c : controlInputs) {
-                c.hasMouseBeenPressed = false;
+                c.hasBeenPressed = false;
             }
             System.out.println("Switching to Keyboard scheme");
         }
@@ -195,12 +258,12 @@ public class Controls {
                         if (getController().getButton(c.getControllerID())) {
                             if (c.isUpdateConstantly()) {
                                 c.performAction();
-                            } else if (!c.hasMouseBeenPressed) {
-                                c.hasMouseBeenPressed = true;
+                            } else if (!c.hasBeenPressed) {
+                                c.hasBeenPressed = true;
                                 c.performAction();
                             }
                         } else {
-                            c.hasMouseBeenPressed = false;
+                            c.hasBeenPressed = false;
                         }
                         break;
                     case CONTROLLER_AXIS:
@@ -215,12 +278,12 @@ public class Controls {
 
                         } else {
                             if (Math.abs(value) > 0.4) { // Dead zone for detextion of
-                                if (!c.hasMouseBeenPressed) {
-                                    c.hasMouseBeenPressed = true;
+                                if (!c.hasBeenPressed) {
+                                    c.hasBeenPressed = true;
                                     c.performAction();
                                 }
                             } else {
-                                c.hasMouseBeenPressed = false;
+                                c.hasBeenPressed = false;
                             }
                         }
                         break;
@@ -228,22 +291,27 @@ public class Controls {
             } else {
                 switch (c.getKeyboardInputType()) {
                     case KEYBOARD_BUTTON:
-                        if (c.isUpdateConstantly() && Gdx.input.isKeyPressed(c.getKeyboardID())) {
-                            c.performAction();
-                        } else if (Gdx.input.isKeyJustPressed(c.getKeyboardID())) {
-                            c.performAction();
+                        if (Gdx.input.isKeyPressed(c.getKeyboardID())) {
+                            if (c.isUpdateConstantly()) {
+                                c.performAction();
+                            } else if (!c.hasBeenPressed) {
+                                c.hasBeenPressed = true;
+                                c.performAction();
+                            }
+                        } else {
+                            c.hasBeenPressed = false;
                         }
                         break;
                     case MOUSE_BUTTON:
                         if (Gdx.input.isButtonPressed(c.getKeyboardID())) {
                             if (c.isUpdateConstantly()) {
                                 c.performAction();
-                            } else if (!c.hasMouseBeenPressed) {
-                                c.hasMouseBeenPressed = true;
+                            } else if (!c.hasBeenPressed) {
+                                c.hasBeenPressed = true;
                                 c.performAction();
                             }
                         } else {
-                            c.hasMouseBeenPressed = false;
+                            c.hasBeenPressed = false;
                         }
                         break;
                 }
@@ -263,7 +331,7 @@ public class Controls {
 }
 
 abstract class ControlInput {
-    protected boolean hasMouseBeenPressed = false;
+    protected boolean hasBeenPressed = false;
 
     private boolean updateConstantly;
     private boolean expectingAxisNegative;
