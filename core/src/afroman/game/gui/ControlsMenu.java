@@ -245,15 +245,21 @@ public class ControlsMenu extends HierarchicalMenu {
     }
 
     private String getBindingText(ControlInput input) {
+        int id = isUsingControllerScheme ? input.getControllerID() : input.getKeyboardID();
+        String toRet;
+
         switch (isUsingControllerScheme ? input.getControllerInputType() : input.getKeyboardInputType()) {
             case CONTROLLER_AXIS:
-                return (input.isExpectingAxisNegative() ? "- " : "+ ") + ControllerMap.Axis.toString(isUsingControllerScheme ? input.getControllerID() : input.getKeyboardID());
+                toRet = ControllerMap.Axis.toString(id);
+                return (input.isExpectingAxisNegative() ? "- " : "+ ") + (toRet != null ? toRet : "" + id);
             case CONTROLLER_BUTTON:
-                return ControllerMap.Buttons.toString(isUsingControllerScheme ? input.getControllerID() : input.getKeyboardID());
+                toRet = ControllerMap.Buttons.toString(id);
+                return toRet != null ? toRet : "" + id;
             case KEYBOARD_BUTTON:
-                return Input.Keys.toString(isUsingControllerScheme ? input.getControllerID() : input.getKeyboardID());
+                toRet = Input.Keys.toString(id);
+                return toRet != null ? toRet : "" + id;
             case MOUSE_BUTTON:
-                switch (isUsingControllerScheme ? input.getControllerID() : input.getKeyboardID()) {
+                switch (id) {
                     case Input.Buttons.LEFT:
                         return "Left MB";
                     case Input.Buttons.RIGHT:
@@ -432,7 +438,7 @@ public class ControlsMenu extends HierarchicalMenu {
             }
 
             // Test for controller axis controls
-            for (int i = 0; i < 256; i++) {
+            for (int i = 0; i < 255; i++) {
                 float axisValue = MainGame.game.getControls().getSafeAxisValue(i);
                 if (Math.abs(axisValue) > 0.5) {
                     // Setup as a keybind

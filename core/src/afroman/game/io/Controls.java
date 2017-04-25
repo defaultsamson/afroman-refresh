@@ -143,14 +143,22 @@ public class Controls {
                 performAction(1F);
             }
         });
+
+        triggerIDs = new ArrayList<Integer>();
     }
+
+    public List<Integer> triggerIDs;
 
     public float getSafeAxisValue(int axisID) {
         if (isUsingController()) {
             float value = getController().getAxis(axisID);
 
-            if (axisID == ControllerMap.Axis.AXIS_LEFT_TRIGGER || axisID == ControllerMap.Axis.AXIS_RIGHT_TRIGGER)
-                value = (value + 1F) / 2F;
+            for (int id : triggerIDs) {
+                if (axisID == id) {
+                    value = (value + 1F) / 2F;
+                    break;
+                }
+            }
 
             return value;
         }
@@ -177,6 +185,20 @@ public class Controls {
         return getController() != null;
     }
 
+    private void detectTriggerAxis() {
+        if (isUsingController()) {
+            triggerIDs.clear();
+            // Test for controller axis controls
+            for (int i = 0; i < 255; i++) {
+                float axisValue = getController().getAxis(i);
+                if (Math.abs(axisValue) > 0.5) {
+                    // Setup as a keybind
+                    triggerIDs.add(i);
+                }
+            }
+        }
+    }
+
     public void update() {
         if (isUsingController() && !isUsingControllerScheme) {
             // Switch to controller scheme
@@ -184,7 +206,24 @@ public class Controls {
             for (ControlInput c : controlInputs) {
                 c.hasBeenPressed = false;
             }
-            System.out.println("Switching to ControllerMap scheme");
+
+            // Wait two seconds before checking for axis
+            new Thread() {
+                @Override
+                public void run() {
+                    super.run();
+
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    detectTriggerAxis();
+                }
+            }.start();
+
+            System.out.println("Switching to Controller scheme");
         } else if (!isUsingController() && isUsingControllerScheme) {
             // Switch to Keyboard scheme
             isUsingControllerScheme = false;
