@@ -8,7 +8,7 @@ public abstract class ControlInput {
 
     private boolean updateConstantly;
     private boolean expectingAxisNegative;
-    private ControlMapType mapType;
+    private final ControlMapType mapType;
     private ControlInputType keyboardInputType;
     private ControlInputType controllerInputType;
     private int controllerId;
@@ -40,12 +40,6 @@ public abstract class ControlInput {
         return controllerId;
     }
 
-    public void set(ControlInputType type, int controllerId, int keyboardId) {
-        this.keyboardInputType = type;
-        this.controllerId = controllerId;
-        this.keyboardId = keyboardId;
-    }
-
     public abstract void performAction(float analogueValue);
 
     public abstract void performAction();
@@ -64,5 +58,25 @@ public abstract class ControlInput {
 
     public boolean isExpectingAxisNegative() {
         return expectingAxisNegative;
+    }
+
+    public void setControllerId(int controllerId) {
+        this.controllerId = controllerId;
+    }
+
+    public void setExpectingAxisNegative(boolean expectingAxisNegative) {
+        this.expectingAxisNegative = expectingAxisNegative;
+    }
+
+    public void setKeyboardId(int keyboardId) {
+        this.keyboardId = keyboardId;
+    }
+
+    public void setControllerInputType(ControlInputType controllerInputType) {
+        this.controllerInputType = controllerInputType;
+    }
+
+    public void setKeyboardInputType(ControlInputType keyboardInputType) {
+        this.keyboardInputType = keyboardInputType;
     }
 }

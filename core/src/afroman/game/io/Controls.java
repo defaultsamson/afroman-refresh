@@ -215,6 +215,19 @@ public class Controls {
         });
     }
 
+    public float getSafeAxisValue(int axisID) {
+        if (isUsingController()) {
+            float value = getController().getAxis(axisID);
+
+            if (axisID == ControllerMap.Axis.AXIS_LEFT_TRIGGER || axisID == ControllerMap.Axis.AXIS_RIGHT_TRIGGER)
+                value = (value + 1F) / 2F;
+
+            return value;
+        }
+
+        return 0;
+    }
+
     public ControlInput getControlInput(ControlMapType mapType) {
         for (ControlInput c : controlInputs) {
             if (c.getMapType() == mapType) return c;
@@ -222,7 +235,7 @@ public class Controls {
         return null;
     }
 
-    private Controller getController() {
+    public Controller getController() {
         try {
             return Controllers.getControllers().get(0);
         } catch (Exception e) {
@@ -267,7 +280,7 @@ public class Controls {
                         }
                         break;
                     case CONTROLLER_AXIS:
-                        float value = getController().getAxis(c.getControllerID());
+                        float value = getSafeAxisValue(c.getControllerID());
 
                         if (c.isUpdateConstantly()) {
                             if ((value < 0 && c.isExpectingAxisNegative()) || (value > 0 && !c.isExpectingAxisNegative())) {

@@ -4,6 +4,7 @@ import afroman.game.MainGame;
 import afroman.game.gui.components.HierarchicalMenu;
 import afroman.game.gui.components.NoisyClickListener;
 import afroman.game.io.ControlInput;
+import afroman.game.io.ControlInputType;
 import afroman.game.io.ControlMapType;
 import afroman.game.io.ControllerMap;
 import com.badlogic.gdx.Gdx;
@@ -71,7 +72,7 @@ public class ControlsMenu extends HierarchicalMenu {
         shapeRenderer = new ShapeRenderer();
         bgColour = new Color(0, 0, 0, 0.7F);
 
-        int buttonWidth = 102;
+        int buttonWidth = 112;
         int buttonHeight = 14;
 
         int buttonYOffset = -61;
@@ -258,7 +259,7 @@ public class ControlsMenu extends HierarchicalMenu {
             @Override
             public boolean buttonDown(Controller controller, int buttonIndex) {
                 if (MainGame.game.getScreen() == ControlsMenu.this) {
-                    System.out.println("Pressed: " + controller.getName() + ", " + buttonIndex);
+                    //System.out.println("Pressed: " + controller.getName() + ", " + buttonIndex);
                 }
                 return super.buttonDown(controller, buttonIndex);
             }
@@ -266,7 +267,7 @@ public class ControlsMenu extends HierarchicalMenu {
             @Override
             public boolean axisMoved(Controller controller, int axisIndex, float value) {
                 if (MainGame.game.getScreen() == ControlsMenu.this) {
-                    System.out.println("Axis: " + controller.getName() + ", " + axisIndex + ", " + value);
+                    //System.out.println("Axis: " + controller.getName() + ", " + axisIndex + ", " + value);
                 }
                 return super.axisMoved(controller, axisIndex, value);
             }
@@ -276,13 +277,13 @@ public class ControlsMenu extends HierarchicalMenu {
     private String getBindingText(ControlInput input) {
         switch (isUsingControllerScheme ? input.getControllerInputType() : input.getKeyboardInputType()) {
             case CONTROLLER_AXIS:
-                return (input.isExpectingAxisNegative() ? "- " : "+ ") + ControllerMap.Axis.toString(input.getControllerID());
+                return (input.isExpectingAxisNegative() ? "- " : "+ ") + ControllerMap.Axis.toString(isUsingControllerScheme ? input.getControllerID() : input.getKeyboardID());
             case CONTROLLER_BUTTON:
-                return ControllerMap.Buttons.toString(input.getControllerID());
+                return ControllerMap.Buttons.toString(isUsingControllerScheme ? input.getControllerID() : input.getKeyboardID());
             case KEYBOARD_BUTTON:
-                return Input.Keys.toString(input.getKeyboardID());
+                return Input.Keys.toString(isUsingControllerScheme ? input.getControllerID() : input.getKeyboardID());
             case MOUSE_BUTTON:
-                switch (input.getKeyboardID()) {
+                switch (isUsingControllerScheme ? input.getControllerID() : input.getKeyboardID()) {
                     case Input.Buttons.LEFT:
                         return "Left MB";
                     case Input.Buttons.RIGHT:
@@ -321,10 +322,14 @@ public class ControlsMenu extends HierarchicalMenu {
             }
         }
 
+        updatingControlMap = null;
+
         exitButton.setVisible(true);
         exitButton.setDisabled(false);
         cancelButton.setVisible(false);
     }
+
+    private ControlMapType updatingControlMap = null;
 
     private void getNewControl(ControlMapType type, Button button) {
         for (Actor a : stageAbove.getActors()) {
@@ -332,6 +337,8 @@ public class ControlsMenu extends HierarchicalMenu {
                 ((Button) a).setDisabled(true);
             }
         }
+
+        updatingControlMap = type;
 
         button.setDisabled(false);
         cancelButton.setVisible(true);
@@ -374,8 +381,105 @@ public class ControlsMenu extends HierarchicalMenu {
             updateButtonText();
         }
 
+        if (updatingControlMap != null) {
+
+            // If a button's being clicked, don't try and set a control to Left Mouse Button
+            boolean isButtonPressed = false;
+            for (Actor a : stageAbove.getActors()) {
+                if (a instanceof Button) {
+                    if (((Button) a).isPressed()) {
+                        isButtonPressed = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!isButtonPressed) updateControlSettingProcess();
+        }
+
         stageAbove.act(delta);
         stageAbove.draw();
+    }
+
+    private void updateControlSettingProcess() {
+        // Test for keyboard controls
+        for (int i = 0; i < 256; i++) {
+            if (Gdx.input.isKeyJustPressed(i)) {
+                // Setup as a keybind
+                ControlInput input = MainGame.game.getControls().getControlInput(updatingControlMap);
+                if (isUsingControllerScheme) {
+                    input.setControllerInputType(ControlInputType.KEYBOARD_BUTTON);
+                    input.setControllerId(i);
+                } else {
+                    input.setKeyboardInputType(ControlInputType.KEYBOARD_BUTTON);
+                    input.setKeyboardId(i);
+                }
+                updatingControlMap = null;
+                endNewControlSetting();
+                updateButtonText();
+                return;
+            }
+        }
+
+        // Test for mouse controls
+        for (int i = 0; i < 8; i++) {
+            if (Gdx.input.isButtonPressed(i)) {
+                // Setup as a keybind
+                ControlInput input = MainGame.game.getControls().getControlInput(updatingControlMap);
+                if (isUsingControllerScheme) {
+                    input.setControllerInputType(ControlInputType.MOUSE_BUTTON);
+                    input.setControllerId(i);
+                } else {
+                    input.setKeyboardInputType(ControlInputType.MOUSE_BUTTON);
+                    input.setKeyboardId(i);
+                }
+                updatingControlMap = null;
+                endNewControlSetting();
+                updateButtonText();
+                return;
+            }
+        }
+
+        // Test for controller button controls
+        if (MainGame.game.getControls().isUsingController()) {
+            for (int i = 0; i < 256; i++) {
+                if (MainGame.game.getControls().getController().getButton(i)) {
+                    // Setup as a keybind
+                    ControlInput input = MainGame.game.getControls().getControlInput(updatingControlMap);
+                    if (isUsingControllerScheme) {
+                        input.setControllerInputType(ControlInputType.CONTROLLER_BUTTON);
+                        input.setControllerId(i);
+                    } else {
+                        input.setKeyboardInputType(ControlInputType.CONTROLLER_BUTTON);
+                        input.setKeyboardId(i);
+                    }
+                    updatingControlMap = null;
+                    endNewControlSetting();
+                    updateButtonText();
+                    return;
+                }
+            }
+
+            for (int i = 0; i < 256; i++) {
+                float axisValue = MainGame.game.getControls().getSafeAxisValue(i);
+                if (Math.abs(axisValue) > 0.5) {
+                    // Setup as a keybind
+                    ControlInput input = MainGame.game.getControls().getControlInput(updatingControlMap);
+                    if (isUsingControllerScheme) {
+                        input.setControllerInputType(ControlInputType.CONTROLLER_AXIS);
+                        input.setControllerId(i);
+                    } else {
+                        input.setKeyboardInputType(ControlInputType.CONTROLLER_AXIS);
+                        input.setKeyboardId(i);
+                    }
+                    input.setExpectingAxisNegative(axisValue < 0);
+                    updatingControlMap = null;
+                    endNewControlSetting();
+                    updateButtonText();
+                    return;
+                }
+            }
+        }
     }
 
     @Override
