@@ -10,9 +10,6 @@ import afroman.game.io.ControllerMap;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.controllers.ControllerAdapter;
-import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL30;
@@ -33,6 +30,8 @@ import static afroman.game.gui.components.GuiConstants.skin;
  * Created by Samson on 2017-04-08.
  */
 public class ControlsMenu extends HierarchicalMenu {
+
+    private ControlResetConfirm confirmPage;
 
     /**
      * The stage above the lighting.
@@ -146,7 +145,7 @@ public class ControlsMenu extends HierarchicalMenu {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (!resetControls.isDisabled()) {
-                    // TODO reset the controls
+                    MainGame.game.setScreen(confirmPage);
                 }
             }
         });
@@ -242,36 +241,7 @@ public class ControlsMenu extends HierarchicalMenu {
         });
         stageAbove.addActor(cancelButton);
 
-        Controllers.addListener(new ControllerAdapter() {
-            /*
-            @Override
-            public void connected(ControllerMap controller) {
-                super.connected(controller);
-                System.out.println("Connected! " + controller.getName());
-            }
-
-            @Override
-            public void disconnected(ControllerMap controller) {
-                super.disconnected(controller);
-                System.out.println("Disconnected: " + controller.getName());
-            }*/
-
-            @Override
-            public boolean buttonDown(Controller controller, int buttonIndex) {
-                if (MainGame.game.getScreen() == ControlsMenu.this) {
-                    //System.out.println("Pressed: " + controller.getName() + ", " + buttonIndex);
-                }
-                return super.buttonDown(controller, buttonIndex);
-            }
-
-            @Override
-            public boolean axisMoved(Controller controller, int axisIndex, float value) {
-                if (MainGame.game.getScreen() == ControlsMenu.this) {
-                    //System.out.println("Axis: " + controller.getName() + ", " + axisIndex + ", " + value);
-                }
-                return super.axisMoved(controller, axisIndex, value);
-            }
-        });
+        confirmPage = new ControlResetConfirm(this);
     }
 
     private String getBindingText(ControlInput input) {
@@ -301,7 +271,7 @@ public class ControlsMenu extends HierarchicalMenu {
     }
 
     private void updateButtonText() {
-        title.setText("Controls " + (isUsingControllerScheme ? "(Controller)" : "(Keyboard)"));
+        title.setText("Controls (" + (isUsingControllerScheme && MainGame.game.getControls().isUsingController() ? MainGame.game.getControls().getController().getName() : "Keyboard") + ")");
 
         nextItemButton.setText("Next Item: " + getBindingText(MainGame.game.getControls().getControlInput(ControlMapType.NEXT_ITEM)));
         prevItemButton.setText("Prev Item: " + getBindingText(MainGame.game.getControls().getControlInput(ControlMapType.PREV_ITEM)));
@@ -440,8 +410,9 @@ public class ControlsMenu extends HierarchicalMenu {
             }
         }
 
-        // Test for controller button controls
+        // If a controller is plugged in
         if (MainGame.game.getControls().isUsingController()) {
+            // Test for controller button controls
             for (int i = 0; i < 256; i++) {
                 if (MainGame.game.getControls().getController().getButton(i)) {
                     // Setup as a keybind
@@ -460,6 +431,7 @@ public class ControlsMenu extends HierarchicalMenu {
                 }
             }
 
+            // Test for controller axis controls
             for (int i = 0; i < 256; i++) {
                 float axisValue = MainGame.game.getControls().getSafeAxisValue(i);
                 if (Math.abs(axisValue) > 0.5) {
@@ -500,7 +472,14 @@ public class ControlsMenu extends HierarchicalMenu {
 
     @Override
     public void hide() {
-
+        // Saves the controls
+        for (ControlMapType type : ControlMapType.values()) {
+            ControlInput input = MainGame.game.getControls().getControlInput(type);
+            MainGame.game.getSettings().putString(type.getKeyboardTypeSetting(), input.getKeyboardInputType().name());
+            MainGame.game.getSettings().putInteger(type.getKeyboardIDSetting(), input.getKeyboardID());
+            MainGame.game.getSettings().putString(type.getControllerTypeSetting(), input.getControllerInputType().name());
+            MainGame.game.getSettings().putInteger(type.getControllerIDSetting(), input.getControllerID());
+        }
     }
 
     @Override
