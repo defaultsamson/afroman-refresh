@@ -24,6 +24,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.io.IOException;
+
 import static afroman.game.gui.components.GuiConstants.menuRayHandler;
 import static afroman.game.gui.components.GuiConstants.skin;
 
@@ -199,7 +201,12 @@ public class JoinMenu extends HierarchicalMenu implements Screen {
 
     private void connectToServer() {
         if (canJoin()) {
-            MainGame.game.connectToServer(ipInput.getText());
+            try {
+                MainGame.game.getNetworkManager().connectToServer(ipInput.getText());
+            } catch (IOException e) {
+                System.out.println("Error while connecting to server [ip=" + ipInput.getText() + "]");
+                e.printStackTrace();
+            }
         }
     }
 

@@ -300,4 +300,9 @@ public class Controls {
             }
         }
     }
+
+    public void dispose() {
+        controlInputs.clear();
+        Controllers.clearListeners();
+    }
 }

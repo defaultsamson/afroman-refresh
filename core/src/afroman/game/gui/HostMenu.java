@@ -23,6 +23,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.io.IOException;
+
 import static afroman.game.gui.components.GuiConstants.menuRayHandler;
 import static afroman.game.gui.components.GuiConstants.skin;
 
@@ -206,7 +208,12 @@ public class HostMenu extends HierarchicalMenu implements Screen {
     }
 
     private void hostServer() {
-        MainGame.game.connectToServer(passwordInput.getText());
+        try {
+            MainGame.game.getNetworkManager().hostServer(portInput.getText(), passwordInput.getText());
+        } catch (IOException e) {
+            System.out.println("Error while hosting server [port=" + portInput.getText() + "], [password=" + passwordInput.getText() + "]");
+            e.printStackTrace();
+        }
     }
 
     @Override

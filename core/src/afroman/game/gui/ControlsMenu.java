@@ -491,5 +491,8 @@ public class ControlsMenu extends HierarchicalMenu {
     @Override
     public void dispose() {
         stageAbove.dispose();
+        shapeRenderer.dispose();
+
+        confirmPage.dispose();
     }
 }

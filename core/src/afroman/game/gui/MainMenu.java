@@ -28,7 +28,7 @@ import static afroman.game.gui.components.GuiConstants.skin;
  */
 public class MainMenu implements Screen {
 
-    private final OptionsMenu settingsMenu;
+    private final SettingsMenu settingsMenu;
     private final JoinMenu joinMenu;
     private final HostMenu hostMenu;
     private final ControlsMenu controlsMenu;
@@ -47,7 +47,7 @@ public class MainMenu implements Screen {
     private Label fpsCounter;
 
     public MainMenu() {
-        settingsMenu = new OptionsMenu(this);
+        settingsMenu = new SettingsMenu(this);
         joinMenu = new JoinMenu(this);
         hostMenu = new HostMenu(this);
         controlsMenu = new ControlsMenu(this);
@@ -221,6 +221,10 @@ public class MainMenu implements Screen {
         stageAbove.dispose();
         stageBelow.dispose();
         music.dispose();
+
         settingsMenu.dispose();
+        joinMenu.dispose();
+        hostMenu.dispose();
+        controlsMenu.dispose();
     }
 }

@@ -8,11 +8,11 @@ import afroman.game.gui.components.NoisyClickListener;
 import afroman.game.io.Controls;
 import afroman.game.io.Setting;
 import afroman.game.io.Settings;
+import afroman.game.net.NetworkManager;
 import afroman.game.util.DeviceUtil;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Net;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
@@ -22,8 +22,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.net.Socket;
-import com.badlogic.gdx.net.SocketHints;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -38,12 +36,13 @@ public class MainGame extends Game {
 
     public static MainGame game;
 
-    private Socket socket;
-
+    private NetworkManager networkManager;
     private Controls controls;
     private Settings settings;
     private Assets assets;
+
     private MainMenu mainMenu;
+
     private SpriteBatch batch;
     private Texture vignette;
 
@@ -67,9 +66,15 @@ public class MainGame extends Game {
         }
     }
 
+    public NetworkManager getNetworkManager() {
+        return networkManager;
+    }
+
     @Override
     public void create() {
         game = this;
+
+        if (DeviceUtil.isDesktop()) DebugConsole.initialize();
 
         // Loads the assets
         assets = new Assets();
@@ -121,36 +126,11 @@ public class MainGame extends Game {
         viewportList = new ArrayList<ScreenViewport>();
 
         controls = new Controls();
+        networkManager = new NetworkManager();
 
         GuiConstants.initGuiConstants();
         mainMenu = new MainMenu();
         setScreen(mainMenu);
-    }
-
-    public void connectToServer(String ip) {
-        int port = FinalConstants.defaultPort;
-        if (ip.contains(":")) {
-            try {
-                String[] split = ip.split("[:]");
-                port = Integer.parseInt(split[split.length - 1]);
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < split.length - 1; i++) {
-                    sb.append(split[i]);
-                    if (i < split.length - 2) sb.append(':');
-                }
-                ip = sb.toString();
-            } catch (NumberFormatException e) {
-                System.err.println("Error when parsing port from IP");
-                e.printStackTrace();
-            }
-        }
-
-        connectToServer(ip, port);
-    }
-
-    public void connectToServer(String ip, int port) {
-        socket = Gdx.net.newClientSocket(Net.Protocol.TCP, ip, port, new SocketHints());
-
     }
 
     private void resetScreenSize(float scale) {
@@ -179,6 +159,10 @@ public class MainGame extends Game {
                     windowedHeight = Gdx.graphics.getHeight();
                     Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
                 }
+            }
+
+            if (Gdx.input.isKeyJustPressed(Input.Keys.F10)) {
+                DebugConsole.setVisible(!DebugConsole.isVisible());
             }
         }
 
@@ -231,11 +215,19 @@ public class MainGame extends Game {
     public void dispose() {
         super.dispose();
 
-        mainMenu.dispose();
+        networkManager.dispose();
+        controls.dispose();
         settings.save();
         assets.dispose();
+
+        mainMenu.dispose();
+
         batch.dispose();
         vignette.dispose();
+
+        if (DeviceUtil.isDesktop() && DebugConsole.instance() != null && DebugConsole.instance().getJFrame() != null) {
+            DebugConsole.instance().getJFrame().dispose();
+        }
     }
 
     public Assets getAssets() {

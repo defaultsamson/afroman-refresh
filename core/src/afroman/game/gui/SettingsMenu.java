@@ -28,16 +28,15 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 /**
  * Created by Samson on 2017-04-08.
  */
-public class OptionsMenu extends HierarchicalMenu implements Screen {
+public class SettingsMenu extends HierarchicalMenu implements Screen {
     /**
      * The stage above the lighting.
      */
     private Stage stageAbove;
-
     private ShapeRenderer shapeRenderer;
     private Color bgColour;
 
-    public OptionsMenu(final Screen parentScreen) {
+    public SettingsMenu(final Screen parentScreen) {
         super(parentScreen);
 
         Skin skin = MainGame.game.getAssets().getSkin(Asset.AFRO_SKIN);

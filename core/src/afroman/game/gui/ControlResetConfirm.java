@@ -143,6 +143,7 @@ public class ControlResetConfirm extends HierarchicalMenu {
 
     @Override
     public void dispose() {
-
+        stageAbove.dispose();
+        shapeRenderer.dispose();
     }
 }
