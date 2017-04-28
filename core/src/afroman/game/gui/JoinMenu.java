@@ -24,8 +24,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import java.io.IOException;
-
 import static afroman.game.gui.components.GuiConstants.menuRayHandler;
 import static afroman.game.gui.components.GuiConstants.skin;
 
@@ -199,14 +197,54 @@ public class JoinMenu extends HierarchicalMenu implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)) gotoParentScreen();
     }
 
+    private boolean isStarting = false;
+    private boolean failed = false;
+
     private void connectToServer() {
         if (canJoin()) {
-            try {
-                MainGame.game.getNetworkManager().connectToServer(ipInput.getText());
-            } catch (IOException e) {
-                System.out.println("Error while connecting to server [ip=" + ipInput.getText() + "]");
-                e.printStackTrace();
-            }
+            final TextGui gui = new TextGui("Joining Server \n" + ipInput.getText() + "\nPlease wait...") {
+                @Override
+                public void render(float delta) {
+                    super.render(delta);
+
+                    if (!isStarting) {
+                        if (failed) {
+                            failed = false;
+                            MainGame.game.setScreen(JoinMenu.this);
+                        } else {
+                            MainGame.game.setScreen(new LobbyGui());
+                        }
+                    }
+                }
+            };
+
+            isStarting = true;
+            MainGame.game.setScreen(gui);
+
+            new Thread() {
+                @Override
+                public void run() {
+                    super.run();
+
+                    try {
+                        MainGame.game.getNetworkManager().connectToServer(ipInput.getText());
+                    } catch (Exception e) {
+                        failed = true;
+                        gui.setText("Failed to join server.\n" + e.getMessage());
+                        System.err.println("Failed to join server.");
+                        e.printStackTrace();
+                        MainGame.game.getNetworkManager().killClient();
+
+                        try {
+                            Thread.sleep(3000);
+                        } catch (InterruptedException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+
+                    isStarting = false;
+                }
+            }.start();
         }
     }
 

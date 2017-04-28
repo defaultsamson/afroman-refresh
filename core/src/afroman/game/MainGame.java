@@ -57,6 +57,10 @@ public class MainGame extends Game {
 
     private List<ScreenViewport> viewportList;
 
+    public void goToMainMenu() {
+        setScreen(mainMenu);
+    }
+
     public void setScale(float scale) {
         settings.putFloat(Setting.SCALE, scale);
 

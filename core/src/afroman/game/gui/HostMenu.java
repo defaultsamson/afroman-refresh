@@ -23,8 +23,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import java.io.IOException;
-
 import static afroman.game.gui.components.GuiConstants.menuRayHandler;
 import static afroman.game.gui.components.GuiConstants.skin;
 
@@ -32,6 +30,7 @@ import static afroman.game.gui.components.GuiConstants.skin;
  * Created by Samson on 2017-04-08.
  */
 public class HostMenu extends HierarchicalMenu implements Screen {
+
     /**
      * The stage above the lighting.
      */
@@ -136,6 +135,7 @@ public class HostMenu extends HierarchicalMenu implements Screen {
         portInput = new CleanTextField("", skin);
         portInput.setSize(portInputWidth, buttonHeight);
         portInput.setMaxLength(FinalConstants.maxPortLength);
+        portInput.setMessageText("" + FinalConstants.defaultPort);
         portInput.setPosition(passwordInput.getX() + passwordInput.getWidth() + buttonSpacing, buttonYOffset + (0.5F * (buttonHeight + buttonSpacing)));
         portInput.setTextFieldListener(new TextField.TextFieldListener() {
             @Override
@@ -191,7 +191,6 @@ public class HostMenu extends HierarchicalMenu implements Screen {
 
     @Override
     public void render(float delta) {
-
         stageBelow.act(delta);
         stageBelow.draw();
 
@@ -207,13 +206,57 @@ public class HostMenu extends HierarchicalMenu implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)) gotoParentScreen();
     }
 
+    private boolean isStarting = false;
+    private boolean failed = false;
+
     private void hostServer() {
-        try {
-            MainGame.game.getNetworkManager().hostServer(portInput.getText(), passwordInput.getText());
-        } catch (IOException e) {
-            System.out.println("Error while hosting server [port=" + portInput.getText() + "], [password=" + passwordInput.getText() + "]");
-            e.printStackTrace();
-        }
+        final TextGui gui = new TextGui("Hosting Server\nPlease wait...") {
+            @Override
+            public void render(float delta) {
+                super.render(delta);
+
+                if (!isStarting) {
+                    if (failed) {
+                        failed = false;
+                        MainGame.game.setScreen(HostMenu.this);
+                    } else {
+                        MainGame.game.setScreen(new LobbyGui());
+                    }
+                }
+            }
+        };
+
+        isStarting = true;
+        MainGame.game.setScreen(gui);
+
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+
+                try {
+                    MainGame.game.getNetworkManager().hostServer(portInput.getText(), passwordInput.getText());
+                    gui.setText("Joining Server\nPlease wait...");
+                    MainGame.game.getNetworkManager().connectToServer("localhost", MainGame.game.getNetworkManager().getServerPort());
+
+                } catch (Exception e) {
+                    failed = true;
+                    gui.setText("Failed to create server.\n" + e.getMessage());
+                    System.err.println("Failed to create server.");
+                    e.printStackTrace();
+                    MainGame.game.getNetworkManager().killServer();
+                    MainGame.game.getNetworkManager().killClient();
+
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+
+                isStarting = false;
+            }
+        }.start();
     }
 
     @Override

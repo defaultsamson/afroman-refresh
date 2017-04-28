@@ -28,6 +28,7 @@ import static afroman.game.gui.components.GuiConstants.skin;
  */
 public class MainMenu implements Screen {
 
+
     private final SettingsMenu settingsMenu;
     private final JoinMenu joinMenu;
     private final HostMenu hostMenu;

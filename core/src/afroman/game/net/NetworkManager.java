@@ -42,7 +42,20 @@ public class NetworkManager {
         connectToServer(ip, port);
     }
 
+    private int serverPort = 0;
+    private boolean isConnectingClient = false;
+    private boolean isCreatingServer = false;
+
+    public boolean isConnectingClient() {
+        return isConnectingClient;
+    }
+
+    public boolean isCreatingServer() {
+        return isCreatingServer;
+    }
+
     public void connectToServer(String ip, int port) throws IOException {
+        isConnectingClient = true;
         client = new Client();
         client.start();
         client.connect(5000, ip, port, port);
@@ -50,10 +63,6 @@ public class NetworkManager {
         Kryo kryo = client.getKryo();
         kryo.register(SomeRequest.class);
         kryo.register(SomeResponse.class);
-
-        SomeRequest request = new SomeRequest();
-        request.text = "Here is the request";
-        client.sendTCP(request);
 
         client.addListener(new Listener() {
             public void received(Connection connection, Object object) {
@@ -63,7 +72,13 @@ public class NetworkManager {
                 }
             }
         });
-        //socket = Gdx.net.newClientSocket(Net.Protocol.TCP, ip, port, new SocketHints());
+
+        serverPort = port;
+        isConnectingClient = false;
+
+        SomeRequest request = new SomeRequest();
+        request.text = "Here is the request";
+        client.sendTCP(request);
 
         System.out.println("Client successfully connected to host!");
     }
@@ -82,6 +97,7 @@ public class NetworkManager {
     }
 
     public void hostServer(int port, String password) throws IOException {
+        isCreatingServer = true;
         server = new Server();
         server.start();
         server.bind(port, port);
@@ -105,6 +121,9 @@ public class NetworkManager {
 
         });
 
+        serverPort = port;
+        isCreatingServer = false;
+
         System.out.println("Server successfully hosted!");
     }
 
@@ -114,6 +133,30 @@ public class NetworkManager {
 
     public static class SomeResponse {
         public String text;
+    }
+
+    public void killServer() {
+        if (server != null) {
+            server.stop();
+        }
+    }
+
+    public void killClient() {
+        if (client != null) {
+            client.stop();
+        }
+    }
+
+    public int getServerPort() {
+        return serverPort;
+    }
+
+    public Server getServer() {
+        return server;
+    }
+
+    public Client getClient() {
+        return client;
     }
 
     public void dispose() {
