@@ -3,7 +3,9 @@ package afroman.game.net;
 import afroman.game.FinalConstants;
 import afroman.game.MainGame;
 import afroman.game.PlayerType;
+import afroman.game.net.objects.PlayerWrapper;
 import afroman.game.net.objects.RequestPassword;
+import afroman.game.net.objects.UpdatePlayerList;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
@@ -69,12 +71,13 @@ public class NetworkManager {
 
     public void connectToServer(String ip, int port) throws IOException {
         isConnectingClient = true;
+
+        serverConnctions = new ArrayList<PlayerConnection>();
+
         client = new Client();
+        registerKryo(client.getKryo());
         client.start();
         client.connect(5000, ip, port, port);
-
-        Kryo kryo = client.getKryo();
-        kryo.register(RequestPassword.class);
 
         client.addListener(new Listener() {
             public void received(Connection connection, Object object) {
@@ -90,7 +93,18 @@ public class NetworkManager {
                             MainGame.game.safelySetScreen(MainGame.game.getPasswordGui());
                         }
                     }
+                } else if (object instanceof UpdatePlayerList) {
+                    System.out.println("MMMMm mmmm CREAMEEEE -------------");
+                    if (!isHostingServer()) {
+                        for (PlayerWrapper w : ((UpdatePlayerList) object).connections) {
+                            serverConnctions.clear();
+                            serverConnctions.add(new PlayerConnection(w.username, w.isHost, w.type));
+                            System.out.println("Adding conenctted player: " + w.username + ", " + w.isHost + ", " + w.type);
+                        }
+                    }
                 }
+                // TODO update lobby menu
+                MainGame.game.safelySetScreen(MainGame.game.getLobbyGui());
             }
 
             @Override
@@ -110,6 +124,10 @@ public class NetworkManager {
         System.out.println("Client successfully connected to host!");
     }
 
+    public boolean isHostingServer() {
+        return server != null;
+    }
+
     public void hostServer(String port, String password) throws IOException {
         int p = FinalConstants.defaultPort;
 
@@ -123,6 +141,14 @@ public class NetworkManager {
         hostServer(p, password);
     }
 
+    private void registerKryo(Kryo k) {
+        k.register(RequestPassword.class);
+        k.register(UpdatePlayerList.class);
+        k.register(PlayerWrapper.class);
+        k.register(PlayerWrapper[].class);
+        k.register(PlayerType.class);
+    }
+
     public void hostServer(int port, final String password) throws IOException {
         isCreatingServer = true;
 
@@ -130,11 +156,9 @@ public class NetworkManager {
         serverConnctions = new ArrayList<PlayerConnection>();
 
         server = new Server();
+        registerKryo(server.getKryo());
         server.start();
         server.bind(port, port);
-
-        Kryo kryo = server.getKryo();
-        kryo.register(RequestPassword.class);
 
         server.addListener(new Listener() {
             public void received(Connection connection, Object object) {
@@ -150,7 +174,7 @@ public class NetworkManager {
                             sp.incrementPasswordAttempts();
                             if (((RequestPassword) object).pass.equals(password)) {
                                 sp.confirmPlayerAsAuthenticated();
-                                System.out.println("Goteem good that time");
+                                server.sendToAllTCP(new UpdatePlayerList(serverConnctions));
                             } else {
                                 // If password is incorrect too many times, disconnect them
                                 if (sp.passwordAttempts() > FinalConstants.maxPasswordAttempts) {
@@ -189,6 +213,8 @@ public class NetworkManager {
 
                     }
                 }
+
+                server.sendToAllTCP(new UpdatePlayerList(serverConnctions));
             }
 
             @Override
@@ -199,22 +225,20 @@ public class NetworkManager {
                 ServerPlayerConnection sp = new ServerPlayerConnection(connection, "user", serverConnctions.isEmpty(), type);
                 serverConnctions.add(sp);
 
-                if (hasPassword()) {
-                    System.out.println("----- Server has password");
+                if (sp.isHost()) {
+                    sp.confirmPlayerAsAuthenticated();
+                } else if (hasPassword()) {
                     // If there's a password, ask for it from the player
                     // If they're the host, don't need to ask for a password
-                    if (sp.isHost()) {
-                        System.out.println("----- Connection is host");
-                        sp.confirmPlayerAsAuthenticated();
-                    } else {
-                        System.out.println("----- Requesting password over TCP");
-                        RequestPassword req = new RequestPassword();
-                        req.pass = "dank";
-                        connection.sendTCP(req);
-                    }
+
+                    RequestPassword req = new RequestPassword();
+                    req.pass = "dank";
+                    connection.sendTCP(req);
                 } else {
                     sp.confirmPlayerAsAuthenticated();
                 }
+
+                server.sendToAllTCP(new UpdatePlayerList(serverConnctions));
             }
         });
 
@@ -277,12 +301,16 @@ public class NetworkManager {
     public void killServer() {
         if (server != null) {
             server.stop();
+            server = null;
+            if (serverConnctions != null) serverConnctions.clear();
         }
     }
 
     public void killClient() {
         if (client != null) {
             client.stop();
+            client = null;
+            if (serverConnctions != null) serverConnctions.clear();
         }
     }
 

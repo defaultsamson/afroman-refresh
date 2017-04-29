@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -105,6 +106,18 @@ public class PasswordGui extends HierarchicalMenu {
             }
         });
         stageAbove.addActor(enterButton);
+
+        // If anything is touched that's not a TextField, remove text input focus
+        stageAbove.getRoot().addCaptureListener(new InputListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (!(event.getTarget() instanceof TextField)) {
+                    stageAbove.setKeyboardFocus(null);
+                    Gdx.input.setOnscreenKeyboardVisible(false);
+                    viewport.getCamera().position.y = 0;
+                }
+                return false;
+            }
+        });
     }
 
     private void back() {
