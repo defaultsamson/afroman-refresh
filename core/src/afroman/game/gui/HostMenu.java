@@ -216,6 +216,7 @@ public class HostMenu extends HierarchicalMenu implements Screen {
                 if (thread != null) {
                     thread.stop();
                 }
+                MainGame.game.getNetworkManager().preventFromSendingToMainMenu();
                 MainGame.game.getNetworkManager().killClient();
                 MainGame.game.getNetworkManager().killServer();
                 MainGame.game.setScreen(HostMenu.this);
@@ -236,6 +237,7 @@ public class HostMenu extends HierarchicalMenu implements Screen {
                     gui.setText("Failed to create server.\n" + e.getMessage());
                     System.err.println("Failed to create server.");
                     e.printStackTrace();
+
                     MainGame.game.getNetworkManager().killServer();
                     MainGame.game.getNetworkManager().killClient();
                 }

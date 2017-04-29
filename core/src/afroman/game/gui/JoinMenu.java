@@ -208,6 +208,7 @@ public class JoinMenu extends HierarchicalMenu implements Screen {
                     if (thread != null) {
                         thread.stop();
                     }
+                    MainGame.game.getNetworkManager().preventFromSendingToMainMenu();
                     MainGame.game.getNetworkManager().killClient();
                     MainGame.game.setScreen(JoinMenu.this);
                 }

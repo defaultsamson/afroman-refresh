@@ -3,6 +3,7 @@ package afroman.game.net;
 import afroman.game.FinalConstants;
 import afroman.game.MainGame;
 import afroman.game.PlayerType;
+import afroman.game.net.objects.RequestPassword;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
@@ -48,6 +49,12 @@ public class NetworkManager {
         connectToServer(ip, port);
     }
 
+    private boolean preventFromSendingToMainMenu = false;
+
+    public void preventFromSendingToMainMenu() {
+        preventFromSendingToMainMenu = true;
+    }
+
     private int serverPort = 0;
     private boolean isConnectingClient = false;
     private boolean isCreatingServer = false;
@@ -75,10 +82,14 @@ public class NetworkManager {
                     String pass = ((RequestPassword) object).pass;
                     // If the server is replying with some text, that means that a password is required
                     if (pass != null && pass.length() > 0) {
-                        System.out.println("showing password gui");
-                        MainGame.game.safelySetScreen(MainGame.game.getPasswordGui());
+                        if (pass.equals(FinalConstants.incorrectPasswordMessage)) {
+                            MainGame.game.getPasswordGui().setMessage("INCORRECT PASSWORD");
+                            MainGame.game.safelySetScreen(MainGame.game.getPasswordGui());
+                        } else {
+                            MainGame.game.getPasswordGui().resetMessage();
+                            MainGame.game.safelySetScreen(MainGame.game.getPasswordGui());
+                        }
                     }
-                    System.out.println("Received Password: " + pass);
                 }
             }
 
@@ -86,7 +97,10 @@ public class NetworkManager {
             public void disconnected(Connection connection) {
                 super.disconnected(connection);
                 killClient();
-                MainGame.game.safelySetScreen(MainGame.game.getMainMenu());
+                if (!preventFromSendingToMainMenu) {
+                    MainGame.game.safelySetScreen(MainGame.game.getMainMenu());
+                }
+                preventFromSendingToMainMenu = false;
             }
         });
 
@@ -136,12 +150,18 @@ public class NetworkManager {
                             sp.incrementPasswordAttempts();
                             if (((RequestPassword) object).pass.equals(password)) {
                                 sp.confirmPlayerAsAuthenticated();
+                                System.out.println("Goteem good that time");
                             } else {
-                                // If password is incorrect too many times
+                                // If password is incorrect too many times, disconnect them
                                 if (sp.passwordAttempts() > FinalConstants.maxPasswordAttempts) {
                                     System.err.println("Connection failed to enter the password too many times, disconnecting...");
                                     System.err.println("Connection: " + connection.getID() + ", " + connection.getRemoteAddressUDP().getHostName() + ", " + connection.getRemoteAddressTCP().getHostName());
                                     connection.close();
+                                } else {
+                                    // Otherwise tell them that the password is wrong
+                                    RequestPassword req = new RequestPassword();
+                                    req.pass = FinalConstants.incorrectPasswordMessage;
+                                    connection.sendTCP(req);
                                 }
                             }
                         }
@@ -188,9 +208,9 @@ public class NetworkManager {
                         sp.confirmPlayerAsAuthenticated();
                     } else {
                         System.out.println("----- Requesting password over TCP");
-                        RequestPassword pack = new RequestPassword();
-                        pack.pass = "dank";
-                        connection.sendTCP(pack);
+                        RequestPassword req = new RequestPassword();
+                        req.pass = "dank";
+                        connection.sendTCP(req);
                     }
                 } else {
                     sp.confirmPlayerAsAuthenticated();
@@ -295,9 +315,5 @@ public class NetworkManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public static class RequestPassword {
-        public String pass;
     }
 }
