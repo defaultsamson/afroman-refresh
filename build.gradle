@@ -30,6 +30,7 @@ allprojects {
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        //maven { url "https://jitpack.io" }
     }
 }
 
@@ -112,6 +113,7 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
         compile "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion"
         compile "com.esotericsoftware:kryonet:2.22.0-RC1"
+        // compile 'com.github.anubiann00b:kryonet:b6b71d4'
     }
 }
 

@@ -121,7 +121,7 @@ public class PasswordGui extends HierarchicalMenu {
     }
 
     private void back() {
-        MainGame.game.getNetworkManager().preventFromSendingToMainMenu();
+        MainGame.game.getNetworkManager().preventFromSendingToMainMenu(true);
         MainGame.game.getNetworkManager().killClient();
         gotoParentScreen();
     }

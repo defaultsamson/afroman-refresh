@@ -52,8 +52,8 @@ public class NetworkManager {
 
     private boolean preventFromSendingToMainMenu = false;
 
-    public void preventFromSendingToMainMenu() {
-        preventFromSendingToMainMenu = true;
+    public void preventFromSendingToMainMenu(boolean hnng) {
+        preventFromSendingToMainMenu = hnng;
     }
 
     private int serverPort = 0;
@@ -100,7 +100,6 @@ public class NetworkManager {
                         }
                     }
                 } else if (object instanceof UpdatePlayerList) {
-
                     if (!isHostingServer()) {
                         serverConnctions.clear();
                         for (PlayerWrapper w : ((UpdatePlayerList) object).connections) {

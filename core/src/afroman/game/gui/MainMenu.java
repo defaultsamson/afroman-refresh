@@ -40,7 +40,6 @@ public class MainMenu implements Screen {
     private Stage stageBelow;
 
     private Music music;
-    private Label fpsCounter;
 
     public MainMenu() {
         joinMenu = new JoinMenu(this);
@@ -78,11 +77,6 @@ public class MainMenu implements Screen {
         music = MainGame.game.getAssets().getMusic(Asset.MENU_MUSIC);
         music.setLooping(true);
         music.setVolume(1.0F);
-
-        fpsCounter = new Label("FPS: 0", skin);
-        fpsCounter.setSize(buttonWidth, buttonHeight);
-        fpsCounter.setPosition(-100, 0);
-        stageAbove.addActor(fpsCounter);
 
         Label title = new Label("The Adventures of Afro Man", skin);
         title.setSize(buttonWidth, buttonHeight);
@@ -174,8 +168,6 @@ public class MainMenu implements Screen {
 
     @Override
     public void render(float delta) {
-
-        fpsCounter.setText("FPS: " + Gdx.graphics.getFramesPerSecond());
 
         stageBelow.act(delta);
         stageBelow.draw();

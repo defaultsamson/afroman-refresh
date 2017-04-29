@@ -62,8 +62,8 @@ public class LobbyGui implements Screen {
         menuRayHandler = new RayHandler(menuWorld);
         menuRayHandler.setBlurNum(1);
         menuRayHandler.setAmbientLight(0.3F);
-        p1Light = new FlickeringLight(0.035F, 50, 70, menuRayHandler, 20, new Color(0F, 0F, 0F, 1F), -(manSpacing / 2), 27);
-        p2Light = new FlickeringLight(0.03F, 50, 70, menuRayHandler, 20, new Color(0F, 0F, 0F, 1F), (manSpacing / 2), 27);
+        p1Light = new FlickeringLight(0.04F, 35, 50, menuRayHandler, 20, new Color(0F, 0F, 0F, 1F), -(manSpacing / 2), 27);
+        p2Light = new FlickeringLight(0.04F, 35, 50, menuRayHandler, 20, new Color(0F, 0F, 0F, 1F), (manSpacing / 2), 27);
 
         final ScreenViewport viewport = MainGame.createStandardViewport();
 
@@ -166,7 +166,7 @@ public class LobbyGui implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 MainGame.game.getSettingsMenu().setParent(LobbyGui.this);
-                MainGame.game.setScreen(MainGame.game.getSettingsMenu());
+                MainGame.game.safelySetScreen(MainGame.game.getSettingsMenu());
             }
         });
         stageAbove.addActor(settingsButton);
@@ -179,7 +179,7 @@ public class LobbyGui implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 MainGame.game.getControlsMenu().setParent(LobbyGui.this);
-                MainGame.game.setScreen(MainGame.game.getControlsMenu());
+                MainGame.game.safelySetScreen(MainGame.game.getControlsMenu());
             }
         });
         stageAbove.addActor(controlsButton);
@@ -202,6 +202,9 @@ public class LobbyGui implements Screen {
 
         stageAbove.act(delta);
         stageAbove.draw();
+
+        if (!p1Light.isActive()) p1Light.update();
+        if (!p2Light.isActive()) p2Light.update();
     }
 
     public void updateGui() {

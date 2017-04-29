@@ -208,19 +208,32 @@ public class HostMenu extends HierarchicalMenu implements Screen {
     }
 
     private Thread thread = null;
+    private TextGui gui = null;
 
     private void hostServer() {
-        final TextGui gui = new TextGui("Hosting Server\nPlease wait...", "Cancel", new NoisyClickListener() {
+        MainGame.game.getNetworkManager().preventFromSendingToMainMenu(false);
+
+        gui = new TextGui("Hosting Server\nPlease wait...", "Cancel", new NoisyClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                if (thread != null) {
-                    thread.stop();
+                if (!gui.getButton().isDisabled()) {
+                    if (thread != null) {
+                        thread.stop();
+                    }
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            super.run();
+                            MainGame.game.getNetworkManager().preventFromSendingToMainMenu(true);
+                            MainGame.game.getNetworkManager().killClient();
+                            MainGame.game.getNetworkManager().killServer();
+                            MainGame.game.safelySetScreen(HostMenu.this);
+                        }
+                    }.start();
+                    gui.setText("Cancelling\nPlease wait...");
+                    gui.getButton().setDisabled(true);
                 }
-                MainGame.game.getNetworkManager().preventFromSendingToMainMenu();
-                MainGame.game.getNetworkManager().killClient();
-                MainGame.game.getNetworkManager().killServer();
-                MainGame.game.setScreen(HostMenu.this);
             }
         });
 

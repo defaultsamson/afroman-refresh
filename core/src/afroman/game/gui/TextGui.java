@@ -31,6 +31,7 @@ public class TextGui implements Screen {
     private Color bgColour;
 
     private Label title;
+    private TextButton backButton;
 
     public void setText(String newText) {
         title.setText(newText);
@@ -58,11 +59,15 @@ public class TextGui implements Screen {
         title.setAlignment(Align.center);
         stageAbove.addActor(title);
 
-        TextButton backButton = new TextButton(cancelText, skin);
+        backButton = new TextButton(cancelText, skin);
         backButton.setSize(buttonWidth, buttonHeight);
         backButton.setPosition(-buttonWidth / 2, buttonYOffset + (1 * (buttonHeight + buttonSpacing)));
         backButton.addListener(buttonListener);
         stageAbove.addActor(backButton);
+    }
+
+    public TextButton getButton() {
+        return backButton;
     }
 
     @Override
