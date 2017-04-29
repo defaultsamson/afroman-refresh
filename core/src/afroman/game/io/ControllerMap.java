@@ -1,5 +1,8 @@
 package afroman.game.io;
 
+import afroman.game.MainGame;
+import com.badlogic.gdx.controllers.Controller;
+
 /**
  * Created by Samson on 2017-04-24.
  */
@@ -23,6 +26,11 @@ public class ControllerMap {
         public static final int LEFT = 13;
 
         public static String toString(int keycode) {
+            Controller c = MainGame.game.getControls().getController();
+            if (c != null && !c.getName().contains("Xbox")) {
+                return "" + keycode;
+            }
+
             switch (keycode) {
                 default:
                     return null;
@@ -68,6 +76,11 @@ public class ControllerMap {
         public static final int AXIS_RIGHT_TRIGGER = 5;
 
         public static String toString(int keycode) {
+            Controller c = MainGame.game.getControls().getController();
+            if (c != null && !c.getName().contains("Xbox")) {
+                return "" + keycode;
+            }
+
             switch (keycode) {
                 default:
                     return null;

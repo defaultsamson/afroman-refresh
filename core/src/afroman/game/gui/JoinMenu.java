@@ -193,7 +193,8 @@ public class JoinMenu extends HierarchicalMenu implements Screen {
                 }
             }
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)) gotoParentScreen();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
+            gotoParentScreen();
     }
 
     private Thread thread = null;

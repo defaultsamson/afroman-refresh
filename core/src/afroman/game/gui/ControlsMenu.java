@@ -371,12 +371,16 @@ public class ControlsMenu extends HierarchicalMenu {
             }
 
             if (!isButtonPressed) updateControlSettingProcess();
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            gotoParentScreen();
         }
 
         stageAbove.act(delta);
         stageAbove.draw();
+    }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)) gotoParentScreen();
+    public void setParent(Screen screen) {
+        this.parentScreen = screen;
     }
 
     private void updateControlSettingProcess() {

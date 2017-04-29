@@ -3,6 +3,7 @@ package afroman.game.gui;
 import afroman.game.MainGame;
 import afroman.game.assets.Asset;
 import afroman.game.gui.components.FlickeringLight;
+import afroman.game.gui.components.IconButton;
 import afroman.game.gui.components.NoisyClickListener;
 import afroman.game.net.NetworkManager;
 import afroman.game.net.PlayerConnection;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -155,6 +157,32 @@ public class LobbyGui implements Screen {
         waitingLabel.setPosition(0, buttonYOffset + (1 * (buttonHeight + buttonSpacing)));
         waitingLabel.setAlignment(Align.center);
         stageAbove.addActor(waitingLabel);
+
+        Texture settingsIcon = MainGame.game.getAssets().getTexture(Asset.SETTINGS_ICON);
+        IconButton settingsButton = new IconButton(skin, settingsIcon);
+        settingsButton.setSize(buttonHeight, buttonHeight);
+        settingsButton.setPosition((-buttonWidth / 2) - (1 * (buttonHeight + buttonSpacing)), buttonYOffset + (0 * (buttonHeight + buttonSpacing)));
+        settingsButton.addListener(new NoisyClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                MainGame.game.getSettingsMenu().setParent(LobbyGui.this);
+                MainGame.game.setScreen(MainGame.game.getSettingsMenu());
+            }
+        });
+        stageAbove.addActor(settingsButton);
+
+        Texture controlsIcon = MainGame.game.getAssets().getTexture(Asset.CONTROLLER_ICON);
+        IconButton controlsButton = new IconButton(skin, controlsIcon);
+        controlsButton.setSize(buttonHeight, buttonHeight);
+        controlsButton.setPosition((-buttonWidth / 2) - (2 * (buttonHeight + buttonSpacing)), buttonYOffset + (0 * (buttonHeight + buttonSpacing)));
+        controlsButton.addListener(new NoisyClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                MainGame.game.getControlsMenu().setParent(LobbyGui.this);
+                MainGame.game.setScreen(MainGame.game.getControlsMenu());
+            }
+        });
+        stageAbove.addActor(controlsButton);
     }
 
     @Override

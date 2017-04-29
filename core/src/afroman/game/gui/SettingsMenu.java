@@ -29,7 +29,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 /**
  * Created by Samson on 2017-04-08.
  */
-public class SettingsMenu extends HierarchicalMenu implements Screen {
+public class SettingsMenu extends HierarchicalMenu {
     /**
      * The stage above the lighting.
      */
@@ -171,7 +171,7 @@ public class SettingsMenu extends HierarchicalMenu implements Screen {
         exitButton.addListener(new NoisyClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                MainGame.game.setScreen(parentScreen);// gotoParentScreen();
+                gotoParentScreen();
             }
         });
         stageAbove.addActor(exitButton);
@@ -199,6 +199,10 @@ public class SettingsMenu extends HierarchicalMenu implements Screen {
         Gdx.input.setInputProcessor(stageAbove);
     }
 
+    public void setParent(Screen screen) {
+        this.parentScreen = screen;
+    }
+
     @Override
     public void render(float delta) {
 
@@ -221,7 +225,8 @@ public class SettingsMenu extends HierarchicalMenu implements Screen {
         stageAbove.act(delta);
         stageAbove.draw();
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)) gotoParentScreen();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
+            gotoParentScreen();
     }
 
     @Override

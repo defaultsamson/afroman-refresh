@@ -240,6 +240,12 @@ public class NetworkManager {
             @Override
             public void connected(Connection connection) {
                 super.connected(connection);
+
+                if (serverConnctions.size() >= FinalConstants.maxPlayers) {
+                    connection.close();
+                    return;
+                }
+
                 // By defualt, make the player player 1. If there's already a player 1, switch them to player 2
                 PlayerType type = getPlayerConnection(PlayerType.PLAYER1) == null ? PlayerType.PLAYER1 : PlayerType.PLAYER2;
                 ServerPlayerConnection sp = new ServerPlayerConnection(connection, "", serverConnctions.isEmpty(), type);

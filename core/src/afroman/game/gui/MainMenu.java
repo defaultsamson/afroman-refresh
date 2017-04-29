@@ -7,7 +7,6 @@ import afroman.game.gui.components.NoisyClickListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -28,10 +27,8 @@ import static afroman.game.gui.components.GuiConstants.skin;
  */
 public class MainMenu implements Screen {
 
-    public final SettingsMenu settingsMenu;
     public final JoinMenu joinMenu;
     public final HostMenu hostMenu;
-    public final ControlsMenu controlsMenu;
 
     /**
      * The stage above the lighting.
@@ -46,10 +43,8 @@ public class MainMenu implements Screen {
     private Label fpsCounter;
 
     public MainMenu() {
-        settingsMenu = new SettingsMenu(this);
         joinMenu = new JoinMenu(this);
         hostMenu = new HostMenu(this);
-        controlsMenu = new ControlsMenu(this);
 
         final ScreenViewport viewport = MainGame.createStandardViewport();
 
@@ -95,9 +90,6 @@ public class MainMenu implements Screen {
         title.setAlignment(Align.center);
         stageAbove.addActor(title);
 
-        final Sound buttonUp = MainGame.game.getAssets().getSound(Asset.BUTTON_UP);
-        final Sound buttonDown = MainGame.game.getAssets().getSound(Asset.BUTTON_DOWN);
-
         TextButton joinButton = new TextButton("Join", skin, "default");
         joinButton.setSize(buttonWidth, buttonHeight);
         joinButton.setPosition(-buttonWidth / 2, buttonYOffset + (2 * (buttonHeight + buttonSpacing)));
@@ -127,7 +119,8 @@ public class MainMenu implements Screen {
         settingsButton.addListener(new NoisyClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                MainGame.game.setScreen(settingsMenu);
+                MainGame.game.getSettingsMenu().setParent(MainMenu.this);
+                MainGame.game.setScreen(MainGame.game.getSettingsMenu());
             }
         });
         stageAbove.addActor(settingsButton);
@@ -139,7 +132,9 @@ public class MainMenu implements Screen {
         controlsButton.addListener(new NoisyClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                MainGame.game.setScreen(controlsMenu);
+                ControlsMenu cm = MainGame.game.getControlsMenu();
+                cm.setParent(MainMenu.this);
+                MainGame.game.setScreen(cm);
             }
         });
         stageAbove.addActor(controlsButton);
@@ -221,9 +216,7 @@ public class MainMenu implements Screen {
         stageBelow.dispose();
         music.dispose();
 
-        settingsMenu.dispose();
         joinMenu.dispose();
         hostMenu.dispose();
-        controlsMenu.dispose();
     }
 }

@@ -10,4 +10,5 @@ public class FinalConstants {
     public static final int maxPortLength = 5;
     public static final int maxPasswordAttempts = 3;
     public static final String incorrectPasswordMessage = "inc";
+    public static final int maxPlayers = 2;
 }

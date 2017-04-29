@@ -191,7 +191,7 @@ public class PasswordGui extends HierarchicalMenu {
                 sendPassword();
             }
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)) back();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) back();
     }
 
     @Override

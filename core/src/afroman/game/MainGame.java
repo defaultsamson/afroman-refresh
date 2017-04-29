@@ -2,9 +2,7 @@ package afroman.game;
 
 import afroman.game.assets.Asset;
 import afroman.game.assets.Assets;
-import afroman.game.gui.LobbyGui;
-import afroman.game.gui.MainMenu;
-import afroman.game.gui.PasswordGui;
+import afroman.game.gui.*;
 import afroman.game.gui.components.GuiConstants;
 import afroman.game.gui.components.NoisyClickListener;
 import afroman.game.io.Controls;
@@ -47,6 +45,8 @@ public class MainGame extends Game {
     private MainMenu mainMenu;
     private LobbyGui lobbyGui;
     private PasswordGui passwordGui;
+    private SettingsMenu settingsMenu;
+    private ControlsMenu controlsMenu;
 
     private SpriteBatch batch;
     private Texture vignette;
@@ -143,6 +143,8 @@ public class MainGame extends Game {
         mainMenu = new MainMenu();
         lobbyGui = new LobbyGui();
         passwordGui = new PasswordGui();
+        settingsMenu = new SettingsMenu(null);
+        controlsMenu = new ControlsMenu(null);
         setScreen(mainMenu);
     }
 
@@ -341,6 +343,14 @@ public class MainGame extends Game {
 
     public PasswordGui getPasswordGui() {
         return passwordGui;
+    }
+
+    public SettingsMenu getSettingsMenu() {
+        return settingsMenu;
+    }
+
+    public ControlsMenu getControlsMenu() {
+        return controlsMenu;
     }
 
     public static class RemovableOnCompletionListener implements Music.OnCompletionListener {

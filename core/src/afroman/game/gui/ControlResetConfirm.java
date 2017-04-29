@@ -121,7 +121,8 @@ public class ControlResetConfirm extends HierarchicalMenu {
         stageAbove.act(delta);
         stageAbove.draw();
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)) gotoParentScreen();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
+            gotoParentScreen();
     }
 
     @Override
