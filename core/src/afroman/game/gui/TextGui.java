@@ -7,8 +7,10 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -34,7 +36,7 @@ public class TextGui implements Screen {
         title.setText(newText);
     }
 
-    public TextGui(String text) {
+    public TextGui(String text, String cancelText, EventListener buttonListener) {
         final ScreenViewport viewport = MainGame.createStandardViewport();
 
         stageAbove = new Stage(viewport);
@@ -52,9 +54,15 @@ public class TextGui implements Screen {
 
         title = new Label(text, skin);
         title.setSize(0, buttonHeight);
-        title.setPosition(0, buttonYOffset + (2 * (buttonHeight + buttonSpacing)));
+        title.setPosition(0, buttonYOffset + (2.3F * (buttonHeight + buttonSpacing)));
         title.setAlignment(Align.center);
         stageAbove.addActor(title);
+
+        TextButton backButton = new TextButton(cancelText, skin);
+        backButton.setSize(buttonWidth, buttonHeight);
+        backButton.setPosition(-buttonWidth / 2, buttonYOffset + (1 * (buttonHeight + buttonSpacing)));
+        backButton.addListener(buttonListener);
+        stageAbove.addActor(backButton);
     }
 
     @Override

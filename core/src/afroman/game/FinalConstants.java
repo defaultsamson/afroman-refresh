@@ -8,4 +8,5 @@ public class FinalConstants {
     public static final int maxUsernameLength = 12;
     public static final int defaultPort = 2413;
     public static final int maxPortLength = 5;
+    public static final int maxPasswordAttempts = 3;
 }

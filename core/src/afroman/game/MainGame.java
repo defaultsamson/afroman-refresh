@@ -2,7 +2,9 @@ package afroman.game;
 
 import afroman.game.assets.Asset;
 import afroman.game.assets.Assets;
+import afroman.game.gui.LobbyGui;
 import afroman.game.gui.MainMenu;
+import afroman.game.gui.PasswordGui;
 import afroman.game.gui.components.GuiConstants;
 import afroman.game.gui.components.NoisyClickListener;
 import afroman.game.io.Controls;
@@ -13,6 +15,7 @@ import afroman.game.util.DeviceUtil;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
@@ -42,6 +45,8 @@ public class MainGame extends Game {
     private Assets assets;
 
     private MainMenu mainMenu;
+    private LobbyGui lobbyGui;
+    private PasswordGui passwordGui;
 
     private SpriteBatch batch;
     private Texture vignette;
@@ -57,8 +62,10 @@ public class MainGame extends Game {
 
     private List<ScreenViewport> viewportList;
 
-    public void goToMainMenu() {
-        setScreen(mainMenu);
+    private Screen safelyGotoScreen;
+
+    public void safelySetScreen(Screen screen) {
+        safelyGotoScreen = screen;
     }
 
     public void setScale(float scale) {
@@ -134,7 +141,13 @@ public class MainGame extends Game {
 
         GuiConstants.initGuiConstants();
         mainMenu = new MainMenu();
+        lobbyGui = new LobbyGui();
+        passwordGui = new PasswordGui();
         setScreen(mainMenu);
+    }
+
+    public MainMenu getMainMenu() {
+        return mainMenu;
     }
 
     private void resetScreenSize(float scale) {
@@ -151,6 +164,11 @@ public class MainGame extends Game {
 
     @Override
     public void render() {
+        if (safelyGotoScreen != null) {
+            setScreen(safelyGotoScreen);
+            safelyGotoScreen = null;
+        }
+
         if (DeviceUtil.isDesktop()) {
             // Debug, rescales the window size
             if (Gdx.input.isKeyJustPressed(Input.Keys.F12)) resetScreenSize(settings.getFloat(Setting.SCALE));
@@ -313,6 +331,14 @@ public class MainGame extends Game {
      */
     public boolean isInverted() {
         return isYInverted;
+    }
+
+    public LobbyGui getLobbyGui() {
+        return lobbyGui;
+    }
+
+    public PasswordGui getPasswordGui() {
+        return passwordGui;
     }
 
     public static class RemovableOnCompletionListener implements Music.OnCompletionListener {

@@ -28,12 +28,10 @@ import static afroman.game.gui.components.GuiConstants.skin;
  */
 public class MainMenu implements Screen {
 
-
-    private final SettingsMenu settingsMenu;
-    private final JoinMenu joinMenu;
-    private final HostMenu hostMenu;
-    private final ControlsMenu controlsMenu;
-
+    public final SettingsMenu settingsMenu;
+    public final JoinMenu joinMenu;
+    public final HostMenu hostMenu;
+    public final ControlsMenu controlsMenu;
 
     /**
      * The stage above the lighting.

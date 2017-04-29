@@ -1,17 +1,22 @@
 package afroman.game.gui;
 
+import afroman.game.FinalConstants;
 import afroman.game.MainGame;
+import afroman.game.gui.components.CleanTextField;
+import afroman.game.gui.components.GuiConstants;
+import afroman.game.gui.components.HierarchicalMenu;
 import afroman.game.gui.components.NoisyClickListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -21,7 +26,7 @@ import static afroman.game.gui.components.GuiConstants.skin;
 /**
  * Created by Samson on 2017-04-24.
  */
-public class LobbyGui implements Screen {
+public class PasswordGui extends HierarchicalMenu {
 
     /**
      * The stage above the lighting.
@@ -31,9 +36,10 @@ public class LobbyGui implements Screen {
     private ShapeRenderer shapeRenderer;
     private Color bgColour;
 
-    private Label title;
+    private CleanTextField usernameInput;
 
-    public LobbyGui() {
+    public PasswordGui() {
+        super(MainGame.game.getMainMenu().joinMenu);
         final ScreenViewport viewport = MainGame.createStandardViewport();
 
         stageAbove = new Stage(viewport);
@@ -43,27 +49,52 @@ public class LobbyGui implements Screen {
         shapeRenderer = new ShapeRenderer();
         bgColour = new Color(0, 0, 0, 0.7F);
 
-        int buttonWidth = 200;
+        int buttonWidth = 72;
         int buttonHeight = 16;
 
-        int buttonYOffset = -42;
+        int buttonYOffset = -46;
         final int buttonSpacing = 6;
 
-        title = new Label("This is a pretty dank lobby\namirite, fellas?", skin);
-        title.setSize(0, buttonHeight);
-        title.setPosition(0, buttonYOffset + (2 * (buttonHeight + buttonSpacing)));
-        title.setAlignment(Align.center);
-        stageAbove.addActor(title);
+        usernameInput = new CleanTextField("", skin);
+        usernameInput.setSize(buttonWidth * 2, buttonHeight);
+        usernameInput.setPosition(-usernameInput.getWidth() / 2, buttonYOffset + (2F * (buttonHeight + buttonSpacing)));
+        usernameInput.setTextFieldFilter(GuiConstants.usernameFilter);
+        usernameInput.setMaxLength(FinalConstants.maxUsernameLength);
+        usernameInput.setTextFieldListener(new TextField.TextFieldListener() {
+            @Override
+            public void keyTyped(TextField textField, char c) {
 
-        TextButton backButton = new TextButton("Heckin wicked yo", skin);
-        backButton.setSize(buttonWidth, buttonHeight);
-        backButton.setPosition(-(buttonWidth / 2), buttonYOffset + (1 * (buttonHeight + buttonSpacing)));
-        backButton.addListener(new NoisyClickListener() {
+            }
+        });
+        usernameInput.addListener(new CleanTextField.TextFieldOrientFocusListener(viewport.getCamera(), buttonSpacing));
+        stageAbove.addActor(usernameInput);
+
+        Label usernameLabel = new Label("Enter Server Password", skin);
+        usernameLabel.setSize(0, buttonHeight);
+        usernameLabel.setAlignment(Align.center);
+        usernameLabel.setTouchable(Touchable.disabled);
+        usernameLabel.setPosition(0, buttonYOffset + (3F * (buttonHeight + buttonSpacing)));
+        stageAbove.addActor(usernameLabel);
+
+        TextButton resetControls = new TextButton("Back", skin);
+        resetControls.setSize(buttonWidth, buttonHeight);
+        resetControls.setPosition(buttonSpacing / 2, buttonYOffset + (1 * (buttonHeight + buttonSpacing)));
+        resetControls.addListener(new NoisyClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 MainGame.game.getNetworkManager().killClient();
-                MainGame.game.getNetworkManager().killServer();
-                MainGame.game.setScreen(MainGame.game.getMainMenu());
+                gotoParentScreen();
+            }
+        });
+        stageAbove.addActor(resetControls);
+
+        TextButton backButton = new TextButton("Enter", skin);
+        backButton.setSize(buttonWidth, buttonHeight);
+        backButton.setPosition(-buttonWidth - (buttonSpacing / 2), buttonYOffset + (1 * (buttonHeight + buttonSpacing)));
+        backButton.addListener(new NoisyClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+
             }
         });
         stageAbove.addActor(backButton);

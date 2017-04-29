@@ -6,6 +6,7 @@ import afroman.game.gui.components.NoisyClickListener;
 import afroman.game.io.ControlInput;
 import afroman.game.io.ControlMapType;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
@@ -119,11 +120,14 @@ public class ControlResetConfirm extends HierarchicalMenu {
 
         stageAbove.act(delta);
         stageAbove.draw();
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)) gotoParentScreen();
     }
 
     @Override
     public void resize(int width, int height) {
-
+        stageAbove.getViewport().update(width, height);
+        stageAbove.getViewport().getCamera().update();
     }
 
     @Override

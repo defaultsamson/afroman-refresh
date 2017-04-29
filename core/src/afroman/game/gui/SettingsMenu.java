@@ -7,6 +7,7 @@ import afroman.game.gui.components.NoisyClickListener;
 import afroman.game.gui.components.RoundingSlider;
 import afroman.game.io.Setting;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
@@ -219,6 +220,8 @@ public class SettingsMenu extends HierarchicalMenu implements Screen {
 
         stageAbove.act(delta);
         stageAbove.draw();
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)) gotoParentScreen();
     }
 
     @Override

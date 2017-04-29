@@ -375,6 +375,8 @@ public class ControlsMenu extends HierarchicalMenu {
 
         stageAbove.act(delta);
         stageAbove.draw();
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)) gotoParentScreen();
     }
 
     private void updateControlSettingProcess() {

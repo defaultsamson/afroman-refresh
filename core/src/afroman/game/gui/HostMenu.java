@@ -206,57 +206,47 @@ public class HostMenu extends HierarchicalMenu implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)) gotoParentScreen();
     }
 
-    private boolean isStarting = false;
-    private boolean failed = false;
+    private Thread thread = null;
 
     private void hostServer() {
-        final TextGui gui = new TextGui("Hosting Server\nPlease wait...") {
+        final TextGui gui = new TextGui("Hosting Server\nPlease wait...", "Cancel", new NoisyClickListener() {
             @Override
-            public void render(float delta) {
-                super.render(delta);
-
-                if (!isStarting) {
-                    if (failed) {
-                        failed = false;
-                        MainGame.game.setScreen(HostMenu.this);
-                    } else {
-                        MainGame.game.setScreen(new LobbyGui());
-                    }
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                if (thread != null) {
+                    thread.stop();
                 }
+                MainGame.game.getNetworkManager().killClient();
+                MainGame.game.getNetworkManager().killServer();
+                MainGame.game.setScreen(HostMenu.this);
             }
-        };
+        });
 
-        isStarting = true;
-        MainGame.game.setScreen(gui);
-
-        new Thread() {
+        thread = new Thread() {
             @Override
             public void run() {
                 super.run();
 
                 try {
+
                     MainGame.game.getNetworkManager().hostServer(portInput.getText(), passwordInput.getText());
                     gui.setText("Joining Server\nPlease wait...");
                     MainGame.game.getNetworkManager().connectToServer("localhost", MainGame.game.getNetworkManager().getServerPort());
-
                 } catch (Exception e) {
-                    failed = true;
                     gui.setText("Failed to create server.\n" + e.getMessage());
                     System.err.println("Failed to create server.");
                     e.printStackTrace();
                     MainGame.game.getNetworkManager().killServer();
                     MainGame.game.getNetworkManager().killClient();
-
-                    try {
-                        Thread.sleep(3000);
-                    } catch (InterruptedException e1) {
-                        e1.printStackTrace();
-                    }
                 }
 
-                isStarting = false;
+                thread = null;
             }
-        }.start();
+        };
+
+        MainGame.game.setScreen(gui);
+
+        thread.start();
     }
 
     @Override

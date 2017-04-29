@@ -182,7 +182,6 @@ public class JoinMenu extends HierarchicalMenu implements Screen {
         stageAbove.act(delta);
         stageAbove.draw();
 
-        // TODO
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             if (DeviceUtil.isDesktop()) {
                 if (!canJoin()) {
@@ -197,31 +196,24 @@ public class JoinMenu extends HierarchicalMenu implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK)) gotoParentScreen();
     }
 
-    private boolean isStarting = false;
-    private boolean failed = false;
+    private Thread thread = null;
 
     private void connectToServer() {
         if (canJoin()) {
-            final TextGui gui = new TextGui("Joining Server \n" + ipInput.getText() + "\nPlease wait...") {
+
+            final TextGui gui = new TextGui("Joining Server \n" + ipInput.getText() + "\nPlease wait...", "Cancel", new NoisyClickListener() {
                 @Override
-                public void render(float delta) {
-                    super.render(delta);
-
-                    if (!isStarting) {
-                        if (failed) {
-                            failed = false;
-                            MainGame.game.setScreen(JoinMenu.this);
-                        } else {
-                            MainGame.game.setScreen(new LobbyGui());
-                        }
+                public void clicked(InputEvent event, float x, float y) {
+                    super.clicked(event, x, y);
+                    if (thread != null) {
+                        thread.stop();
                     }
+                    MainGame.game.getNetworkManager().killClient();
+                    MainGame.game.setScreen(JoinMenu.this);
                 }
-            };
+            });
 
-            isStarting = true;
-            MainGame.game.setScreen(gui);
-
-            new Thread() {
+            thread = new Thread() {
                 @Override
                 public void run() {
                     super.run();
@@ -229,22 +221,19 @@ public class JoinMenu extends HierarchicalMenu implements Screen {
                     try {
                         MainGame.game.getNetworkManager().connectToServer(ipInput.getText());
                     } catch (Exception e) {
-                        failed = true;
                         gui.setText("Failed to join server.\n" + e.getMessage());
                         System.err.println("Failed to join server.");
                         e.printStackTrace();
                         MainGame.game.getNetworkManager().killClient();
-
-                        try {
-                            Thread.sleep(3000);
-                        } catch (InterruptedException e1) {
-                            e1.printStackTrace();
-                        }
                     }
 
-                    isStarting = false;
+                    thread = null;
                 }
-            }.start();
+            };
+
+            MainGame.game.setScreen(gui);
+
+            thread.start();
         }
     }
 
