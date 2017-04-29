@@ -31,4 +31,8 @@ public class PlayerConnection {
     public void setHost(boolean host) {
         this.isHost = host;
     }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 }

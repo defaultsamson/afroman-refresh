@@ -165,8 +165,10 @@ public class MainGame extends Game {
     @Override
     public void render() {
         if (safelyGotoScreen != null) {
-            setScreen(safelyGotoScreen);
-            safelyGotoScreen = null;
+            if (safelyGotoScreen != getScreen()) {
+                setScreen(safelyGotoScreen);
+                safelyGotoScreen = null;
+            }
         }
 
         if (DeviceUtil.isDesktop()) {

@@ -27,7 +27,7 @@ public class GuiConstants {
         menuRayHandler = new RayHandler(menuWorld);
         menuRayHandler.setBlurNum(1);
         menuRayHandler.setAmbientLight(0.3F);
-        menuLight = new FlickeringLight(0.03F, 80, 100, menuRayHandler, 10, new Color(0F, 0F, 0F, 1F), 0, 26);
+        menuLight = new FlickeringLight(0.03F, 80, 100, menuRayHandler, 20, new Color(0F, 0F, 0F, 1F), 0, 27);
 
         skin = MainGame.game.getAssets().getSkin(Asset.AFRO_SKIN);
 

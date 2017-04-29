@@ -41,8 +41,4 @@ public class FlickeringLight extends PointLight {
         state += Gdx.graphics.getDeltaTime();
         setDistance(animation.getKeyFrame(state));
     }
-
-    public void uploadToImgur(float pixels) {
-
-    }
 }

@@ -3,9 +3,7 @@ package afroman.game.net;
 import afroman.game.FinalConstants;
 import afroman.game.MainGame;
 import afroman.game.PlayerType;
-import afroman.game.net.objects.PlayerWrapper;
-import afroman.game.net.objects.RequestPassword;
-import afroman.game.net.objects.UpdatePlayerList;
+import afroman.game.net.objects.*;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
@@ -22,6 +20,7 @@ import java.util.List;
 public class NetworkManager {
 
     private String serverPassword;
+    private String clientUsername;
 
     private Client client;
     private Server server;
@@ -30,7 +29,7 @@ public class NetworkManager {
 
     }
 
-    public void connectToServer(String ip) throws IOException {
+    public void connectToServer(String username, String ip) throws IOException {
         int port = FinalConstants.defaultPort;
         if (ip.contains(":")) {
             try {
@@ -48,7 +47,7 @@ public class NetworkManager {
             }
         }
 
-        connectToServer(ip, port);
+        connectToServer(username, ip, port);
     }
 
     private boolean preventFromSendingToMainMenu = false;
@@ -69,9 +68,16 @@ public class NetworkManager {
         return isCreatingServer;
     }
 
-    public void connectToServer(String ip, int port) throws IOException {
+    private PlayerType thisPlayerType;
+
+    public PlayerType getThisPlayerType() {
+        return thisPlayerType;
+    }
+
+    public void connectToServer(String username, String ip, int port) throws IOException {
         isConnectingClient = true;
 
+        clientUsername = username;
         serverConnctions = new ArrayList<PlayerConnection>();
 
         client = new Client();
@@ -94,17 +100,18 @@ public class NetworkManager {
                         }
                     }
                 } else if (object instanceof UpdatePlayerList) {
-                    System.out.println("MMMMm mmmm CREAMEEEE -------------");
+
                     if (!isHostingServer()) {
+                        serverConnctions.clear();
                         for (PlayerWrapper w : ((UpdatePlayerList) object).connections) {
-                            serverConnctions.clear();
                             serverConnctions.add(new PlayerConnection(w.username, w.isHost, w.type));
-                            System.out.println("Adding conenctted player: " + w.username + ", " + w.isHost + ", " + w.type);
                         }
                     }
+                    MainGame.game.safelySetScreen(MainGame.game.getLobbyGui());
+                    MainGame.game.getLobbyGui().updateGui();
+                } else if (object instanceof SetPlayerTypes) {
+                    thisPlayerType = ((SetPlayerTypes) object).playerType;
                 }
-                // TODO update lobby menu
-                MainGame.game.safelySetScreen(MainGame.game.getLobbyGui());
             }
 
             @Override
@@ -115,6 +122,13 @@ public class NetworkManager {
                     MainGame.game.safelySetScreen(MainGame.game.getMainMenu());
                 }
                 preventFromSendingToMainMenu = false;
+            }
+
+            @Override
+            public void connected(Connection connection) {
+                super.connected(connection);
+
+                connection.sendTCP(new ChangeUsername(clientUsername));
             }
         });
 
@@ -147,6 +161,9 @@ public class NetworkManager {
         k.register(PlayerWrapper.class);
         k.register(PlayerWrapper[].class);
         k.register(PlayerType.class);
+        k.register(KickPlayer.class);
+        k.register(SetPlayerTypes.class);
+        k.register(ChangeUsername.class);
     }
 
     public void hostServer(int port, final String password) throws IOException {
@@ -164,10 +181,13 @@ public class NetworkManager {
             public void received(Connection connection, Object object) {
                 ServerPlayerConnection sp = getServerPlayerConnection(connection);
                 if (sp != null) {
-                    if (sp.hasAuthenticated()) {
-                        if (object instanceof RequestPassword) {
-                            RequestPassword request = (RequestPassword) object;
-                            System.out.println(request.pass);
+                    if (object instanceof ChangeUsername) {
+                        sp.setUsername(((ChangeUsername) object).username);
+                        if (sp.hasAuthenticated()) server.sendToAllTCP(new UpdatePlayerList(serverConnctions));
+                    } else if (sp.hasAuthenticated()) {
+                        if (object instanceof KickPlayer) {
+                            ServerPlayerConnection spKick = getServerPlayerConnection(false);
+                            if (spKick != null) spKick.getConnection().close();
                         }
                     } else {
                         if (object instanceof RequestPassword) {
@@ -222,7 +242,7 @@ public class NetworkManager {
                 super.connected(connection);
                 // By defualt, make the player player 1. If there's already a player 1, switch them to player 2
                 PlayerType type = getPlayerConnection(PlayerType.PLAYER1) == null ? PlayerType.PLAYER1 : PlayerType.PLAYER2;
-                ServerPlayerConnection sp = new ServerPlayerConnection(connection, "user", serverConnctions.isEmpty(), type);
+                ServerPlayerConnection sp = new ServerPlayerConnection(connection, "", serverConnctions.isEmpty(), type);
                 serverConnctions.add(sp);
 
                 if (sp.isHost()) {
@@ -238,7 +258,7 @@ public class NetworkManager {
                     sp.confirmPlayerAsAuthenticated();
                 }
 
-                server.sendToAllTCP(new UpdatePlayerList(serverConnctions));
+                sp.getConnection().sendTCP(new SetPlayerTypes(type));
             }
         });
 
@@ -257,6 +277,26 @@ public class NetworkManager {
     public PlayerConnection getPlayerConnection(PlayerType playerType) {
         for (PlayerConnection p : serverConnctions) {
             if (p.getType() == playerType) return p;
+        }
+
+        return null;
+    }
+
+    public PlayerConnection getPlayerConnection(boolean isHost) {
+        for (PlayerConnection p : serverConnctions) {
+            if (p.isHost() == isHost) return p;
+        }
+
+        return null;
+    }
+
+    public ServerPlayerConnection getServerPlayerConnection(boolean isHost) {
+        for (PlayerConnection p : serverConnctions) {
+            if (p instanceof ServerPlayerConnection) {
+                if (p.isHost() == isHost) {
+                    return ((ServerPlayerConnection) p);
+                }
+            }
         }
 
         return null;
@@ -302,7 +342,6 @@ public class NetworkManager {
         if (server != null) {
             server.stop();
             server = null;
-            if (serverConnctions != null) serverConnctions.clear();
         }
     }
 
@@ -310,7 +349,6 @@ public class NetworkManager {
         if (client != null) {
             client.stop();
             client = null;
-            if (serverConnctions != null) serverConnctions.clear();
         }
     }
 

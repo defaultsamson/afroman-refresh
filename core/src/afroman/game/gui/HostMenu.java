@@ -232,7 +232,7 @@ public class HostMenu extends HierarchicalMenu implements Screen {
 
                     MainGame.game.getNetworkManager().hostServer(portInput.getText(), passwordInput.getText());
                     gui.setText("Joining Server\nPlease wait...");
-                    MainGame.game.getNetworkManager().connectToServer("localhost", MainGame.game.getNetworkManager().getServerPort());
+                    MainGame.game.getNetworkManager().connectToServer(usernameInput.getText(), "localhost", MainGame.game.getNetworkManager().getServerPort());
                 } catch (Exception e) {
                     gui.setText("Failed to create server.\n" + e.getMessage());
                     System.err.println("Failed to create server.");

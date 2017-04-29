@@ -220,7 +220,7 @@ public class JoinMenu extends HierarchicalMenu implements Screen {
                     super.run();
 
                     try {
-                        MainGame.game.getNetworkManager().connectToServer(ipInput.getText());
+                        MainGame.game.getNetworkManager().connectToServer(usernameInput.getText(), ipInput.getText());
                     } catch (Exception e) {
                         gui.setText("Failed to join server.\n" + e.getMessage());
                         System.err.println("Failed to join server.");
