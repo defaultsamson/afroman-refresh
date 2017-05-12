@@ -10,6 +10,8 @@ public class DesktopLauncher {
 
     public static void main(String[] arg) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+        config.setTitle("Afro Man");
+        // TODO config.setWindowIcon();
 
         new Lwjgl3Application(new MainGame(), config);
     }

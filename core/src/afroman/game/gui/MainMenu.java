@@ -4,6 +4,7 @@ import afroman.game.MainGame;
 import afroman.game.assets.Asset;
 import afroman.game.gui.components.IconButton;
 import afroman.game.gui.components.NoisyClickListener;
+import afroman.game.util.DeviceUtil;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
@@ -15,12 +16,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.Random;
 
-import static afroman.game.gui.components.GuiConstants.menuRayHandler;
-import static afroman.game.gui.components.GuiConstants.skin;
+import static afroman.game.gui.components.GuiConstants.*;
 
 /**
  * Created by Samson on 2017-04-08.
@@ -44,8 +43,6 @@ public class MainMenu implements Screen {
     public MainMenu() {
         joinMenu = new JoinMenu(this);
         hostMenu = new HostMenu(this);
-
-        final ScreenViewport viewport = MainGame.createStandardViewport();
 
         stageAbove = new Stage(viewport);
         stageBelow = new Stage(viewport);
@@ -71,7 +68,7 @@ public class MainMenu implements Screen {
         int buttonWidth = 72;
         int buttonHeight = 16;
 
-        int buttonYOffset = -48;
+        int buttonYOffset = -49;
         int buttonSpacing = 6;
 
         music = MainGame.game.getAssets().getMusic(Asset.MENU_MUSIC);
@@ -109,7 +106,7 @@ public class MainMenu implements Screen {
         Texture settingsIcon = MainGame.game.getAssets().getTexture(Asset.SETTINGS_ICON);
         IconButton settingsButton = new IconButton(skin, settingsIcon);
         settingsButton.setSize(buttonHeight, buttonHeight);
-        settingsButton.setPosition((-buttonWidth / 2) - buttonHeight - buttonSpacing, buttonYOffset + (1 * (buttonHeight + buttonSpacing)));
+        settingsButton.setPosition((-buttonWidth / 2) - buttonHeight - buttonSpacing, buttonYOffset + ((DeviceUtil.isAndroid() ? 2 : 1) * (buttonHeight + buttonSpacing)));
         settingsButton.addListener(new NoisyClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -122,7 +119,7 @@ public class MainMenu implements Screen {
         Texture controlsIcon = MainGame.game.getAssets().getTexture(Asset.CONTROLLER_ICON);
         IconButton controlsButton = new IconButton(skin, controlsIcon);
         controlsButton.setSize(buttonHeight, buttonHeight);
-        controlsButton.setPosition((-buttonWidth / 2) - buttonHeight - buttonSpacing, buttonYOffset + (0 * (buttonHeight + buttonSpacing)));
+        controlsButton.setPosition((-buttonWidth / 2) - buttonHeight - buttonSpacing, buttonYOffset + ((DeviceUtil.isAndroid() ? 1 : 0) * (buttonHeight + buttonSpacing)));
         controlsButton.addListener(new NoisyClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -133,16 +130,18 @@ public class MainMenu implements Screen {
         });
         stageAbove.addActor(controlsButton);
 
-        TextButton exitButton = new TextButton("Exit", skin, "default");
-        exitButton.setSize(buttonWidth, buttonHeight);
-        exitButton.setPosition(-buttonWidth / 2, buttonYOffset + (0 * (buttonHeight + buttonSpacing)));
-        exitButton.addListener(new NoisyClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.exit();
-            }
-        });
-        stageAbove.addActor(exitButton);
+        if (DeviceUtil.isDesktop()) {
+            TextButton exitButton = new TextButton("Exit", skin, "default");
+            exitButton.setSize(buttonWidth, buttonHeight);
+            exitButton.setPosition(-buttonWidth / 2, buttonYOffset + (0 * (buttonHeight + buttonSpacing)));
+            exitButton.addListener(new NoisyClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    Gdx.app.exit();
+                }
+            });
+            stageAbove.addActor(exitButton);
+        }
     }
 
     @Override
@@ -164,6 +163,11 @@ public class MainMenu implements Screen {
                 MainGame.game.playMusic(music);
             }
         }
+
+        if (DeviceUtil.isAndroid()) {
+            viewport.getCamera().position.x = 0;
+            viewport.getCamera().position.y = 13;
+        }
     }
 
     @Override
@@ -183,8 +187,8 @@ public class MainMenu implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        stageAbove.getViewport().update(width, height);
-        stageAbove.getViewport().getCamera().update();
+        viewport.update(width, height);
+        viewport.getCamera().update();
     }
 
     @Override
@@ -199,7 +203,8 @@ public class MainMenu implements Screen {
 
     @Override
     public void hide() {
-
+        viewport.getCamera().position.x = 0;
+        viewport.getCamera().position.y = 0;
     }
 
     @Override

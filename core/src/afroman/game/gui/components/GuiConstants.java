@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 /**
  * Created by Samson on 2017-04-21.
@@ -17,10 +18,16 @@ public class GuiConstants {
     public static FlickeringLight menuLight;
     public static RayHandler menuRayHandler;
     public static World menuWorld;
-
     public static Skin skin;
-
     public static TextField.TextFieldFilter usernameFilter;
+    public static ScreenViewport viewport;
+
+    public static void dispose() {
+        menuLight.dispose();
+        menuRayHandler.dispose();
+        menuWorld.dispose();
+        skin.dispose();
+    }
 
     public static void initGuiConstants() {
         menuWorld = new World(new Vector2(0, 0F), true);
@@ -30,6 +37,8 @@ public class GuiConstants {
         menuLight = new FlickeringLight(0.03F, 80, 100, menuRayHandler, 20, new Color(0F, 0F, 0F, 1F), 0, 27);
 
         skin = MainGame.game.getAssets().getSkin(Asset.AFRO_SKIN);
+
+        viewport = MainGame.createStandardViewport();
 
         usernameFilter = new TextField.TextFieldFilter() {
             @Override

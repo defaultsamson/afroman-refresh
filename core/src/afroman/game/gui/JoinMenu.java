@@ -22,10 +22,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import static afroman.game.gui.components.GuiConstants.menuRayHandler;
-import static afroman.game.gui.components.GuiConstants.skin;
+import static afroman.game.gui.components.GuiConstants.*;
 
 /**
  * Created by Samson on 2017-04-08.
@@ -46,8 +44,6 @@ public class JoinMenu extends HierarchicalMenu implements Screen {
 
     public JoinMenu(Screen parentScreen) {
         super(parentScreen);
-
-        final ScreenViewport viewport = MainGame.createStandardViewport();
 
         stageAbove = new Stage(viewport);
         stageBelow = new Stage(viewport);
@@ -252,8 +248,8 @@ public class JoinMenu extends HierarchicalMenu implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        stageAbove.getViewport().update(width, height);
-        stageAbove.getViewport().getCamera().update();
+        viewport.update(width, height);
+        viewport.getCamera().update();
     }
 
     @Override

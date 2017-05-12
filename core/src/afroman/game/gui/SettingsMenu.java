@@ -1,7 +1,6 @@
 package afroman.game.gui;
 
 import afroman.game.MainGame;
-import afroman.game.assets.Asset;
 import afroman.game.gui.components.HierarchicalMenu;
 import afroman.game.gui.components.NoisyClickListener;
 import afroman.game.gui.components.RoundingSlider;
@@ -18,14 +17,14 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import static afroman.game.gui.components.GuiConstants.skin;
+import static afroman.game.gui.components.GuiConstants.viewport;
 /**
  * Created by Samson on 2017-04-08.
  */
@@ -39,10 +38,6 @@ public class SettingsMenu extends HierarchicalMenu {
 
     public SettingsMenu(final Screen parentScreen) {
         super(parentScreen);
-
-        Skin skin = MainGame.game.getAssets().getSkin(Asset.AFRO_SKIN);
-
-        final ScreenViewport viewport = MainGame.createStandardViewport();
 
         stageAbove = new Stage(viewport);
         viewport.getCamera().position.x = 0;
@@ -231,8 +226,8 @@ public class SettingsMenu extends HierarchicalMenu {
 
     @Override
     public void resize(int width, int height) {
-        stageAbove.getViewport().update(width, height);
-        stageAbove.getViewport().getCamera().update();
+        viewport.update(width, height);
+        viewport.getCamera().update();
     }
 
     @Override

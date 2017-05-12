@@ -21,10 +21,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import static afroman.game.gui.components.GuiConstants.menuRayHandler;
-import static afroman.game.gui.components.GuiConstants.skin;
+import static afroman.game.gui.components.GuiConstants.*;
 
 /**
  * Created by Samson on 2017-04-08.
@@ -47,8 +45,6 @@ public class HostMenu extends HierarchicalMenu implements Screen {
 
     public HostMenu(Screen parentScreen) {
         super(parentScreen);
-
-        final ScreenViewport viewport = MainGame.createStandardViewport();
 
         stageAbove = new Stage(viewport);
         stageBelow = new Stage(viewport);
@@ -243,7 +239,6 @@ public class HostMenu extends HierarchicalMenu implements Screen {
                 super.run();
 
                 try {
-
                     MainGame.game.getNetworkManager().hostServer(portInput.getText(), passwordInput.getText());
                     gui.setText("Joining Server\nPlease wait...");
                     MainGame.game.getNetworkManager().connectToServer(usernameInput.getText(), "localhost", MainGame.game.getNetworkManager().getServerPort());
@@ -267,8 +262,8 @@ public class HostMenu extends HierarchicalMenu implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        stageAbove.getViewport().update(width, height);
-        stageAbove.getViewport().getCamera().update();
+        viewport.update(width, height);
+        viewport.getCamera().update();
     }
 
     @Override

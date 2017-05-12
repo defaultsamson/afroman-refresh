@@ -22,9 +22,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import static afroman.game.gui.components.GuiConstants.skin;
+import static afroman.game.gui.components.GuiConstants.viewport;
 
 /**
  * Created by Samson on 2017-04-24.
@@ -64,8 +64,6 @@ public class LobbyGui implements Screen {
         menuRayHandler.setAmbientLight(0.3F);
         p1Light = new FlickeringLight(0.04F, 35, 50, menuRayHandler, 20, new Color(0F, 0F, 0F, 1F), -(manSpacing / 2), 27);
         p2Light = new FlickeringLight(0.04F, 35, 50, menuRayHandler, 20, new Color(0F, 0F, 0F, 1F), (manSpacing / 2), 27);
-
-        final ScreenViewport viewport = MainGame.createStandardViewport();
 
         stageAbove = new Stage(viewport);
         stageBelow = new Stage(viewport);
@@ -161,7 +159,7 @@ public class LobbyGui implements Screen {
         Texture settingsIcon = MainGame.game.getAssets().getTexture(Asset.SETTINGS_ICON);
         IconButton settingsButton = new IconButton(skin, settingsIcon);
         settingsButton.setSize(buttonHeight, buttonHeight);
-        settingsButton.setPosition((-buttonWidth / 2) - (1 * (buttonHeight + buttonSpacing)), buttonYOffset + (0 * (buttonHeight + buttonSpacing)));
+        settingsButton.setPosition((-buttonWidth / 2) - (2 * (buttonHeight + buttonSpacing)), buttonYOffset + (0 * (buttonHeight + buttonSpacing)));
         settingsButton.addListener(new NoisyClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -174,7 +172,7 @@ public class LobbyGui implements Screen {
         Texture controlsIcon = MainGame.game.getAssets().getTexture(Asset.CONTROLLER_ICON);
         IconButton controlsButton = new IconButton(skin, controlsIcon);
         controlsButton.setSize(buttonHeight, buttonHeight);
-        controlsButton.setPosition((-buttonWidth / 2) - (2 * (buttonHeight + buttonSpacing)), buttonYOffset + (0 * (buttonHeight + buttonSpacing)));
+        controlsButton.setPosition((-buttonWidth / 2) - (1 * (buttonHeight + buttonSpacing)), buttonYOffset + (0 * (buttonHeight + buttonSpacing)));
         controlsButton.addListener(new NoisyClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -257,8 +255,8 @@ public class LobbyGui implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        stageAbove.getViewport().update(width, height);
-        stageAbove.getViewport().getCamera().update();
+        viewport.update(width, height);
+        viewport.getCamera().update();
     }
 
     @Override

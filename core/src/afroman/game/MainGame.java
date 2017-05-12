@@ -247,9 +247,15 @@ public class MainGame extends Game {
         assets.dispose();
 
         mainMenu.dispose();
+        lobbyGui.dispose();
+        passwordGui.dispose();
+        settingsMenu.dispose();
+        controlsMenu.dispose();
 
         batch.dispose();
         vignette.dispose();
+
+        GuiConstants.dispose();
 
         if (DeviceUtil.isDesktop() && DebugConsole.instance() != null && DebugConsole.instance().getJFrame() != null) {
             DebugConsole.instance().getJFrame().dispose();

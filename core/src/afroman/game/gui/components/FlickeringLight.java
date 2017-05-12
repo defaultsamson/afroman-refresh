@@ -35,6 +35,10 @@ public class FlickeringLight extends PointLight {
         return radi;
     }
 
+    public Animation<Float> getAnimation() {
+        return animation;
+    }
+
     @Override
     public void update() {
         super.update();

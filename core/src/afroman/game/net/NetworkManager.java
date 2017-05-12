@@ -122,19 +122,13 @@ public class NetworkManager {
                 }
                 preventFromSendingToMainMenu = false;
             }
-
-            @Override
-            public void connected(Connection connection) {
-                super.connected(connection);
-
-                connection.sendTCP(new ChangeUsername(clientUsername));
-            }
         });
 
         serverPort = port;
         isConnectingClient = false;
 
         System.out.println("Client successfully connected to host!");
+        client.sendTCP(new ChangeUsername(clientUsername));
     }
 
     public boolean isHostingServer() {
@@ -202,9 +196,7 @@ public class NetworkManager {
                                     connection.close();
                                 } else {
                                     // Otherwise tell them that the password is wrong
-                                    RequestPassword req = new RequestPassword();
-                                    req.pass = FinalConstants.incorrectPasswordMessage;
-                                    connection.sendTCP(req);
+                                    connection.sendTCP(new RequestPassword(FinalConstants.incorrectPasswordMessage));
                                 }
                             }
                         }
@@ -256,9 +248,7 @@ public class NetworkManager {
                     // If there's a password, ask for it from the player
                     // If they're the host, don't need to ask for a password
 
-                    RequestPassword req = new RequestPassword();
-                    req.pass = "dank";
-                    connection.sendTCP(req);
+                    connection.sendTCP(new RequestPassword("dank"));
                 } else {
                     sp.confirmPlayerAsAuthenticated();
                 }
