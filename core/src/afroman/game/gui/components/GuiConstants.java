@@ -24,7 +24,7 @@ public class GuiConstants {
 
     public static void dispose() {
         menuLight.dispose();
-        menuRayHandler.dispose();
+        //menuRayHandler.dispose();
         menuWorld.dispose();
         skin.dispose();
     }

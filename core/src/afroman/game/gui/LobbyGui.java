@@ -135,6 +135,7 @@ public class LobbyGui implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // TODO
+                MainGame.game.setScreen(new PlayScreen());
             }
         });
         stageAbove.addActor(startGameButton);
@@ -251,6 +252,9 @@ public class LobbyGui implements Screen {
             user2Label.setVisible(false);
             p2Light.setActive(false);
         }
+
+        //TODO remove debug
+        startGameButton.setDisabled(false);
     }
 
     @Override

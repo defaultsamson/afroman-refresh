@@ -42,8 +42,6 @@ public abstract class ControlInput {
 
     public abstract void performAction(float analogueValue);
 
-    public abstract void performAction();
-
     public ControlMapType getMapType() {
         return mapType;
     }

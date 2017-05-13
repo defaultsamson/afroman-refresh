@@ -1,5 +1,7 @@
 package afroman.game.io;
 
+import afroman.game.MainGame;
+import afroman.game.gui.PlayScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
@@ -20,17 +22,15 @@ public class Controls {
         controlInputs = new ArrayList<ControlInput>();
 
         ControlInputConfig up = new ControlInputConfig(ControlMapType.UP);
-        up.updateConstantly = true;
+        up.updateConstantly = false;
         up.axisExpectingNegative = false;
         controlInputs.add(new ControlInput(up) {
             @Override
             public void performAction(float analogueValue) {
                 //System.out.println("Moving Up: " + analogueValue);
-            }
-
-            @Override
-            public void performAction() {
-                performAction(1F);
+                if (MainGame.game.getScreen() instanceof PlayScreen) {
+                    ((PlayScreen) MainGame.game.getScreen()).jump();
+                }
             }
         });
 
@@ -42,11 +42,6 @@ public class Controls {
             public void performAction(float analogueValue) {
                 //System.out.println("Moving Down: " + analogueValue);
             }
-
-            @Override
-            public void performAction() {
-                performAction(-1F);
-            }
         });
 
         ControlInputConfig left = new ControlInputConfig(ControlMapType.LEFT);
@@ -55,12 +50,10 @@ public class Controls {
         controlInputs.add(new ControlInput(left) {
             @Override
             public void performAction(float analogueValue) {
-                //System.out.println("Moving Left: " + analogueValue);
-            }
-
-            @Override
-            public void performAction() {
-                performAction(-1F);
+                // System.out.println("Moving Left: " + analogueValue);
+                if (MainGame.game.getScreen() instanceof PlayScreen) {
+                    ((PlayScreen) MainGame.game.getScreen()).left(analogueValue);
+                }
             }
         });
 
@@ -71,11 +64,9 @@ public class Controls {
             @Override
             public void performAction(float analogueValue) {
                 //System.out.println("Moving Right: " + analogueValue);
-            }
-
-            @Override
-            public void performAction() {
-                performAction(1F);
+                if (MainGame.game.getScreen() instanceof PlayScreen) {
+                    ((PlayScreen) MainGame.game.getScreen()).right(analogueValue);
+                }
             }
         });
 
@@ -85,11 +76,6 @@ public class Controls {
             public void performAction(float analogueValue) {
                 System.out.println("Interact");
             }
-
-            @Override
-            public void performAction() {
-                performAction(1F);
-            }
         });
 
         ControlInputConfig nextItem = new ControlInputConfig(ControlMapType.NEXT_ITEM);
@@ -97,11 +83,6 @@ public class Controls {
             @Override
             public void performAction(float analogueValue) {
                 System.out.println("Next Item");
-            }
-
-            @Override
-            public void performAction() {
-                performAction(1F);
             }
         });
 
@@ -111,11 +92,6 @@ public class Controls {
             public void performAction(float analogueValue) {
                 System.out.println("Prev Item");
             }
-
-            @Override
-            public void performAction() {
-                performAction(1F);
-            }
         });
 
         ControlInputConfig dropItem = new ControlInputConfig(ControlMapType.DROP_ITEM);
@@ -124,11 +100,6 @@ public class Controls {
             public void performAction(float analogueValue) {
                 System.out.println("Drop Item");
             }
-
-            @Override
-            public void performAction() {
-                performAction(1F);
-            }
         });
 
         ControlInputConfig useItem = new ControlInputConfig(ControlMapType.USE_ITEM);
@@ -136,11 +107,6 @@ public class Controls {
             @Override
             public void performAction(float analogueValue) {
                 System.out.println("Use Item");
-            }
-
-            @Override
-            public void performAction() {
-                performAction(1F);
             }
         });
 
@@ -239,13 +205,16 @@ public class Controls {
                     case CONTROLLER_BUTTON:
                         if (getController().getButton(c.getControllerID())) {
                             if (c.isUpdateConstantly()) {
-                                c.performAction();
+                                c.performAction(1);
                             } else if (!c.hasBeenPressed) {
                                 c.hasBeenPressed = true;
-                                c.performAction();
+                                c.performAction(1);
                             }
                         } else {
                             c.hasBeenPressed = false;
+                            if (c.isUpdateConstantly()) {
+                                c.performAction(0);
+                            }
                         }
                         break;
                     case CONTROLLER_AXIS:
@@ -262,7 +231,7 @@ public class Controls {
                             if (Math.abs(value) > 0.4) { // Dead zone for detextion of
                                 if (!c.hasBeenPressed) {
                                     c.hasBeenPressed = true;
-                                    c.performAction();
+                                    c.performAction(1);
                                 }
                             } else {
                                 c.hasBeenPressed = false;
@@ -275,25 +244,31 @@ public class Controls {
                     case KEYBOARD_BUTTON:
                         if (Gdx.input.isKeyPressed(c.getKeyboardID())) {
                             if (c.isUpdateConstantly()) {
-                                c.performAction();
+                                c.performAction(1);
                             } else if (!c.hasBeenPressed) {
                                 c.hasBeenPressed = true;
-                                c.performAction();
+                                c.performAction(1);
                             }
                         } else {
                             c.hasBeenPressed = false;
+                            if (c.isUpdateConstantly()) {
+                                c.performAction(0);
+                            }
                         }
                         break;
                     case MOUSE_BUTTON:
                         if (Gdx.input.isButtonPressed(c.getKeyboardID())) {
                             if (c.isUpdateConstantly()) {
-                                c.performAction();
+                                c.performAction(1);
                             } else if (!c.hasBeenPressed) {
                                 c.hasBeenPressed = true;
-                                c.performAction();
+                                c.performAction(1);
                             }
                         } else {
                             c.hasBeenPressed = false;
+                            if (c.isUpdateConstantly()) {
+                                c.performAction(0);
+                            }
                         }
                         break;
                 }
