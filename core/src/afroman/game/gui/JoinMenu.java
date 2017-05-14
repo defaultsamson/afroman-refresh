@@ -197,53 +197,55 @@ public class JoinMenu extends HierarchicalMenu implements Screen {
     private TextGui gui = null;
 
     private void connectToServer() {
-        MainGame.game.getNetworkManager().preventFromSendingToMainMenu(false);
+        if (canJoin()) {
+            MainGame.game.getNetworkManager().preventFromSendingToMainMenu(false);
 
-        gui = new TextGui("Joining Server \n" + ipInput.getText() + "\nPlease wait...", "Cancel", new NoisyClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
-                if (!gui.getButton().isDisabled()) {
-                    if (thread != null) {
-                        thread.stop();
-                    }
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            super.run();
-                            MainGame.game.getNetworkManager().preventFromSendingToMainMenu(true);
-                            MainGame.game.getNetworkManager().killClient();
-                            MainGame.game.safelySetScreen(JoinMenu.this);
-                            gui = null;
+            gui = new TextGui("Joining Server \n" + ipInput.getText() + "\nPlease wait...", "Cancel", new NoisyClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    super.clicked(event, x, y);
+                    if (!gui.getButton().isDisabled()) {
+                        if (thread != null) {
+                            thread.stop();
                         }
-                    }.start();
-                    gui.setText("Cancelling\nPlease wait...");
-                    gui.getButton().setDisabled(true);
+                        new Thread() {
+                            @Override
+                            public void run() {
+                                super.run();
+                                MainGame.game.getNetworkManager().preventFromSendingToMainMenu(true);
+                                MainGame.game.getNetworkManager().killClient();
+                                MainGame.game.safelySetScreen(JoinMenu.this);
+                                gui = null;
+                            }
+                        }.start();
+                        gui.setText("Cancelling\nPlease wait...");
+                        gui.getButton().setDisabled(true);
+                    }
                 }
-            }
-        });
+            });
 
-        thread = new Thread() {
-            @Override
-            public void run() {
-                super.run();
+            thread = new Thread() {
+                @Override
+                public void run() {
+                    super.run();
 
-                try {
-                    MainGame.game.getNetworkManager().connectToServer(usernameInput.getText(), ipInput.getText());
-                } catch (Exception e) {
-                    gui.setText("Failed to join server.\n" + e.getMessage());
-                    System.err.println("Failed to join server.");
-                    e.printStackTrace();
-                    MainGame.game.getNetworkManager().killClient();
+                    try {
+                        MainGame.game.getNetworkManager().connectToServer(usernameInput.getText(), ipInput.getText());
+                    } catch (Exception e) {
+                        gui.setText("Failed to join server.\n" + e.getMessage());
+                        System.err.println("Failed to join server.");
+                        e.printStackTrace();
+                        MainGame.game.getNetworkManager().killClient();
+                    }
+
+                    thread = null;
                 }
+            };
 
-                thread = null;
-            }
-        };
+            MainGame.game.setScreen(gui);
 
-        MainGame.game.setScreen(gui);
-
-        thread.start();
+            thread.start();
+        }
     }
 
     @Override

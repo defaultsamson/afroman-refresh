@@ -22,14 +22,14 @@ public class Controls {
         controlInputs = new ArrayList<ControlInput>();
 
         ControlInputConfig up = new ControlInputConfig(ControlMapType.UP);
-        up.updateConstantly = false;
+        up.updateConstantly = true;
         up.axisExpectingNegative = false;
         controlInputs.add(new ControlInput(up) {
             @Override
             public void performAction(float analogueValue) {
                 //System.out.println("Moving Up: " + analogueValue);
                 if (MainGame.game.getScreen() instanceof PlayScreen) {
-                    ((PlayScreen) MainGame.game.getScreen()).jump();
+                    ((PlayScreen) MainGame.game.getScreen()).jump(analogueValue);
                 }
             }
         });

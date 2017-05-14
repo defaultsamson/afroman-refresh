@@ -35,6 +35,7 @@ public class PlayScreen implements Screen {
 
     private Body body;
     private Fixture jumpFixture;
+    private boolean lastIsTouchingGround = false;
     private boolean isTouchingGround = false;
 
     private ScreenViewport viewport;
@@ -47,7 +48,7 @@ public class PlayScreen implements Screen {
     private TextButton stopButton;
 
     public PlayScreen() {
-        world = new World(new Vector2(0, -9.81F), true);
+        world = new World(new Vector2(0, standardGravityAcceleration), true);
         rayHandler = new RayHandler(world);
         rayHandler.setBlurNum(1);
         debugRenderer = new Box2DDebugRenderer();
@@ -211,7 +212,7 @@ public class PlayScreen implements Screen {
 
             // Jump detector
             PolygonShape shape2 = new PolygonShape();
-            shape2.setAsBox(4F / PhysicsUtil.PIXELS_PER_METER, 1F / PhysicsUtil.PIXELS_PER_METER, new Vector2(0, -6F / PhysicsUtil.PIXELS_PER_METER), 0);
+            shape2.setAsBox(4F / PhysicsUtil.PIXELS_PER_METER, 0.3F / PhysicsUtil.PIXELS_PER_METER, new Vector2(0, -6F / PhysicsUtil.PIXELS_PER_METER), 0);
             FixtureDef jumpFix = new FixtureDef();
             jumpFix.shape = shape2;
             jumpFix.isSensor = true;
@@ -240,11 +241,15 @@ public class PlayScreen implements Screen {
                 PhysicsUtil.PIXELS_PER_METER, PhysicsUtil.PIXELS_PER_METER));*/
         debugRenderer.render(world, viewport.getCamera().combined.cpy().scale(PhysicsUtil.PIXELS_PER_METER,
                 PhysicsUtil.PIXELS_PER_METER, PhysicsUtil.PIXELS_PER_METER));
-        
-        if (isTouchingGround) {
+
+        // If the player is touching the ground and has been since the last tick
+        // (Allows player to perform repeated jumps while maintaining some of the previous momentum)
+        if (isTouchingGround && lastIsTouchingGround) {
             body.setLinearVelocity(additiveXVelocity, body.getLinearVelocity().y);
         }
         additiveXVelocity = 0;
+
+        lastIsTouchingGround = isTouchingGround;
 
         PhysicsUtil.stepWorld(world, delta);
 
@@ -275,18 +280,71 @@ public class PlayScreen implements Screen {
     }
 
     private boolean isShowingEscMenu = false;
-    private static final float hardStopThreshold = 0.5F; // m/s
-    private static final float maxXVelocity = 8; // m/s
-    private static final float airAcceleration = 9; // m/s^2
-    private static final float jumpVelocity = 6; // m/s
+    private static final float standardGravityAcceleration = -36F;//-9.81F; // m/s^2
+    private static final float maxXVelocity = 5; // m/s
+    private static final float airAcceleration = 12; // m/s^2
+    private static final float jumpVelocity = 10; // m/s
+    private static final float jumpVelocitySquared = jumpVelocity * jumpVelocity; // m^2/s^2
+    private static final float jumpReleaseVelocity = 8; // m/s
+    private static final float minJumpReleaseVelocity = jumpReleaseVelocity / 2F; // m/s
+    private static final float maximumMaxJumpTime = 0.15F; // s
 
-    public void jump() {
+    private boolean jumpTimeTriggered = false;
+    private boolean jumped = false;
+    private float jumpAccumulator = 0F;
+
+    public void jump(float upPress) {
         if (!isShowingEscMenu) {
-            if (isTouchingGround) {
-                body.setLinearVelocity(body.getLinearVelocity().x, jumpVelocity);
+            // If jump is being toggled
+            if (Math.abs(upPress) > 0.1F) {
+
+                if (jumped) {
+                    jumpAccumulator += Gdx.graphics.getDeltaTime();
+                    if (jumpAccumulator >= maximumMaxJumpTime) {
+                        jumped = false;
+                        jumpTimeTriggered = true;
+                        jumpAccumulator = 0;
+                    }
+                }
+
+                // If the player isn't jumping, but they're touching the ground, make 'em jump
+                if (isTouchingGround) {
+                    if (!lastIsTouchingGround) {
+
+                    }
+                    jumped = true;
+                }
+
+                // If already jumping
+                if (jumped) {
+                    float xVel = body.getLinearVelocity().x;
+                    float yVel = (float) Math.sqrt(jumpVelocitySquared - (xVel * xVel));
+                    // Continue setting the velocity to the max jump velocity until the player lets go of the key
+                    body.setLinearVelocity(xVel, yVel);
+                }
+            }
+            // If the player released the button but was stopped by the jump time trigger
+            else if (jumpTimeTriggered) {
+                // If the vertical velocity is still greater than the minimum
+                if (body.getLinearVelocity().y > minJumpReleaseVelocity) {
+                    body.setLinearVelocity(body.getLinearVelocity().x, minJumpReleaseVelocity);
+                }
+                jumpTimeTriggered = false;
+                jumped = false;
+                jumpAccumulator = 0;
+            }
+            // If the button was released while the player was jumping
+            else if (jumped) {
+                body.setLinearVelocity(body.getLinearVelocity().x, Math.max(minJumpReleaseVelocity, jumpReleaseVelocity * (jumpAccumulator / maximumMaxJumpTime)));
+                jumped = false;
+                jumpAccumulator = 0;
+            } else {
+                jumped = false;
+                jumpAccumulator = 0;
             }
         }
     }
+
 
     // The desired max velocities for when the left or right controls are pressed
     private float additiveXVelocity = 0;

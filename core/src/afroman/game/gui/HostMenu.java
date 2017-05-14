@@ -177,7 +177,11 @@ public class HostMenu extends HierarchicalMenu implements Screen {
     }
 
     private void updateHostButton() {
-        hostButton.setDisabled(usernameInput.getText().length() < FinalConstants.minUsernameLength);
+        hostButton.setDisabled(!canHost());
+    }
+
+    private boolean canHost() {
+        return usernameInput.getText().length() >= FinalConstants.minUsernameLength;
     }
 
     @Override
@@ -207,57 +211,59 @@ public class HostMenu extends HierarchicalMenu implements Screen {
     private TextGui gui = null;
 
     private void hostServer() {
-        MainGame.game.getNetworkManager().preventFromSendingToMainMenu(false);
+        if (canHost()) {
+            MainGame.game.getNetworkManager().preventFromSendingToMainMenu(false);
 
-        gui = new TextGui("Hosting Server\nPlease wait...", "Cancel", new NoisyClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
-                if (!gui.getButton().isDisabled()) {
-                    if (thread != null) {
-                        thread.stop();
-                    }
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            super.run();
-                            MainGame.game.getNetworkManager().preventFromSendingToMainMenu(true);
-                            MainGame.game.getNetworkManager().killClient();
-                            MainGame.game.getNetworkManager().killServer();
-                            MainGame.game.safelySetScreen(HostMenu.this);
+            gui = new TextGui("Hosting Server\nPlease wait...", "Cancel", new NoisyClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    super.clicked(event, x, y);
+                    if (!gui.getButton().isDisabled()) {
+                        if (thread != null) {
+                            thread.stop();
                         }
-                    }.start();
-                    gui.setText("Cancelling\nPlease wait...");
-                    gui.getButton().setDisabled(true);
+                        new Thread() {
+                            @Override
+                            public void run() {
+                                super.run();
+                                MainGame.game.getNetworkManager().preventFromSendingToMainMenu(true);
+                                MainGame.game.getNetworkManager().killClient();
+                                MainGame.game.getNetworkManager().killServer();
+                                MainGame.game.safelySetScreen(HostMenu.this);
+                            }
+                        }.start();
+                        gui.setText("Cancelling\nPlease wait...");
+                        gui.getButton().setDisabled(true);
+                    }
                 }
-            }
-        });
+            });
 
-        thread = new Thread() {
-            @Override
-            public void run() {
-                super.run();
+            thread = new Thread() {
+                @Override
+                public void run() {
+                    super.run();
 
-                try {
-                    MainGame.game.getNetworkManager().hostServer(portInput.getText(), passwordInput.getText());
-                    gui.setText("Joining Server\nPlease wait...");
-                    MainGame.game.getNetworkManager().connectToServer(usernameInput.getText(), "localhost", MainGame.game.getNetworkManager().getServerPort());
-                } catch (Exception e) {
-                    gui.setText("Failed to create server.\n" + e.getMessage());
-                    System.err.println("Failed to create server.");
-                    e.printStackTrace();
+                    try {
+                        MainGame.game.getNetworkManager().hostServer(portInput.getText(), passwordInput.getText());
+                        gui.setText("Joining Server\nPlease wait...");
+                        MainGame.game.getNetworkManager().connectToServer(usernameInput.getText(), "localhost", MainGame.game.getNetworkManager().getServerPort());
+                    } catch (Exception e) {
+                        gui.setText("Failed to create server.\n" + e.getMessage());
+                        System.err.println("Failed to create server.");
+                        e.printStackTrace();
 
-                    MainGame.game.getNetworkManager().killServer();
-                    MainGame.game.getNetworkManager().killClient();
+                        MainGame.game.getNetworkManager().killServer();
+                        MainGame.game.getNetworkManager().killClient();
+                    }
+
+                    thread = null;
                 }
+            };
 
-                thread = null;
-            }
-        };
+            MainGame.game.setScreen(gui);
 
-        MainGame.game.setScreen(gui);
-
-        thread.start();
+            thread.start();
+        }
     }
 
     @Override
