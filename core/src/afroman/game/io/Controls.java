@@ -1,5 +1,6 @@
 package afroman.game.io;
 
+import afroman.game.FinalConstants;
 import afroman.game.MainGame;
 import afroman.game.gui.PlayScreen;
 import com.badlogic.gdx.Gdx;
@@ -228,7 +229,7 @@ public class Controls {
                             }
 
                         } else {
-                            if (Math.abs(value) > 0.4) { // Dead zone for detextion of
+                            if (Math.abs(value) > FinalConstants.analogueTriggerThreshold) { // Dead zone for detextion of
                                 if (!c.hasBeenPressed) {
                                     c.hasBeenPressed = true;
                                     c.performAction(1);

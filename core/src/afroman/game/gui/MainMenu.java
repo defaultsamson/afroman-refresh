@@ -103,6 +103,17 @@ public class MainMenu implements Screen {
         });
         stageAbove.addActor(hostButton);
 
+        TextButton testButton = new TextButton("Test", skin);
+        testButton.setSize(buttonWidth, buttonHeight);
+        testButton.setPosition((buttonWidth / 2) + buttonSpacing, buttonYOffset + (1 * (buttonHeight + buttonSpacing)));
+        testButton.addListener(new NoisyClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                MainGame.game.setScreen(new PlayScreen());
+            }
+        });
+        stageAbove.addActor(testButton);
+
         Texture settingsIcon = MainGame.game.getAssets().getTexture(Asset.SETTINGS_ICON);
         IconButton settingsButton = new IconButton(skin, settingsIcon);
         settingsButton.setSize(buttonHeight, buttonHeight);
