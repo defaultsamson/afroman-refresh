@@ -108,7 +108,7 @@ public class LobbyGui implements Screen {
         stopServer = new TextButton("Stop Server", skin);
         stopServer.setSize(buttonWidth, buttonHeight);
         stopServer.setPosition(user1middle - (buttonWidth / 2), buttonYOffset + (1 * (buttonHeight + buttonSpacing)));
-        stopServer.addListener(new NoisyClickListener() {
+        stopServer.addListener(new NoisyClickListener(stopServer) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 MainGame.game.getNetworkManager().killClient();
@@ -120,7 +120,7 @@ public class LobbyGui implements Screen {
         kickPlayer2 = new TextButton("Kick Player", skin);
         kickPlayer2.setSize(buttonWidth, buttonHeight);
         kickPlayer2.setPosition(user2middle - (buttonWidth / 2), buttonYOffset + (1 * (buttonHeight + buttonSpacing)));
-        kickPlayer2.addListener(new NoisyClickListener() {
+        kickPlayer2.addListener(new NoisyClickListener(kickPlayer2) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 MainGame.game.getNetworkManager().getClient().sendTCP(new KickPlayer());
@@ -131,7 +131,7 @@ public class LobbyGui implements Screen {
         startGameButton = new TextButton("Start Game", skin);
         startGameButton.setSize(buttonWidth, buttonHeight);
         startGameButton.setPosition(-(buttonWidth / 2), buttonYOffset + (0 * (buttonHeight + buttonSpacing)));
-        startGameButton.addListener(new NoisyClickListener() {
+        startGameButton.addListener(new NoisyClickListener(startGameButton) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // TODO
@@ -143,7 +143,7 @@ public class LobbyGui implements Screen {
         disconnectButton = new TextButton("Disconnect", skin);
         disconnectButton.setSize(buttonWidth, buttonHeight);
         disconnectButton.setPosition(-(buttonWidth / 2), buttonYOffset + (0 * (buttonHeight + buttonSpacing)));
-        disconnectButton.addListener(new NoisyClickListener() {
+        disconnectButton.addListener(new NoisyClickListener(disconnectButton) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 MainGame.game.getNetworkManager().killClient();
@@ -161,7 +161,7 @@ public class LobbyGui implements Screen {
         IconButton settingsButton = new IconButton(skin, settingsIcon);
         settingsButton.setSize(buttonHeight, buttonHeight);
         settingsButton.setPosition((-buttonWidth / 2) - (2 * (buttonHeight + buttonSpacing)), buttonYOffset + (0 * (buttonHeight + buttonSpacing)));
-        settingsButton.addListener(new NoisyClickListener() {
+        settingsButton.addListener(new NoisyClickListener(settingsButton) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 MainGame.game.getSettingsMenu().setParent(LobbyGui.this);
@@ -174,7 +174,7 @@ public class LobbyGui implements Screen {
         IconButton controlsButton = new IconButton(skin, controlsIcon);
         controlsButton.setSize(buttonHeight, buttonHeight);
         controlsButton.setPosition((-buttonWidth / 2) - (1 * (buttonHeight + buttonSpacing)), buttonYOffset + (0 * (buttonHeight + buttonSpacing)));
-        controlsButton.addListener(new NoisyClickListener() {
+        controlsButton.addListener(new NoisyClickListener(controlsButton) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 MainGame.game.getControlsMenu().setParent(LobbyGui.this);

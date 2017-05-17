@@ -62,7 +62,7 @@ public class ControlResetConfirm extends HierarchicalMenu {
         TextButton resetControls = new TextButton("No, Go Back", skin);
         resetControls.setSize(buttonWidth, buttonHeight);
         resetControls.setPosition(buttonSpacing / 2, buttonYOffset + (1 * (buttonHeight + buttonSpacing)));
-        resetControls.addListener(new NoisyClickListener() {
+        resetControls.addListener(new NoisyClickListener(resetControls) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 gotoParentScreen();
@@ -73,7 +73,7 @@ public class ControlResetConfirm extends HierarchicalMenu {
         TextButton backButton = new TextButton("Yes, Reset!", skin);
         backButton.setSize(buttonWidth, buttonHeight);
         backButton.setPosition(-buttonWidth - (buttonSpacing / 2), buttonYOffset + (1 * (buttonHeight + buttonSpacing)));
-        backButton.addListener(new NoisyClickListener() {
+        backButton.addListener(new NoisyClickListener(backButton) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 for (ControlMapType mapType : ControlMapType.values()) {

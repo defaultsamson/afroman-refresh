@@ -102,7 +102,7 @@ public class PlayScreen implements Screen {
         settingsButton.setVisible(false);
         settingsButton.setSize(buttonHeight, buttonHeight);
         settingsButton.setPosition((-buttonWidth / 2) - (2 * (buttonHeight + buttonSpacing)), buttonYOffset + (0 * (buttonHeight + buttonSpacing)));
-        settingsButton.addListener(new NoisyClickListener() {
+        settingsButton.addListener(new NoisyClickListener(settingsButton) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 MainGame.game.getSettingsMenu().setParent(PlayScreen.this);
@@ -117,7 +117,7 @@ public class PlayScreen implements Screen {
         controlsButton.setVisible(false);
         controlsButton.setSize(buttonHeight, buttonHeight);
         controlsButton.setPosition((-buttonWidth / 2) - (1 * (buttonHeight + buttonSpacing)), buttonYOffset + (0 * (buttonHeight + buttonSpacing)));
-        controlsButton.addListener(new NoisyClickListener() {
+        controlsButton.addListener(new NoisyClickListener(controlsButton) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 MainGame.game.getControlsMenu().setParent(PlayScreen.this);
@@ -131,7 +131,7 @@ public class PlayScreen implements Screen {
         stopButton.setVisible(false);
         stopButton.setSize(buttonWidth, buttonHeight);
         stopButton.setPosition(-(buttonWidth / 2), buttonYOffset + (0 * (buttonHeight + buttonSpacing)));
-        stopButton.addListener(new NoisyClickListener() {
+        stopButton.addListener(new NoisyClickListener(stopButton) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
 

@@ -87,7 +87,7 @@ public class ControlsMenu extends HierarchicalMenu {
         nextItemButton = new TextButton("Next Item: ", skin);
         nextItemButton.setSize(buttonWidth, buttonHeight);
         nextItemButton.setPosition(buttonXSpacing / 2, buttonYOffset + (5 * (buttonHeight + buttonYSpacing)));
-        nextItemButton.addListener(new NoisyClickListener() {
+        nextItemButton.addListener(new NoisyClickListener(nextItemButton) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (allowButtonHotswitching || !nextItemButton.isDisabled()) {
@@ -100,7 +100,7 @@ public class ControlsMenu extends HierarchicalMenu {
         prevItemButton = new TextButton("Prev Item: ", skin);
         prevItemButton.setSize(buttonWidth, buttonHeight);
         prevItemButton.setPosition(buttonXSpacing / 2, buttonYOffset + (4 * (buttonHeight + buttonYSpacing)));
-        prevItemButton.addListener(new NoisyClickListener() {
+        prevItemButton.addListener(new NoisyClickListener(prevItemButton) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (allowButtonHotswitching || !prevItemButton.isDisabled()) {
@@ -113,7 +113,7 @@ public class ControlsMenu extends HierarchicalMenu {
         dropItemButton = new TextButton("Drop Item: ", skin);
         dropItemButton.setSize(buttonWidth, buttonHeight);
         dropItemButton.setPosition(buttonXSpacing / 2, buttonYOffset + (3 * (buttonHeight + buttonYSpacing)));
-        dropItemButton.addListener(new NoisyClickListener() {
+        dropItemButton.addListener(new NoisyClickListener(dropItemButton) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (allowButtonHotswitching || !dropItemButton.isDisabled()) {
@@ -126,7 +126,7 @@ public class ControlsMenu extends HierarchicalMenu {
         useItemButton = new TextButton("Use Item: ", skin);
         useItemButton.setSize(buttonWidth, buttonHeight);
         useItemButton.setPosition(buttonXSpacing / 2, buttonYOffset + (2 * (buttonHeight + buttonYSpacing)));
-        useItemButton.addListener(new NoisyClickListener() {
+        useItemButton.addListener(new NoisyClickListener(useItemButton) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (allowButtonHotswitching || !useItemButton.isDisabled()) {
@@ -139,7 +139,7 @@ public class ControlsMenu extends HierarchicalMenu {
         resetControls = new TextButton("Reset Controls", skin);
         resetControls.setSize(buttonWidth, buttonHeight);
         resetControls.setPosition(buttonXSpacing / 2, buttonYOffset + (1 * (buttonHeight + buttonYSpacing)));
-        resetControls.addListener(new NoisyClickListener() {
+        resetControls.addListener(new NoisyClickListener(resetControls) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (!resetControls.isDisabled()) {
@@ -152,7 +152,7 @@ public class ControlsMenu extends HierarchicalMenu {
         upButton = new TextButton("Up: ", skin);
         upButton.setSize(buttonWidth, buttonHeight);
         upButton.setPosition(-buttonWidth - (buttonXSpacing / 2), buttonYOffset + (5 * (buttonHeight + buttonYSpacing)));
-        upButton.addListener(new NoisyClickListener() {
+        upButton.addListener(new NoisyClickListener(upButton) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (allowButtonHotswitching || !upButton.isDisabled()) {
@@ -165,7 +165,7 @@ public class ControlsMenu extends HierarchicalMenu {
         downButton = new TextButton("Down: ", skin);
         downButton.setSize(buttonWidth, buttonHeight);
         downButton.setPosition(-buttonWidth - (buttonXSpacing / 2), buttonYOffset + (4 * (buttonHeight + buttonYSpacing)));
-        downButton.addListener(new NoisyClickListener() {
+        downButton.addListener(new NoisyClickListener(downButton) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (allowButtonHotswitching || !downButton.isDisabled()) {
@@ -178,7 +178,7 @@ public class ControlsMenu extends HierarchicalMenu {
         leftButton = new TextButton("Left: ", skin);
         leftButton.setSize(buttonWidth, buttonHeight);
         leftButton.setPosition(-buttonWidth - (buttonXSpacing / 2), buttonYOffset + (3 * (buttonHeight + buttonYSpacing)));
-        leftButton.addListener(new NoisyClickListener() {
+        leftButton.addListener(new NoisyClickListener(leftButton) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (allowButtonHotswitching || !leftButton.isDisabled()) {
@@ -191,7 +191,7 @@ public class ControlsMenu extends HierarchicalMenu {
         rightButton = new TextButton("Right: ", skin);
         rightButton.setSize(buttonWidth, buttonHeight);
         rightButton.setPosition(-buttonWidth - (buttonXSpacing / 2), buttonYOffset + (2 * (buttonHeight + buttonYSpacing)));
-        rightButton.addListener(new NoisyClickListener() {
+        rightButton.addListener(new NoisyClickListener(rightButton) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (allowButtonHotswitching || !rightButton.isDisabled()) {
@@ -204,7 +204,7 @@ public class ControlsMenu extends HierarchicalMenu {
         interactButton = new TextButton("Interact: ", skin);
         interactButton.setSize(buttonWidth, buttonHeight);
         interactButton.setPosition(-buttonWidth - (buttonXSpacing / 2), buttonYOffset + (1 * (buttonHeight + buttonYSpacing)));
-        interactButton.addListener(new NoisyClickListener() {
+        interactButton.addListener(new NoisyClickListener(interactButton) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (allowButtonHotswitching || !interactButton.isDisabled()) {
@@ -217,7 +217,7 @@ public class ControlsMenu extends HierarchicalMenu {
         exitButton = new TextButton("Back", skin);
         exitButton.setSize(buttonWidth, buttonHeight);
         exitButton.setPosition(-buttonWidth / 2, buttonYOffset + (0 * (buttonHeight + buttonYSpacing)));
-        exitButton.addListener(new NoisyClickListener() {
+        exitButton.addListener(new NoisyClickListener(exitButton) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (!exitButton.isDisabled()) {
@@ -231,7 +231,7 @@ public class ControlsMenu extends HierarchicalMenu {
         cancelButton.setVisible(false);
         cancelButton.setSize(buttonWidth, buttonHeight);
         cancelButton.setPosition(-buttonWidth / 2, buttonYOffset + (0 * (buttonHeight + buttonYSpacing)));
-        cancelButton.addListener(new NoisyClickListener() {
+        cancelButton.addListener(new NoisyClickListener(cancelButton) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 endNewControlSetting();

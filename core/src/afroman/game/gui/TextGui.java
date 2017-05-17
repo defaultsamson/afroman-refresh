@@ -1,6 +1,7 @@
 package afroman.game.gui;
 
 import afroman.game.MainGame;
+import afroman.game.gui.components.NoisyClickListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
@@ -61,6 +62,7 @@ public class TextGui implements Screen {
         backButton.setSize(buttonWidth, buttonHeight);
         backButton.setPosition(-buttonWidth / 2, buttonYOffset + (1 * (buttonHeight + buttonSpacing)));
         backButton.addListener(buttonListener);
+        backButton.addListener(new NoisyClickListener(backButton));
         stageAbove.addActor(backButton);
     }
 

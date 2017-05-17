@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.Align;
 
@@ -77,7 +78,7 @@ public class JoinMenu extends HierarchicalMenu implements Screen {
         joinButton = new TextButton("Join", skin, "default");
         joinButton.setSize(buttonWidth, buttonHeight);
         joinButton.setPosition(-buttonWidth - (buttonSpacing / 2), buttonYOffset + (-0.5F * (buttonHeight + buttonSpacing)));
-        joinButton.addListener(new NoisyClickListener() {
+        joinButton.addListener(new NoisyClickListener(joinButton) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 connectToServer();
@@ -128,7 +129,7 @@ public class JoinMenu extends HierarchicalMenu implements Screen {
         TextButton exitButton = new TextButton("Back", skin, "default");
         exitButton.setSize(buttonWidth, buttonHeight);
         exitButton.setPosition((buttonSpacing / 2), buttonYOffset + (-0.5F * (buttonHeight + buttonSpacing)));
-        exitButton.addListener(new NoisyClickListener() {
+        exitButton.addListener(new NoisyClickListener(exitButton) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 gotoParentScreen();
@@ -200,7 +201,7 @@ public class JoinMenu extends HierarchicalMenu implements Screen {
         if (canJoin()) {
             MainGame.game.getNetworkManager().preventFromSendingToMainMenu(false);
 
-            gui = new TextGui("Joining Server \n" + ipInput.getText() + "\nPlease wait...", "Cancel", new NoisyClickListener() {
+            gui = new TextGui("Joining Server \n" + ipInput.getText() + "\nPlease wait...", "Cancel", new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     super.clicked(event, x, y);

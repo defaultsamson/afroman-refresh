@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
 import static afroman.game.gui.components.GuiConstants.*;
@@ -80,7 +81,7 @@ public class HostMenu extends HierarchicalMenu implements Screen {
         hostButton = new TextButton("Host", skin, "default");
         hostButton.setSize(buttonWidth, buttonHeight);
         hostButton.setPosition(-buttonWidth - (buttonSpacing / 2), buttonYOffset + (-0.5F * (buttonHeight + buttonSpacing)));
-        hostButton.addListener(new NoisyClickListener() {
+        hostButton.addListener(new NoisyClickListener(hostButton) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 hostServer();
@@ -153,7 +154,7 @@ public class HostMenu extends HierarchicalMenu implements Screen {
         TextButton exitButton = new TextButton("Back", skin, "default");
         exitButton.setSize(buttonWidth, buttonHeight);
         exitButton.setPosition((buttonSpacing / 2), buttonYOffset + (-0.5F * (buttonHeight + buttonSpacing)));
-        exitButton.addListener(new NoisyClickListener() {
+        exitButton.addListener(new NoisyClickListener(exitButton) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 gotoParentScreen();
@@ -214,7 +215,7 @@ public class HostMenu extends HierarchicalMenu implements Screen {
         if (canHost()) {
             MainGame.game.getNetworkManager().preventFromSendingToMainMenu(false);
 
-            gui = new TextGui("Hosting Server\nPlease wait...", "Cancel", new NoisyClickListener() {
+            gui = new TextGui("Hosting Server\nPlease wait...", "Cancel", new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     super.clicked(event, x, y);

@@ -84,7 +84,7 @@ public class MainMenu implements Screen {
         TextButton joinButton = new TextButton("Join", skin, "default");
         joinButton.setSize(buttonWidth, buttonHeight);
         joinButton.setPosition(-buttonWidth / 2, buttonYOffset + (2 * (buttonHeight + buttonSpacing)));
-        joinButton.addListener(new NoisyClickListener() {
+        joinButton.addListener(new NoisyClickListener(joinButton) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 MainGame.game.setScreen(joinMenu);
@@ -95,7 +95,7 @@ public class MainMenu implements Screen {
         TextButton hostButton = new TextButton("Host", skin, "default");
         hostButton.setSize(buttonWidth, buttonHeight);
         hostButton.setPosition(-buttonWidth / 2, buttonYOffset + (1 * (buttonHeight + buttonSpacing)));
-        hostButton.addListener(new NoisyClickListener() {
+        hostButton.addListener(new NoisyClickListener(hostButton) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 MainGame.game.setScreen(hostMenu);
@@ -107,7 +107,7 @@ public class MainMenu implements Screen {
         IconButton settingsButton = new IconButton(skin, settingsIcon);
         settingsButton.setSize(buttonHeight, buttonHeight);
         settingsButton.setPosition((-buttonWidth / 2) - buttonHeight - buttonSpacing, buttonYOffset + ((DeviceUtil.isAndroid() ? 2 : 1) * (buttonHeight + buttonSpacing)));
-        settingsButton.addListener(new NoisyClickListener() {
+        settingsButton.addListener(new NoisyClickListener(settingsButton) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 MainGame.game.getSettingsMenu().setParent(MainMenu.this);
@@ -120,7 +120,7 @@ public class MainMenu implements Screen {
         IconButton controlsButton = new IconButton(skin, controlsIcon);
         controlsButton.setSize(buttonHeight, buttonHeight);
         controlsButton.setPosition((-buttonWidth / 2) - buttonHeight - buttonSpacing, buttonYOffset + ((DeviceUtil.isAndroid() ? 1 : 0) * (buttonHeight + buttonSpacing)));
-        controlsButton.addListener(new NoisyClickListener() {
+        controlsButton.addListener(new NoisyClickListener(controlsButton) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 ControlsMenu cm = MainGame.game.getControlsMenu();
@@ -134,7 +134,7 @@ public class MainMenu implements Screen {
             TextButton exitButton = new TextButton("Exit", skin, "default");
             exitButton.setSize(buttonWidth, buttonHeight);
             exitButton.setPosition(-buttonWidth / 2, buttonYOffset + (0 * (buttonHeight + buttonSpacing)));
-            exitButton.addListener(new NoisyClickListener() {
+            exitButton.addListener(new NoisyClickListener(exitButton) {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     Gdx.app.exit();

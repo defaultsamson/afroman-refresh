@@ -25,6 +25,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import static afroman.game.gui.components.GuiConstants.skin;
 import static afroman.game.gui.components.GuiConstants.viewport;
+
 /**
  * Created by Samson on 2017-04-08.
  */
@@ -163,7 +164,7 @@ public class SettingsMenu extends HierarchicalMenu {
         TextButton exitButton = new TextButton("Done", skin, "default");
         exitButton.setSize(buttonWidth, buttonHeight);
         exitButton.setPosition(-buttonWidth / 2, buttonYOffset + (0 * (buttonHeight + buttonSpacing)));
-        exitButton.addListener(new NoisyClickListener() {
+        exitButton.addListener(new NoisyClickListener(exitButton) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 gotoParentScreen();

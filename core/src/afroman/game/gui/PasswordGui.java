@@ -21,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -87,7 +88,7 @@ public class PasswordGui extends HierarchicalMenu {
         TextButton backControls = new TextButton("Back", skin);
         backControls.setSize(buttonWidth, buttonHeight);
         backControls.setPosition(buttonSpacing / 2, buttonYOffset + (1 * (buttonHeight + buttonSpacing)));
-        backControls.addListener(new NoisyClickListener() {
+        backControls.addListener(new NoisyClickListener(backControls) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 back();
@@ -98,7 +99,7 @@ public class PasswordGui extends HierarchicalMenu {
         enterButton = new TextButton("Enter", skin);
         enterButton.setSize(buttonWidth, buttonHeight);
         enterButton.setPosition(-buttonWidth - (buttonSpacing / 2), buttonYOffset + (1 * (buttonHeight + buttonSpacing)));
-        enterButton.addListener(new NoisyClickListener() {
+        enterButton.addListener(new NoisyClickListener(enterButton) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 sendPassword();
@@ -143,7 +144,7 @@ public class PasswordGui extends HierarchicalMenu {
 
     private void sendPassword() {
         if (canSend()) {
-            final TextGui gui = new TextGui("Sending Password\nPlease wait...", "Cancel", new NoisyClickListener() {
+            final TextGui gui = new TextGui("Sending Password\nPlease wait...", "Cancel", new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     super.clicked(event, x, y);
@@ -153,9 +154,7 @@ public class PasswordGui extends HierarchicalMenu {
             });
 
             MainGame.game.setScreen(gui);
-            RequestPassword req = new RequestPassword();
-            req.pass = passwordInput.getText();
-            MainGame.game.getNetworkManager().getClient().sendTCP(req);
+            MainGame.game.getNetworkManager().getClient().sendTCP(new RequestPassword(passwordInput.getText()));
         }
     }
 
