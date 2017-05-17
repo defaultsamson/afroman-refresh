@@ -11,4 +11,5 @@ public class FinalConstants {
     public static final int maxPasswordAttempts = 3;
     public static final String incorrectPasswordMessage = "inc";
     public static final int maxPlayers = 2;
+    public static final float analogueTriggerThreshold = 0.4F;
 }

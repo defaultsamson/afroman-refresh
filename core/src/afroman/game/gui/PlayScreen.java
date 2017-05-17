@@ -1,5 +1,6 @@
 package afroman.game.gui;
 
+import afroman.game.FinalConstants;
 import afroman.game.MainGame;
 import afroman.game.assets.Asset;
 import afroman.game.gui.components.GuiConstants;
@@ -35,8 +36,11 @@ public class PlayScreen implements Screen {
 
     private Body body;
     private Fixture jumpFixture;
-    private boolean lastIsTouchingGround = false;
+    private Fixture leftFixture;
+    private Fixture rightFixture;
     private boolean isTouchingGround = false;
+    private boolean isTouchingLeft = false;
+    private boolean isTouchingRight = false;
 
     private ScreenViewport viewport;
     private SpriteBatch batch;
@@ -82,17 +86,22 @@ public class PlayScreen implements Screen {
             @Override
             public void beginContact(Contact contact) {
                 if (contact.getFixtureA() == jumpFixture || contact.getFixtureB() == jumpFixture) {
-                    System.out.println("Colliding");
                     isTouchingGround = true;
-                    //contact.getWorldManifold().getNormal()
+                } else if (contact.getFixtureA() == leftFixture || contact.getFixtureB() == leftFixture) {
+                    isTouchingLeft = true;
+                } else if (contact.getFixtureA() == rightFixture || contact.getFixtureB() == rightFixture) {
+                    isTouchingRight = true;
                 }
             }
 
             @Override
             public void endContact(Contact contact) {
                 if (contact.getFixtureA() == jumpFixture || contact.getFixtureB() == jumpFixture) {
-                    System.out.println("Uncolliding");
                     isTouchingGround = false;
+                } else if (contact.getFixtureA() == leftFixture || contact.getFixtureB() == leftFixture) {
+                    isTouchingLeft = false;
+                } else if (contact.getFixtureA() == rightFixture || contact.getFixtureB() == rightFixture) {
+                    isTouchingRight = false;
                 }
             }
 
@@ -164,11 +173,11 @@ public class PlayScreen implements Screen {
         });
         stage.addActor(stopButton);
 
-        addRect(world, -20, 50, 20, 5);
-        addRect(world, -60, 60, 20, 5);
+        addRect(world, -20, 65, 20, 5);
+        addRect(world, -60, 95, 20, 5);
 
         // Ground
-        addRect(world, 40, 20, 120, 6);
+        addRect(world, 40, 20, 520, 6);
         // Wall
         addRect(world, 100, 80, 6, 120);
 
@@ -183,8 +192,12 @@ public class PlayScreen implements Screen {
 
             body = world.createBody(bodyDef);
 
+            float halfWidth = 5;
+            float halfHeight = 6;
+            float sensorThickness = 0.3F;
+
             PolygonShape shape = new PolygonShape();
-            shape.setAsBox(5 / PhysicsUtil.PIXELS_PER_METER, 6 / PhysicsUtil.PIXELS_PER_METER);
+            shape.setAsBox(halfWidth / PhysicsUtil.PIXELS_PER_METER, halfHeight / PhysicsUtil.PIXELS_PER_METER);
 
             // The defining features of the Fixture
             FixtureDef fixtureDef = new FixtureDef();
@@ -197,12 +210,30 @@ public class PlayScreen implements Screen {
 
             // Jump detector
             PolygonShape shape2 = new PolygonShape();
-            shape2.setAsBox(4F / PhysicsUtil.PIXELS_PER_METER, 0.3F / PhysicsUtil.PIXELS_PER_METER, new Vector2(0, -6F / PhysicsUtil.PIXELS_PER_METER), 0);
+            shape2.setAsBox((halfWidth - 0.1F) / PhysicsUtil.PIXELS_PER_METER, sensorThickness / PhysicsUtil.PIXELS_PER_METER, new Vector2(0, -halfHeight / PhysicsUtil.PIXELS_PER_METER), 0);
             FixtureDef jumpFix = new FixtureDef();
             jumpFix.shape = shape2;
             jumpFix.isSensor = true;
 
             jumpFixture = body.createFixture(jumpFix);
+
+            // left detector
+            PolygonShape shape3 = new PolygonShape();
+            shape3.setAsBox(sensorThickness / PhysicsUtil.PIXELS_PER_METER, (halfHeight - 0.5F) / PhysicsUtil.PIXELS_PER_METER, new Vector2(-halfWidth / PhysicsUtil.PIXELS_PER_METER, 0), 0);
+            FixtureDef leftFix = new FixtureDef();
+            leftFix.shape = shape3;
+            leftFix.isSensor = true;
+
+            leftFixture = body.createFixture(leftFix);
+
+            // right detector
+            PolygonShape shape4 = new PolygonShape();
+            shape4.setAsBox(sensorThickness / PhysicsUtil.PIXELS_PER_METER, (halfHeight - 0.5F) / PhysicsUtil.PIXELS_PER_METER, new Vector2(halfWidth / PhysicsUtil.PIXELS_PER_METER, 0), 0);
+            FixtureDef rightFix = new FixtureDef();
+            rightFix.shape = shape4;
+            rightFix.isSensor = true;
+
+            rightFixture = body.createFixture(rightFix);
 
             // Shape is the only disposable of the lot, so get rid of it
             shape.dispose();
@@ -236,7 +267,7 @@ public class PlayScreen implements Screen {
         additiveXVelocity = 0;
         */
 
-        lastIsTouchingGround = isTouchingGround;
+        // lastIsTouchingGround = isTouchingGround;
 
         PhysicsUtil.stepWorld(world, delta);
 
@@ -275,6 +306,7 @@ public class PlayScreen implements Screen {
     private static final float maxXVelocity = 5; // m/s
     private static final float airAcceleration = 12; // m/s^2*/
 
+    // Vertical movement
     private static final float gravityAcceleration = -50F;//-9.81F; // m/s^2
     private static final float jumpTime = 0.135F; // s
     private static final float jumpHeight = 60 / PhysicsUtil.PIXELS_PER_METER; // m
@@ -286,10 +318,16 @@ public class PlayScreen implements Screen {
     private static final float jumpSpeed = (float) ((-gravityAcceleration) * (-jumpTime + Math.sqrt((jumpTime * jumpTime) - (2 * jumpHeight / gravityAcceleration)))); // m/s
     private static final float minJumpReleaseVelocity = jumpSpeed / 2F; // m/s
 
+    // Horizontal movement
+    private static final float accelerationTime = 0.06F; // s
+    private static final float xSpeed = (120 / PhysicsUtil.PIXELS_PER_METER); // m/s
+    private static final float xAcceleration = xSpeed / accelerationTime; // m/s^2
+    private static final float xAirAcceleration = xAcceleration / 4; // m/s^2
+
     public void jump(float upPress) {
         if (!isShowingEscMenu) {
             // If jump is being toggled
-            if (Math.abs(upPress) > 0.1F) {
+            if (Math.abs(upPress) > FinalConstants.analogueTriggerThreshold) {
                 if (jumped) {
                     jumpAccumulator += Gdx.graphics.getDeltaTime();
                     if (jumpAccumulator >= jumpTime) {
@@ -323,33 +361,27 @@ public class PlayScreen implements Screen {
     }
 
     public void left(float leftPress) {
-        /*
         if (!isShowingEscMenu) {
-            // If touching the ground
-            if (isTouchingGround) {
-                // Immediately start moving
-                additiveXVelocity -= Math.abs(maxXVelocity * leftPress);
-            } else {
-                // If in the air, allow to accelerate somewhat
-                body.setLinearVelocity(body.getLinearVelocity().add(-Math.abs(airAcceleration * leftPress) * Gdx.graphics.getDeltaTime(), 0));
+            if (Math.abs(leftPress) > FinalConstants.analogueTriggerThreshold) {
+                if (isTouchingRight && !isTouchingGround) {
+                    body.setLinearVelocity(body.getLinearVelocity().x - (jumpSpeed / 4F), jumpSpeed);
+                } else if (body.getLinearVelocity().x > -xSpeed) {
+                    body.setLinearVelocity(body.getLinearVelocity().add(-(isTouchingGround ? xAcceleration : xAirAcceleration) * Gdx.graphics.getDeltaTime(), 0));
+                }
             }
-        }*/
+        }
     }
 
     public void right(float rightPress) {
-        /*
         if (!isShowingEscMenu) {
-            if (isTouchingGround) {
-                additiveXVelocity += Math.abs(maxXVelocity * rightPress);
-            } else {
-                body.setLinearVelocity(body.getLinearVelocity().add(airAcceleration * rightPress * Gdx.graphics.getDeltaTime(), 0));
+            if (Math.abs(rightPress) > FinalConstants.analogueTriggerThreshold) {
+                if (isTouchingLeft && !isTouchingGround) {
+                    body.setLinearVelocity(body.getLinearVelocity().x + (jumpSpeed / 4F), jumpSpeed);
+                } else if (body.getLinearVelocity().x < xSpeed) {
+                    body.setLinearVelocity(body.getLinearVelocity().add((isTouchingGround ? xAcceleration : xAirAcceleration) * Gdx.graphics.getDeltaTime() * Math.abs(rightPress), 0));
+                }
             }
-            /*
-            if (body.getLinearVelocity().x < maxXVelocity) {
-                float acc = isTouchingGround ? acceleration : airAcceleration;
-                body.setLinearVelocity(body.getLinearVelocity().add(acc * Gdx.graphics.getDeltaTime(), 0));
-            }*/
-        //  }
+        }
     }
 
     @Override
