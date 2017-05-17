@@ -48,7 +48,7 @@ public class PlayScreen implements Screen {
     private TextButton stopButton;
 
     public PlayScreen() {
-        world = new World(new Vector2(0, standardGravityAcceleration), true);
+        world = new World(new Vector2(0, gravityAcceleration), true);
         rayHandler = new RayHandler(world);
         rayHandler.setBlurNum(1);
         debugRenderer = new Box2DDebugRenderer();
@@ -242,12 +242,14 @@ public class PlayScreen implements Screen {
         debugRenderer.render(world, viewport.getCamera().combined.cpy().scale(PhysicsUtil.PIXELS_PER_METER,
                 PhysicsUtil.PIXELS_PER_METER, PhysicsUtil.PIXELS_PER_METER));
 
+        /*
         // If the player is touching the ground and has been since the last tick
         // (Allows player to perform repeated jumps while maintaining some of the previous momentum)
         if (isTouchingGround && lastIsTouchingGround) {
             body.setLinearVelocity(additiveXVelocity, body.getLinearVelocity().y);
         }
         additiveXVelocity = 0;
+        */
 
         lastIsTouchingGround = isTouchingGround;
 
@@ -280,62 +282,52 @@ public class PlayScreen implements Screen {
     }
 
     private boolean isShowingEscMenu = false;
-    private static final float standardGravityAcceleration = -36F;//-9.81F; // m/s^2
-    private static final float maxXVelocity = 5; // m/s
-    private static final float airAcceleration = 12; // m/s^2
-    private static final float jumpVelocity = 10; // m/s
-    private static final float jumpVelocitySquared = jumpVelocity * jumpVelocity; // m^2/s^2
-    private static final float jumpReleaseVelocity = 8; // m/s
-    private static final float minJumpReleaseVelocity = jumpReleaseVelocity / 2F; // m/s
-    private static final float maximumMaxJumpTime = 0.15F; // s
 
-    private boolean jumpTimeTriggered = false;
     private boolean jumped = false;
     private float jumpAccumulator = 0F;
+
+    /*
+    private static final float maxXVelocity = 5; // m/s
+    private static final float airAcceleration = 12; // m/s^2*/
+
+    private static final float gravityAcceleration = -50F;//-9.81F; // m/s^2
+    private static final float jumpTime = 0.135F; // s
+    private static final float jumpHeight = 60 / PhysicsUtil.PIXELS_PER_METER; // m
+    // Uses quadratic formula to solve the jump speed based on the desired height, jump time, and acceleration
+    // d1 + d2 = d                          Total displacement is known. It is the sum of the displacement during constant velocity and gravitational acceleration.
+    // t(v) + (-1/2a)(v^2) = d              Using kinematic equations, we can set d1 to the constant velocity displacement, and d2 to the uniform acceleration velocity.
+    // - (1/2a)(v^2) + t(v) - d = 0           Rearranging the equation into quadratic form
+    // v = (-a)(-t +/- sqrt(t^2 - 2*d/a))   Simplified Quadratic formula
+    private static final float jumpSpeed = (float) ((-gravityAcceleration) * (-jumpTime + Math.sqrt((jumpTime * jumpTime) - (2 * jumpHeight / gravityAcceleration)))); // m/s
+    private static final float minJumpReleaseVelocity = jumpSpeed / 2F; // m/s
 
     public void jump(float upPress) {
         if (!isShowingEscMenu) {
             // If jump is being toggled
             if (Math.abs(upPress) > 0.1F) {
-
                 if (jumped) {
                     jumpAccumulator += Gdx.graphics.getDeltaTime();
-                    if (jumpAccumulator >= maximumMaxJumpTime) {
+                    if (jumpAccumulator >= jumpTime) {
                         jumped = false;
-                        jumpTimeTriggered = true;
                         jumpAccumulator = 0;
                     }
                 }
 
                 // If the player isn't jumping, but they're touching the ground, make 'em jump
                 if (isTouchingGround) {
-                    if (!lastIsTouchingGround) {
-
-                    }
                     jumped = true;
+                    System.out.println("Is touching ground");
                 }
 
                 // If already jumping
                 if (jumped) {
-                    float xVel = body.getLinearVelocity().x;
-                    float yVel = (float) Math.sqrt(jumpVelocitySquared - (xVel * xVel));
                     // Continue setting the velocity to the max jump velocity until the player lets go of the key
-                    body.setLinearVelocity(xVel, yVel);
+                    body.setLinearVelocity(body.getLinearVelocity().x, jumpSpeed);
                 }
-            }
-            // If the player released the button but was stopped by the jump time trigger
-            else if (jumpTimeTriggered) {
-                // If the vertical velocity is still greater than the minimum
-                if (body.getLinearVelocity().y > minJumpReleaseVelocity) {
-                    body.setLinearVelocity(body.getLinearVelocity().x, minJumpReleaseVelocity);
-                }
-                jumpTimeTriggered = false;
-                jumped = false;
-                jumpAccumulator = 0;
             }
             // If the button was released while the player was jumping
             else if (jumped) {
-                body.setLinearVelocity(body.getLinearVelocity().x, Math.max(minJumpReleaseVelocity, jumpReleaseVelocity * (jumpAccumulator / maximumMaxJumpTime)));
+                body.setLinearVelocity(body.getLinearVelocity().x, Math.max(minJumpReleaseVelocity, jumpSpeed * (jumpAccumulator / jumpTime)));
                 jumped = false;
                 jumpAccumulator = 0;
             } else {
@@ -345,11 +337,8 @@ public class PlayScreen implements Screen {
         }
     }
 
-
-    // The desired max velocities for when the left or right controls are pressed
-    private float additiveXVelocity = 0;
-
     public void left(float leftPress) {
+        /*
         if (!isShowingEscMenu) {
             // If touching the ground
             if (isTouchingGround) {
@@ -359,10 +348,11 @@ public class PlayScreen implements Screen {
                 // If in the air, allow to accelerate somewhat
                 body.setLinearVelocity(body.getLinearVelocity().add(-Math.abs(airAcceleration * leftPress) * Gdx.graphics.getDeltaTime(), 0));
             }
-        }
+        }*/
     }
 
     public void right(float rightPress) {
+        /*
         if (!isShowingEscMenu) {
             if (isTouchingGround) {
                 additiveXVelocity += Math.abs(maxXVelocity * rightPress);
@@ -374,7 +364,7 @@ public class PlayScreen implements Screen {
                 float acc = isTouchingGround ? acceleration : airAcceleration;
                 body.setLinearVelocity(body.getLinearVelocity().add(acc * Gdx.graphics.getDeltaTime(), 0));
             }*/
-        }
+        //  }
     }
 
     @Override
