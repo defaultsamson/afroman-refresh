@@ -210,7 +210,7 @@ public class PlayScreen implements Screen {
 
             // Jump detector
             PolygonShape shape2 = new PolygonShape();
-            shape2.setAsBox((halfWidth - 0.1F) / PhysicsUtil.PIXELS_PER_METER, sensorThickness / PhysicsUtil.PIXELS_PER_METER, new Vector2(0, -halfHeight / PhysicsUtil.PIXELS_PER_METER), 0);
+            shape2.setAsBox((halfWidth - 0.2F) / PhysicsUtil.PIXELS_PER_METER, sensorThickness / PhysicsUtil.PIXELS_PER_METER, new Vector2(0, -halfHeight / PhysicsUtil.PIXELS_PER_METER), 0);
             FixtureDef jumpFix = new FixtureDef();
             jumpFix.shape = shape2;
             jumpFix.isSensor = true;
@@ -338,6 +338,7 @@ public class PlayScreen implements Screen {
 
                 // If the player isn't jumping, but they're touching the ground, make 'em jump
                 if (isTouchingGround) {
+                    isTouchingGround = false;
                     jumped = true;
                     System.out.println("Is touching ground");
                 }
@@ -364,7 +365,8 @@ public class PlayScreen implements Screen {
         if (!isShowingEscMenu) {
             if (Math.abs(leftPress) > FinalConstants.analogueTriggerThreshold) {
                 if (isTouchingRight && !isTouchingGround) {
-                    body.setLinearVelocity(body.getLinearVelocity().x - (jumpSpeed / 4F), jumpSpeed);
+                    isTouchingRight = false;
+                    body.setLinearVelocity(body.getLinearVelocity().x - (jumpSpeed / 3F), Math.min(body.getLinearVelocity().y + jumpSpeed, jumpSpeed));
                 } else if (body.getLinearVelocity().x > -xSpeed) {
                     body.setLinearVelocity(body.getLinearVelocity().add(-(isTouchingGround ? xAcceleration : xAirAcceleration) * Gdx.graphics.getDeltaTime(), 0));
                 }
@@ -376,7 +378,8 @@ public class PlayScreen implements Screen {
         if (!isShowingEscMenu) {
             if (Math.abs(rightPress) > FinalConstants.analogueTriggerThreshold) {
                 if (isTouchingLeft && !isTouchingGround) {
-                    body.setLinearVelocity(body.getLinearVelocity().x + (jumpSpeed / 4F), jumpSpeed);
+                    isTouchingLeft = false;
+                    body.setLinearVelocity(body.getLinearVelocity().x + (jumpSpeed / 3F), Math.min(body.getLinearVelocity().y + jumpSpeed, jumpSpeed));
                 } else if (body.getLinearVelocity().x < xSpeed) {
                     body.setLinearVelocity(body.getLinearVelocity().add((isTouchingGround ? xAcceleration : xAirAcceleration) * Gdx.graphics.getDeltaTime() * Math.abs(rightPress), 0));
                 }
