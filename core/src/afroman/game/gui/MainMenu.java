@@ -106,7 +106,7 @@ public class MainMenu implements Screen {
         TextButton testButton = new TextButton("Test", skin);
         testButton.setSize(buttonWidth, buttonHeight);
         testButton.setPosition((buttonWidth / 2) + buttonSpacing, buttonYOffset + (1 * (buttonHeight + buttonSpacing)));
-        testButton.addListener(new NoisyClickListener() {
+        testButton.addListener(new NoisyClickListener(testButton) {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 MainGame.game.setScreen(new PlayScreen());
