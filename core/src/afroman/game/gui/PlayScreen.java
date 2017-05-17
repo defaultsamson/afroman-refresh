@@ -47,6 +47,31 @@ public class PlayScreen implements Screen {
     private IconButton settingsButton;
     private TextButton stopButton;
 
+    private static void addRect(World world, float x, float y, float width, float height) {
+        // Now create a BodyDefinition. This defines the physics objects keyboardType
+        // and position in the simulation
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+        bodyDef.fixedRotation = true;
+        bodyDef.position.set(x / PhysicsUtil.PIXELS_PER_METER, y / PhysicsUtil.PIXELS_PER_METER);
+
+        Body staticBody = world.createBody(bodyDef);
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox((width / 2F) / PhysicsUtil.PIXELS_PER_METER, (height / 2F) / PhysicsUtil.PIXELS_PER_METER);
+
+        // The defining features of the Fixture
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+        fixtureDef.density = 1F;
+        fixtureDef.restitution = 0F;
+        fixtureDef.friction = 2F;
+
+        staticBody.createFixture(fixtureDef);
+
+        shape.dispose();
+    }
+
     public PlayScreen() {
         world = new World(new Vector2(0, gravityAcceleration), true);
         rayHandler = new RayHandler(world);
@@ -139,53 +164,13 @@ public class PlayScreen implements Screen {
         });
         stage.addActor(stopButton);
 
-        // Creates ground
-        {
-            // Now create a BodyDefinition. This defines the physics objects keyboardType
-            // and position in the simulation
-            BodyDef bodyDef = new BodyDef();
-            bodyDef.type = BodyDef.BodyType.StaticBody;
-            bodyDef.fixedRotation = true;
-            bodyDef.position.set(40 / PhysicsUtil.PIXELS_PER_METER, 20 / PhysicsUtil.PIXELS_PER_METER);
+        addRect(world, -20, 50, 20, 5);
+        addRect(world, -60, 60, 20, 5);
 
-            Body staticBody = world.createBody(bodyDef);
-
-            PolygonShape shape = new PolygonShape();
-            shape.setAsBox(60 / PhysicsUtil.PIXELS_PER_METER, 3 / PhysicsUtil.PIXELS_PER_METER);
-
-            // The defining features of the Fixture
-            FixtureDef fixtureDef = new FixtureDef();
-            fixtureDef.shape = shape;
-            fixtureDef.density = 1F;
-            fixtureDef.restitution = 0F;
-            fixtureDef.friction = 2F;
-
-            staticBody.createFixture(fixtureDef);
-        }
-
-        // Creates wall
-        {
-            // Now create a BodyDefinition. This defines the physics objects keyboardType
-            // and position in the simulation
-            BodyDef bodyDef = new BodyDef();
-            bodyDef.type = BodyDef.BodyType.StaticBody;
-            bodyDef.fixedRotation = true;
-            bodyDef.position.set(100 / PhysicsUtil.PIXELS_PER_METER, 80 / PhysicsUtil.PIXELS_PER_METER);
-
-            Body staticBody = world.createBody(bodyDef);
-
-            PolygonShape shape = new PolygonShape();
-            shape.setAsBox(3 / PhysicsUtil.PIXELS_PER_METER, 60 / PhysicsUtil.PIXELS_PER_METER);
-
-            // The defining features of the Fixture
-            FixtureDef fixtureDef = new FixtureDef();
-            fixtureDef.shape = shape;
-            fixtureDef.density = 1F;
-            fixtureDef.restitution = 0F;
-            fixtureDef.friction = 0.03F;
-
-            staticBody.createFixture(fixtureDef);
-        }
+        // Ground
+        addRect(world, 40, 20, 120, 6);
+        // Wall
+        addRect(world, 100, 80, 6, 120);
 
         // Creates player
         {
