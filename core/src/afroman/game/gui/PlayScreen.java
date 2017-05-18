@@ -23,6 +23,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.util.ArrayList;
+
 import static afroman.game.gui.components.GuiConstants.skin;
 
 /**
@@ -35,12 +37,16 @@ public class PlayScreen implements Screen {
     private Box2DDebugRenderer debugRenderer;
 
     private Body body;
+    private Fixture bodyFixture;
     private Fixture jumpFixture;
     private Fixture leftFixture;
     private Fixture rightFixture;
     private boolean isTouchingGround = false;
     private boolean isTouchingLeft = false;
     private boolean isTouchingRight = false;
+
+    private ArrayList<Fixture> passableFixtures;
+    private boolean isPassingThrough = false;
 
     private ScreenViewport viewport;
     private SpriteBatch batch;
@@ -51,7 +57,7 @@ public class PlayScreen implements Screen {
     private IconButton settingsButton;
     private TextButton stopButton;
 
-    private static void addRect(World world, float x, float y, float width, float height) {
+    private static Fixture addRect(World world, float x, float y, float width, float height) {
         // Now create a BodyDefinition. This defines the physics objects keyboardType
         // and position in the simulation
         BodyDef bodyDef = new BodyDef();
@@ -71,9 +77,11 @@ public class PlayScreen implements Screen {
         fixtureDef.restitution = 0F;
         fixtureDef.friction = 2F;
 
-        staticBody.createFixture(fixtureDef);
+        Fixture fix = staticBody.createFixture(fixtureDef);
 
         shape.dispose();
+
+        return fix;
     }
 
     public PlayScreen() {
@@ -82,14 +90,39 @@ public class PlayScreen implements Screen {
         rayHandler.setBlurNum(1);
         debugRenderer = new Box2DDebugRenderer();
 
+        world.setContactFilter(new ContactFilter() {
+            @Override
+            public boolean shouldCollide(Fixture fixtureA, Fixture fixtureB) {
+                if (fixtureA == bodyFixture && passableFixtures.contains(fixtureB)) {
+                    //
+                    if (bodyFixture.getBody().getPosition().y < fixtureB.getBody().getPosition().y) {
+                        return false;
+                    }
+                } else if (fixtureB == bodyFixture && passableFixtures.contains(fixtureA)) {
+                    //
+                    if (bodyFixture.getBody().getPosition().y < fixtureA.getBody().getPosition().y) {
+                        return false;
+                    }
+                }
+
+                /*
+                if ((fixtureA == m_platform && fixtureB == m_character) || (fixtureB == m_platform && fixtureA == m_character)) {
+                    Vector2 position = m_character.getBody().getPosition();
+                    if (position.y < m_top + m_radius - 3.0f * 0.005f)
+                        return false;
+                }*/
+                return true;
+            }
+        });
+
         world.setContactListener(new ContactListener() {
             @Override
             public void beginContact(Contact contact) {
                 if (contact.getFixtureA() == jumpFixture || contact.getFixtureB() == jumpFixture) {
                     isTouchingGround = true;
-                } else if (contact.getFixtureA() == leftFixture || contact.getFixtureB() == leftFixture) {
+                } else if ((contact.getFixtureA() == leftFixture || contact.getFixtureB() == leftFixture) && !passableFixtures.contains(contact.getFixtureA()) && !passableFixtures.contains(contact.getFixtureB())) {
                     isTouchingLeft = true;
-                } else if (contact.getFixtureA() == rightFixture || contact.getFixtureB() == rightFixture) {
+                } else if ((contact.getFixtureA() == rightFixture || contact.getFixtureB() == rightFixture) && !passableFixtures.contains(contact.getFixtureA()) && !passableFixtures.contains(contact.getFixtureB())) {
                     isTouchingRight = true;
                 }
             }
@@ -173,8 +206,10 @@ public class PlayScreen implements Screen {
         });
         stage.addActor(stopButton);
 
-        addRect(world, -20, 65, 20, 5);
-        addRect(world, -60, 95, 20, 5);
+        passableFixtures = new ArrayList<Fixture>();
+
+        passableFixtures.add(addRect(world, -20, 65, 20, 0));
+        passableFixtures.add(addRect(world, -60, 95, 20, 0));
 
         // Ground
         addRect(world, 40, 20, 520, 6);
@@ -206,7 +241,7 @@ public class PlayScreen implements Screen {
             fixtureDef.restitution = 0.01F;
             fixtureDef.friction = 1F;
 
-            body.createFixture(fixtureDef);
+            bodyFixture = body.createFixture(fixtureDef);
 
             // Jump detector
             PolygonShape shape2 = new PolygonShape();
@@ -258,6 +293,7 @@ public class PlayScreen implements Screen {
         debugRenderer.render(world, viewport.getCamera().combined.cpy().scale(PhysicsUtil.PIXELS_PER_METER,
                 PhysicsUtil.PIXELS_PER_METER, PhysicsUtil.PIXELS_PER_METER));
 
+        // TODO
         /*
         // If the player is touching the ground and has been since the last tick
         // (Allows player to perform repeated jumps while maintaining some of the previous momentum)
@@ -266,8 +302,6 @@ public class PlayScreen implements Screen {
         }
         additiveXVelocity = 0;
         */
-
-        // lastIsTouchingGround = isTouchingGround;
 
         PhysicsUtil.stepWorld(world, delta);
 
@@ -280,6 +314,14 @@ public class PlayScreen implements Screen {
         stage.getRoot().setPosition(cameraPos.x, cameraPos.y);
         stage.act(delta);
         stage.draw();
+
+        // TODO
+        if (!isMovingLeft && !isMovingRight && isTouchingGround) {
+            bodyFixture.setFriction(100);
+            System.out.println("Killing friction");
+        } else {
+            bodyFixture.setFriction(0);
+        }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             isShowingEscMenu = !isShowingEscMenu;
@@ -301,6 +343,8 @@ public class PlayScreen implements Screen {
 
     private boolean jumped = false;
     private float jumpAccumulator = 0F;
+    private boolean isMovingLeft = false;
+    private boolean isMovingRight = false;
 
     /*
     private static final float maxXVelocity = 5; // m/s
@@ -340,7 +384,6 @@ public class PlayScreen implements Screen {
                 if (isTouchingGround) {
                     isTouchingGround = false;
                     jumped = true;
-                    System.out.println("Is touching ground");
                 }
 
                 // If already jumping
@@ -364,12 +407,18 @@ public class PlayScreen implements Screen {
     public void left(float leftPress) {
         if (!isShowingEscMenu) {
             if (Math.abs(leftPress) > FinalConstants.analogueTriggerThreshold) {
+                // If the right sensor is touching a wall and the player isn't on the ground, make them jump off of it
                 if (isTouchingRight && !isTouchingGround) {
                     isTouchingRight = false;
                     body.setLinearVelocity(body.getLinearVelocity().x - (jumpSpeed / 3F), Math.min(body.getLinearVelocity().y + jumpSpeed, jumpSpeed));
+
+                    // Else, if they're below the max speed, accelerate 'em m8
                 } else if (body.getLinearVelocity().x > -xSpeed) {
                     body.setLinearVelocity(body.getLinearVelocity().add(-(isTouchingGround ? xAcceleration : xAirAcceleration) * Gdx.graphics.getDeltaTime(), 0));
                 }
+                isMovingLeft = true;
+            } else {
+                isMovingLeft = false;
             }
         }
     }
@@ -377,12 +426,18 @@ public class PlayScreen implements Screen {
     public void right(float rightPress) {
         if (!isShowingEscMenu) {
             if (Math.abs(rightPress) > FinalConstants.analogueTriggerThreshold) {
+                // If the left sensor is touching a wall and the player isn't on the ground, make them jump off of it
                 if (isTouchingLeft && !isTouchingGround) {
                     isTouchingLeft = false;
                     body.setLinearVelocity(body.getLinearVelocity().x + (jumpSpeed / 3F), Math.min(body.getLinearVelocity().y + jumpSpeed, jumpSpeed));
+
+                    // Else, if they're below the max speed, accelerate 'em m8
                 } else if (body.getLinearVelocity().x < xSpeed) {
                     body.setLinearVelocity(body.getLinearVelocity().add((isTouchingGround ? xAcceleration : xAirAcceleration) * Gdx.graphics.getDeltaTime() * Math.abs(rightPress), 0));
                 }
+                isMovingRight = true;
+            } else {
+                isMovingRight = false;
             }
         }
     }
