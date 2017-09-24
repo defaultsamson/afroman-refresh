@@ -20,30 +20,27 @@ A remake of afroman-client using libGDX
 
 ![](https://i.imgur.com/vaPUz8V.png)
 
-6. Open `android/AndroidManifest.xml` and add the line
-```
-<uses-permission android:name="android.permission.INTERNET"/>
-```
-to use first body like this
-
-![](https://i.imgur.com/OmiySXa.png)
-
-7. In IDEA go to *Run > Edit Configurations* and add a new Application configuration
+6. In IDEA go to *Run > Edit Configurations* and add a new Application configuration
 
 ![](https://i.imgur.com/j6C7Iol.png)
 
-8. Set **Name** to `desktop`
+7. Set **Name** to `desktop`
+
 Set **Main class** to `afroman.game.desktop.DesktopLauncher`
+
 Set **Working directory** to the android/assets folder
+
 Set **Use classpath of module** to `desktop`
 
-9.
+8. Clone this repository and copy the contents over the current IDEA project
+
+9. Reload IDEA
 
 ### Eclipse
 Basically the same setup but with different menus
 
 ### NetBeans
-Why do people even use this?
+Do people still use this?
 
 ### Notepad
 Good luck 
