@@ -15,6 +15,6 @@ Now you can run the game!
 - If you are getting errors from Gradle about not being able to compile the :android project, you must either configure your system's ANDROID_HOME or create the file `afroman-refresh/local.properties` and add the line `sdk.dir=/path/to/your/Android/Sdk`
 - If running the game from an IDE is failing to load the assets, you may need to change your Run/Debug configuration to have the working directory set to `afroman-refresh/android/assets` (this is because the desktop and android modules both rely on the same Android assets folder)
 - When exporting as a JAR file, you may need to...
-  - Copy the files from `afroman-refresh/android/assets/` into the JAR archive
-  - In the JAR archive, edit `META-INF/MANIFEST.MF` and add the following line if it doesn't exist `Main-Class: net.qwertysam.desktop.DesktopLauncher`
+  - Copy the ***contents*** of the `afroman-refresh/android/assets` into the JAR archive
+  - In the JAR archive, edit `META-INF/MANIFEST.MF` and add the following line if it doesn't exist `Main-Class: afroman.game.desktop.DesktopLauncher`
 
